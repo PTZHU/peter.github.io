@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>zephyr | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="The following usage is based on zephyr v2.7. Stack Usage1234567891011121314151617181920212223242526272829303132#include &lt;zephyr.h&gt;#include &lt;kernel.h&gt;#include &lt;kernel_structs.h&gt;&#x2F;*!  *">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zephyr">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2023/08/01/zephyr/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="The following usage is based on zephyr v2.7. Stack Usage1234567891011121314151617181920212223242526272829303132#include &lt;zephyr.h&gt;#include &lt;kernel.h&gt;#include &lt;kernel_structs.h&gt;&#x2F;*!  *">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-08-01T01:39:30.000Z">
+<meta property="article:modified_time" content="2023-08-14T09:13:57.900Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/peter.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/peter.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/peter.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/peter.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/peter.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/peter.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/peter.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/peter.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://techexplorerpeter.github.io/peter.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-zephyr" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/01/zephyr/" class="article-date">
+  <time class="dt-published" datetime="2023-08-01T01:39:30.000Z" itemprop="datePublished">2023-08-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      zephyr
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>The following usage is based on zephyr v2.7.</p>
+<h2 id="Stack-Usage"><a href="#Stack-Usage" class="headerlink" title="Stack Usage"></a>Stack Usage</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;zephyr.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;kernel.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;kernel_structs.h&gt;</span></span></span><br><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment"> *  stack guard default value</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STACK_GUARD_VALUE 0xAA</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">check_stage_usage</span><span class="params">(<span class="type">k_tid_t</span> tid,<span class="type">const</span> <span class="type">char</span> *thread_name, <span class="type">size_t</span> stack_size)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> unused_stack_space;</span><br><span class="line">    <span class="type">size_t</span> total_stack_space = stack_size;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">k_thread</span> *<span class="title">thread</span> =</span> (<span class="keyword">struct</span> k_thread *) tid;</span><br><span class="line">    <span class="type">uint8_t</span> *stack_ptr = (<span class="type">uint8_t</span> *)thread-&gt;stack_info.start;</span><br><span class="line">    k_thread_stack_space_get(tid,&amp;unused_stack_space);</span><br><span class="line">    <span class="comment">//calculate the stack size usage</span></span><br><span class="line">    <span class="type">size_t</span> used_stack_space = total_stack_space - unused_stack_space;</span><br><span class="line">    <span class="type">double</span> stack_usage = (<span class="type">double</span>)used_stack_space/total_stack_space;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(stack_usage &gt; <span class="number">0.8</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// TODO</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    The stack sentinel is placed at the far end of the stack, so if the stack grows</span></span><br><span class="line"><span class="comment">    beyond its bounds, the sentinel value will be overwritten.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span>(stack_ptr[<span class="number">0</span>]!=STACK_GUARD_VALUE)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//TOD: stack overflow</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="CPU-Load"><a href="#CPU-Load" class="headerlink" title="CPU Load"></a>CPU Load</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> LOOP_CYCLE 669/100</span></span><br><span class="line"><span class="comment">//used to calculate the current thread cpu load</span></span><br><span class="line"><span class="type">uint32_t</span> last_runtimes;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">k_thread_runtime_stats</span> <span class="title">stats</span>;</span></span><br><span class="line">k_thread_runtime_stats_get(k_current_get(),stats);</span><br><span class="line"><span class="type">float</span> cpu_load = (<span class="type">float</span>)<span class="number">100</span> *(stats.execution_cycles - last_runtimes)/(CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC/<span class="number">1000</span>*LOOP_CYCLE);</span><br><span class="line">last_runtimes = stats.execution_cycles;</span><br><span class="line"></span><br><span class="line"><span class="comment">//used to calculate the total thread cpu load</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">thread_runtime_cb</span><span class="params">(<span class="keyword">struct</span> k_thread *thread,<span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint32_t</span> *total*_runtime = (<span class="type">uint32_t</span> *)user_data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">k_thread_runtime_stats</span> <span class="title">stats</span>;</span></span><br><span class="line">    k_thread_runtime_stats_get(thread,stats);</span><br><span class="line">    *total_runtime += stats.execution_cycles;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_cpu_load</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint64_t</span> total_runtime = <span class="number">0</span>;</span><br><span class="line">    <span class="type">float</span> cpu_load;</span><br><span class="line">    k_thread_foreach(thread_runtime_cb,&amp;total_runtime);</span><br><span class="line">    cpu_load = (<span class="type">float</span>)<span class="number">100</span> * (total_runtime - last_total_runtime)/((CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC/<span class="number">1000</span>*LOOP_CYCLE));</span><br><span class="line">    prink(<span class="string">&quot;cpu load = %.2f%%\n&quot;</span>,cpu_load);</span><br><span class="line">    last_total_runtime = total_runtime;</span><br><span class="line">    <span class="keyword">return</span> cpu_load;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/01/zephyr/" data-id="cllanxkz000012kmsastp3w9v" data-title="zephyr" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/peter.github.io/2023/08/08/SeperateLibrary/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Seperate Library
+        
+      </div>
+    </a>
+  
+  
+    <a href="/peter.github.io/2023/07/28/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/peter.github.io/2023/08/15/LinuxMemoryManage/">LinuxMemoryManage</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/08/08/SeperateLibrary/">Seperate Library</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/08/01/zephyr/">zephyr</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/07/28/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/peter.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/peter.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/peter.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/peter.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/peter.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
