@@ -73,6 +73,100 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-personalNote" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/18/personalNote/" class="article-date">
+  <time class="dt-published" datetime="2023-08-18T01:43:34.000Z" itemprop="datePublished">2023-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/18/personalNote/">personalNote</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Precautions-For-Inter-core-Data-Transfer"><a href="#Precautions-For-Inter-core-Data-Transfer" class="headerlink" title="Precautions For Inter-core Data Transfer"></a>Precautions For Inter-core Data Transfer</h2><pre><code>the cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section of core B memory needs to be careful if there is a cache, which is generally not recommended 
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="cllg0c0se0000swms9uk9gtna" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ArmTrustFirmware" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/" class="article-date">
+  <time class="dt-published" datetime="2023-08-17T01:54:31.000Z" itemprop="datePublished">2023-08-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/17/ArmTrustFirmware/">ArmTrustFirmware</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="主要从四个部分去讲解"><a href="#主要从四个部分去讲解" class="headerlink" title="主要从四个部分去讲解"></a>主要从四个部分去讲解</h2><p>一、 安全引导的作用<br>二、 安全引导的原理<br>三、 ATF的启动过程框架<br>四、 ATF的启动过程Code解析</p>
+<h2 id="什么是ATF"><a href="#什么是ATF" class="headerlink" title="什么是ATF"></a>什么是ATF</h2><pre><code>ARM Trusted Firmware中的Trusted Firmware-A（TF-A），是其中的一个类别、项目。这个是在armV8中引入的安全解决方案。它主要包括启动和运行过程中的特权级划分，对ArmV7中的TZ进行了提高，主要是补充了启动过程中信任链的传导，细化运行过程中的特权级区间。
+</code></pre>
+<h2 id="安全引导-启动"><a href="#安全引导-启动" class="headerlink" title="安全引导&#x2F;启动"></a>安全引导&#x2F;启动</h2><h3 id="什么是安全引导-启动"><a href="#什么是安全引导-启动" class="headerlink" title="什么是安全引导&#x2F;启动"></a>什么是安全引导&#x2F;启动</h3><pre><code>指的是在系统的启动过程中，使用链式验证电子签名的方式来验证系统里的重要镜像文件的可靠性，然后再加载镜像文件的引导过程。
+</code></pre>
+<h3 id="为什么要安全引导-启动"><a href="#为什么要安全引导-启动" class="headerlink" title="为什么要安全引导&#x2F;启动"></a>为什么要安全引导&#x2F;启动</h3><pre><code>它可以保护二级厂商系统的独立性和完整性，在V8架构中arm提供了arm可信固件ATF。
+</code></pre>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><pre><code>Bootloader、kernel、TEE os的启动都由ATF来加载和引导。对于V8，bootloader、kernel、TEE os镜像文件的验签工作都是在ATF中完成的。
+</code></pre>
+<h2 id="启动流程以及阶段划分"><a href="#启动流程以及阶段划分" class="headerlink" title="启动流程以及阶段划分"></a>启动流程以及阶段划分</h2><pre><code>分为两种类型：冷启动（restart）和热启动（reset）
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">五个步骤/阶段：</span><br><span class="line"></span><br><span class="line">    1. BL1 -  AP Trusted ROM（normal is BootRom）</span><br><span class="line">    2. BL2 -  Trusted Boot Firmware （normal is Trusted Bootloader）</span><br><span class="line">    3. BL31-  EL3 Runtime Firmware (normal is SML,manage SMC handle and interrupt, run in secure monitor)</span><br><span class="line">    4. BL32-  Secure-EL1 Payload (normal is TEE os Image)</span><br><span class="line">    5. BL33-  Non-Trusted Firmware (normal is uboot，linux kernel)</span><br></pre></td></tr></table></figure>
+<pre><code>ATF will output BL1,BL2,BL31,and provide BL32, BL33 interface.
+I think the interface ATF provide is BL32 and BL33 can be specified, and ATF is actually a framework, it contains five procedures can be 
+defined by manufacturer.
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/17/ArmTrustFirmware/" data-id="cllg0c0sm0001swmscqcvb57t" data-title="ArmTrustFirmware" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-LinuxMemoryManage" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2023/08/15/LinuxMemoryManage/" class="article-date">
@@ -95,7 +189,9 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        
+        <p>Memory management is described and explained in detail next.</p>
+<h2 id="why-we-need-memory-management"><a href="#why-we-need-memory-management" class="headerlink" title="why we need memory management"></a>why we need memory management</h2><p>For example, if a operating system have not memory management,the hardware memory will be directly accessed when the application need use memory, and this may result in other applications not being able to use the memory area and crush the system.In addition, if several applications require a large amount of memory, but the memory is not allocated and freed properly, it may lead to memory fragmentation, which may reduce the performance of the system. Therefore, memory management is a very important part of the operating system.</p>
+
       
     </div>
     <footer class="article-footer">
@@ -274,6 +370,14 @@
       <ul>
         
           <li>
+            <a href="/peter.github.io/2023/08/18/personalNote/">personalNote</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/">ArmTrustFirmware</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/08/15/LinuxMemoryManage/">LinuxMemoryManage</a>
           </li>
         
@@ -283,10 +387,6 @@
         
           <li>
             <a href="/peter.github.io/2023/08/01/zephyr/">zephyr</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/07/31/hello-world/">Hello World</a>
           </li>
         
       </ul>
