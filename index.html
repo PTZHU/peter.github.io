@@ -73,6 +73,105 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ARMv8Arch" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/29/ARMv8Arch/" class="article-date">
+  <time class="dt-published" datetime="2023-08-29T03:09:49.000Z" itemprop="datePublished">2023-08-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/29/ARMv8Arch/">ARMv8Arch</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>AArch64执行状态提供了32个在任何时间任何特权级下都可访问的64位的通用寄存器。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/29/ARMv8Arch/" data-id="clociy0qw0000k8msfzik9yqh" data-title="ARMv8Arch" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Makefile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/18/Makefile/" class="article-date">
+  <time class="dt-published" datetime="2023-08-18T06:13:05.000Z" itemprop="datePublished">2023-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/18/Makefile/">Makefile</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Makefile-培训教程"><a href="#Makefile-培训教程" class="headerlink" title="Makefile 培训教程"></a>Makefile 培训教程</h1><h2 id="Chapter-1-Makefile-简介和必要性"><a href="#Chapter-1-Makefile-简介和必要性" class="headerlink" title="Chapter 1: Makefile 简介和必要性"></a>Chapter 1: Makefile 简介和必要性</h2><h3 id="1-1-什么是-Makefile"><a href="#1-1-什么是-Makefile" class="headerlink" title="1.1 什么是 Makefile"></a>1.1 什么是 Makefile</h3><p>Makefile 是一种文本文件，用于定义如何构建和编译软件项目。它包含了一系列规则，描述了源文件如何转化为目标文件，以及构建过程中使用的命令。</p>
+<h3 id="1-2-为什么需要-Makefile"><a href="#1-2-为什么需要-Makefile" class="headerlink" title="1.2 为什么需要 Makefile"></a>1.2 为什么需要 Makefile</h3><p>Makefile 自动化了构建过程，减少了手动编译的复杂性，提高了开发效率。它能够根据文件的依赖关系自动决定哪些文件需要重新构建，从而确保项目的正确编译和构建。</p>
+<h3 id="1-3-Makefile-vs-CMake-vs-XMake"><a href="#1-3-Makefile-vs-CMake-vs-XMake" class="headerlink" title="1.3 Makefile vs CMake vs XMake"></a>1.3 Makefile vs CMake vs XMake</h3><p>Makefile、CMake 和 XMake 都是构建工具，用于管理软件项目的构建过程。它们之间的主要区别在于语法和功能上的差异。Makefile 是一种基本的构建工具，CMake 提供了更高级的构建和配置功能，而 XMake 则专注于跨平台构建。</p>
+<h3 id="1-4-Makefile-的优点"><a href="#1-4-Makefile-的优点" class="headerlink" title="1.4 Makefile 的优点"></a>1.4 Makefile 的优点</h3><ul>
+<li>简单：Makefile 的语法相对简单，易于学习和使用。</li>
+<li>高效：通过自动化构建过程，减少了手动操作，提高了编译效率。</li>
+<li>灵活：可以根据项目的需要定制构建规则和命令。</li>
+<li>可移植性高：Makefile 在不同的操作系统和环境中都能工作，确保了项目在不同平台上的一致性。</li>
+</ul>
+<h3 id="1-5-Makefile-的历史和演进"><a href="#1-5-Makefile-的历史和演进" class="headerlink" title="1.5 Makefile 的历史和演进"></a>1.5 Makefile 的历史和演进</h3><p>GNU Make 是一个常用的 Make 工具，它是在 Unix 系统上发展起来的。随着软件开发的发展，出现了许多改进版本和替代工具，如 BSD Make、GNU Make、XMake 等，以满足不同项目的需求。</p>
+<h2 id="Chapter-2-Makefile-的基本结构和语法"><a href="#Chapter-2-Makefile-的基本结构和语法" class="headerlink" title="Chapter 2: Makefile 的基本结构和语法"></a>Chapter 2: Makefile 的基本结构和语法</h2><h3 id="2-1-Makefile-的基本结构详解"><a href="#2-1-Makefile-的基本结构详解" class="headerlink" title="2.1 Makefile 的基本结构详解"></a>2.1 Makefile 的基本结构详解</h3><p>Makefile 由一系列规则组成，每个规则描述了如何将源文件转换为目标文件。规则由目标、依赖和命令三部分组成。</p>
+<ul>
+<li>目标（target）：表示要生成的文件，可以是可执行文件、中间文件等。</li>
+<li>依赖（dependencies）：表示生成目标所需的文件，当依赖文件发生变化时，目标将被重新构建。</li>
+<li>命令（commands）：表示生成目标的具体步骤，使用制表符开头，并在命令之间用换行分隔。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 规则：生成目标文件 main.o</span></span><br><span class="line"><span class="section">main.o: main.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-2-注释和变量"><a href="#2-2-注释和变量" class="headerlink" title="2.2 注释和变量"></a>2.2 注释和变量</h3><ul>
+<li>注释使用#符号，用于添加解释和注释，提高 Makefile 的可读性。</li>
+<li>变量用于存储数据，可以是文件名、编译器选项等，以便在 Makefile 中重复使用。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/Makefile/" data-id="clociy0r50004k8ms8125c33v" data-title="Makefile" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-personalNote" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2023/08/18/personalNote/" class="article-date">
@@ -101,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="cllg0c0se0000swms9uk9gtna" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="clociy0r40003k8ms9avjh1ws" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -155,7 +254,7 @@ defined by manufacturer.
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/17/ArmTrustFirmware/" data-id="cllg0c0sm0001swmscqcvb57t" data-title="ArmTrustFirmware" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/17/ArmTrustFirmware/" data-id="clociy0r30002k8msb2v516ii" data-title="ArmTrustFirmware" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -191,11 +290,11 @@ defined by manufacturer.
       
         <p>Memory management is described and explained in detail next.</p>
 <h2 id="why-we-need-memory-management"><a href="#why-we-need-memory-management" class="headerlink" title="why we need memory management"></a>why we need memory management</h2><p>For example, if a operating system have not memory management,the hardware memory will be directly accessed when the application need use memory, and this may result in other applications not being able to use the memory area and crush the system.In addition, if several applications require a large amount of memory, but the memory is not allocated and freed properly, it may lead to memory fragmentation, which may reduce the performance of the system. Therefore, memory management is a very important part of the operating system.</p>
-
+<h2 id="thread-management"><a href="#thread-management" class="headerlink" title="thread management"></a>thread management</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">set_affinity</span><span class="params">(pthread thread,<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pthread_setaffinity_np(thread,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_rt_thread</span><span class="params">(<span class="type">pthread_t</span> *pth, <span class="type">void</span>*(*func)(<span class="type">void</span> *), <span class="type">void</span> *arg, <span class="type">int</span> policy, <span class="type">int</span> prio, <span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">schedp</span>;</span></span><br><span class="line">	<span class="type">pthread_attr_t</span> attr;</span><br><span class="line">    <span class="comment">//cpu_set_t set;</span></span><br><span class="line">	<span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">	pthread_attr_init(&amp;attr);</span><br><span class="line">	<span class="built_in">memset</span>(&amp;schedp, <span class="number">0</span>, <span class="keyword">sizeof</span>(schedp));</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setinheritsched(&amp;attr, PTHREAD_EXPLICIT_SCHED);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setinheritsched\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setschedpolicy(&amp;attr, policy);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedpolicy\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	schedp.sched_priority = prio;</span><br><span class="line">	ret = pthread_attr_setschedparam(&amp;attr, &amp;schedp);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedparam\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_create(pth, &amp;attr, func, arg);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_create\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    ret = set_affinity(*pth,cpu_core);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_affinity_public</span><span class="params">(<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> policy = <span class="number">0</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">pthread_param</span>;</span></span><br><span class="line">    <span class="type">pid_t</span> thread_id = syscall(SYS_gettid);</span><br><span class="line">    pthread_getschedparam(pthread_self(),&amp;policy,&amp;pthread_param);</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> != sched_setaffinity(thread_id,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread %d set success core %d&quot;</span>,thread_id,cpu_core);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/15/LinuxMemoryManage/" data-id="cllc6y6q40000qgms8yfi5m5c" data-title="LinuxMemoryManage" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/15/LinuxMemoryManage/" data-id="clociy0ra0007k8ms2dpyd44g" data-title="LinuxMemoryManage" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -236,7 +335,7 @@ defined by manufacturer.
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/08/SeperateLibrary/" data-id="cllc6y6qc0001qgmsen35eest" data-title="Seperate Library" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/08/SeperateLibrary/" data-id="clociy0r60005k8ms0xck1129" data-title="Seperate Library" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -276,7 +375,7 @@ defined by manufacturer.
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/01/zephyr/" data-id="cllc6y6qe0003qgms0ekx83c5" data-title="zephyr" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/01/zephyr/" data-id="clociy0r60006k8ms3o4g84kv" data-title="zephyr" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -327,7 +426,7 @@ defined by manufacturer.
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/07/31/hello-world/" data-id="cllc6y6qd0002qgms5uxfgpah" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/07/31/hello-world/" data-id="clociy0r10001k8msdefp5v0z" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -370,6 +469,14 @@ defined by manufacturer.
       <ul>
         
           <li>
+            <a href="/peter.github.io/2023/08/29/ARMv8Arch/">ARMv8Arch</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/08/18/Makefile/">Makefile</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/08/18/personalNote/">personalNote</a>
           </li>
         
@@ -379,14 +486,6 @@ defined by manufacturer.
         
           <li>
             <a href="/peter.github.io/2023/08/15/LinuxMemoryManage/">LinuxMemoryManage</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/08/08/SeperateLibrary/">Seperate Library</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/08/01/zephyr/">zephyr</a>
           </li>
         
       </ul>
