@@ -14,7 +14,7 @@
 <meta property="og:description" content="Precautions For Inter-core Data Transferthe cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-08-18T01:43:34.000Z">
-<meta property="article:modified_time" content="2023-08-18T01:49:43.351Z">
+<meta property="article:modified_time" content="2023-11-15T03:36:06.297Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -99,6 +99,8 @@
       
         <h2 id="Precautions-For-Inter-core-Data-Transfer"><a href="#Precautions-For-Inter-core-Data-Transfer" class="headerlink" title="Precautions For Inter-core Data Transfer"></a>Precautions For Inter-core Data Transfer</h2><pre><code>the cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section of core B memory needs to be careful if there is a cache, which is generally not recommended 
 </code></pre>
+<h2 id="SPI调试总结"><a href="#SPI调试总结" class="headerlink" title="SPI调试总结"></a>SPI调试总结</h2><pre><code>SPI时序可能出现问题，需要用逻辑分析仪Kingst VIS或者示波器查看波形变化，为什么出现延时情况，读写寄存器为什么会出现这么大的时间延时。结果发现和系统调用有很大的关系，xxx.elf的进程在运行过程中采用的是默认的优先级配置的nice值默认为0，会出现被抢占的情况，所以整体的延时会出现60us的情况。正常情况下是7-8us.整个配置MMIC的时间。
+</code></pre>
 
       
     </div>
@@ -150,7 +152,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -163,23 +165,23 @@
       <ul>
         
           <li>
+            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/08/29/ARMv8Arch/">ARMv8Arch</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/08/18/Makefile/">Makefile</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/08/18/personalNote/">personalNote</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/">ArmTrustFirmware</a>
           </li>
         
       </ul>

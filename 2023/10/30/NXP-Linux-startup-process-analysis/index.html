@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>NXP Linux startup process analysis | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="uboot stepunder the folder &#x2F;git&#x2F;arch&#x2F;arm&#x2F;cpu&#x2F;armv8&#x2F;start.S  .global _start  -&gt; bl _main -&gt; &#x2F;git&#x2F;arch&#x2F;arm&#x2F;cpu&#x2F;lib&#x2F;crt0_64.S ENTRY(_main) -&gt;  -&gt;bl board_init_f (common&#x2F;board_f.c, static cons">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NXP Linux startup process analysis">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="uboot stepunder the folder &#x2F;git&#x2F;arch&#x2F;arm&#x2F;cpu&#x2F;armv8&#x2F;start.S  .global _start  -&gt; bl _main -&gt; &#x2F;git&#x2F;arch&#x2F;arm&#x2F;cpu&#x2F;lib&#x2F;crt0_64.S ENTRY(_main) -&gt;  -&gt;bl board_init_f (common&#x2F;board_f.c, static cons">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://techexplorerpeter.github.io/peter.github.io/image.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/peter.github.io/image-1.png">
+<meta property="article:published_time" content="2023-10-30T07:54:13.000Z">
+<meta property="article:modified_time" content="2023-11-29T08:02:24.242Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://techexplorerpeter.github.io/peter.github.io/image.png">
+  
+    <link rel="alternate" href="/peter.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/peter.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/peter.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/peter.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/peter.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/peter.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/peter.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/peter.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://techexplorerpeter.github.io/peter.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-NXP-Linux-startup-process-analysis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/" class="article-date">
+  <time class="dt-published" datetime="2023-10-30T07:54:13.000Z" itemprop="datePublished">2023-10-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      NXP Linux startup process analysis
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="uboot-step"><a href="#uboot-step" class="headerlink" title="uboot step"></a>uboot step</h2><pre><code>under the folder /git/arch/arm/cpu/armv8/start.S  .global _start  -&gt; bl _main -&gt; /git/arch/arm/cpu/lib/crt0_64.S ENTRY(_main) -&gt;
+
+-&gt;bl board_init_f (common/board_f.c, static const init_fnc_t init_sequence_f[]) -&gt;b relocate_code (arch/arm/lib/relocate_64.S)-&gt;c_runtime_cpu_setup (arch/arm/cpu/armv8/start.S) -&gt;board_init_r (common/board_r.c, static init_fnc_t init_sequence_r[]) 
+</code></pre>
+<p>[经验] 基于armv8架构对u-boot进行启动流程分析（一）以下为链接<br><strong><a target="_blank" rel="noopener" href="https://bbs.elecfans.com/jishu_2282359_1_1.html">https://bbs.elecfans.com/jishu_2282359_1_1.html</a></strong><br>[经验] 基于armv8架构对u-boot进行启动流程分析（二）以下为链接<br><strong><a target="_blank" rel="noopener" href="https://www.ws-dc.com/jishu_2282360_1_1.html">https://www.ws-dc.com/jishu_2282360_1_1.html</a></strong><br>uboot启动流程（3）<br><strong><a target="_blank" rel="noopener" href="https://adtxl.com/index.php/archives/757.html">https://adtxl.com/index.php/archives/757.html</a></strong></p>
+<p>内核启动先导知识<br><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/522195519">https://zhuanlan.zhihu.com/p/522195519</a></strong></p>
+<h3 id="ArmV8启动知识梳理"><a href="#ArmV8启动知识梳理" class="headerlink" title="ArmV8启动知识梳理"></a><strong>ArmV8启动知识梳理</strong></h3><p><strong><a target="_blank" rel="noopener" href="https://bbs.elecfans.com/jishu_2282359_1_1.html">https://bbs.elecfans.com/jishu_2282359_1_1.html</a></strong><br><img src="/peter.github.io/image.png" alt="Alt text"><br>上图详细概括了arm官方推荐的armv8的启动层次结构：<br>官方将启动分为了BL1，BL2，BL31，BL32，BL33阶段，根据顺序，芯片启动后首先执行BL1阶段代码，接着验签启动BL2，BL2根据具体设计启动BL31或者BL33，BL32只有在有BL31时才可能会存在并被验签加载启动。<br>armv8分为Secure World和Non-Secure World（Normal World），四种异常级别从高到低分别为EL3，EL2，EL1，EL0。<br>Secure World就是可以执行可信的firmware和app，比如密码支付，指纹识别等一系列依赖安全保证的服务。<br>Non-Secure World就是我们常见的u-boot，linux，qnx等裸机程序或者操作系统。<br></p>
+<ul>
+<li>EL3具有最高管理权限，负责安全监测和安全模式切换。</li>
+<li>EL2主要提供了对虚拟化的支持。</li>
+<li>EL1是一个特权模式，能够执行一些特权指令，用于运行各类操作系统，在安全模式则是可信任OS。</li>
+<li>EL0是无特权模式，所有APP应用都在EL0。</li>
+</ul>
+<p>上图中的BL1，BL2，BL31，BL32，BL33分别对应如下功能：</p>
+<ul>
+<li>BL1：是一切信任的根，一般就是固化在ROM中的一段启动加载代码，用于引导bl2，并对bl2进行验签保证可信任执行；</li>
+<li>BL2：一般是在flash中的一段可信安全启动代码，它的可信建立在bl1对它的验证，主要完成一些平台相关的初始化，比如对ddr的初始化等，并在完成初始化后寻找BL31或者BL33进行执行；如果找到了BL31则不会继续调用BL33，如果没有BL31则BL33必须有；</li>
+<li>BL31：BL31不像BL1和BL2是一次性运行的，它作为最后一道可信任固件存在，在系统运行时通过smc指令陷入EL3调用系统安全服务或者在Secure World和Non-Secure World之间进行切换；在完成BL31初始化后会去寻找BL32或者BL33进行验签后加载执行；</li>
+<li>BL32：OPTee OS + 安全app，它是一个可信安全的OS运行在EL1并在EL0启动可信任APP（上述的指纹验证等app），并在Trust OS运行完成后通过smc指令返回- - BL31，BL31切换到Non-Seucre World继续执行BL33；</li>
+<li>BL33：非安全固件，也就是我们常见的UEFI firmware或者u-boot也可能是直接启动Linux kernel；<br>启动BL1，BL2，BL31，BL32则是一个完整的ATF信任链建立流程（ARM Trusted Firmware），像常见的PSCI（Power State Coordination Interface）功能则是在ATF的BL31上实现；</li>
+</ul>
+<p>最后一张图完整展示整个调用流程：<br><img src="/peter.github.io/image-1.png" alt="Alt text"><br>BL2根据是否存在BL31和BL32可选择性的加载不同firmware；<br>综上所述可知u-boot是一个运行在非安全世界的bootloader，负责加载各类操作系统，并提供丰富的驱动接口；并根据是否存在安全固件还可以进行不同的boot流程，如下。<br>u-boot，u-boot-spl，u-boot-tpl的关系：<br>对于一般嵌入式而言只需要一个u-boot作为bootloader即可，但是在小内存，或者有atf的情况下还可以有spl，tpl；<br>spl：Secondary Program Loader，二级加载器<br>tpl：Tertiary Program Loader，三级加载器<br>出现spl和tpl的原因最开始是因为系统sram太小，rom无法在ddr未初始化的情况下一次性把所有代码从flash，emmc，uxx等搬运到sram中执行，也或者是flash太小，无法完整放下整个u-boot来进行片上执行。所以u-boot又定义了spl和tpl，spl和tpl走u-boot完全相同的boot流程，不过在spl和tpl中大多数驱动和功能被去除了，根据需要只保留一部分spl和tpl需要的功能，通过CONFIG_SPL_BUILD和CONFIG_TPL_BUILD控制；一般只用spl就足够了，spl完成ddr初始化，并完成一些外设驱动初始化，比如u<em><strong>，emmc，以此从其他外围设备加载u-boot，但是如果对于小系统spl还是太大了，则可以继续加入tpl，tpl只做ddr等的特定初始化保证代码体积极小，以此再次从指定位置加载spl，spl再去加载u-boot。<br>从目前来看，spl可以取代上图中bl2的位置，或者bl1，根据具体厂商实现来决定，有一些芯片厂商会将spl固化在rom中，使其具有从emmc，u</strong></em>等设备加载u-boot或者其他固件的能力。<br>当然在有atf的情况下可以由atf加载u-boot，或者由spl加载atf，atf再去加载u-boot。甚至在快速启动的系统中可以直接由spl启动加载linux等操作系统而跳过启动u-boot；在上图中arm官方只是给出了一个建议的启动信任链，具体实现都需要芯片厂商来决定</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/" data-id="clpjhc8gm0001q4ms4xpxg0jv" data-title="NXP Linux startup process analysis" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/peter.github.io/2023/10/30/Linux-System-command-description/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Linux System command description
+        
+      </div>
+    </a>
+  
+  
+    <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LinuxMemoryManage</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/peter.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/peter.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/peter.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/peter.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/peter.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
