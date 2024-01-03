@@ -14,7 +14,7 @@
 <meta property="og:description" content="Memory management is described and explained in detail next. why we need memory managementFor example, if a operating system have not memory management,the hardware memory will be directly accessed wh">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-15T02:42:04.000Z">
-<meta property="article:modified_time" content="2023-10-30T06:46:19.221Z">
+<meta property="article:modified_time" content="2023-12-20T02:34:29.530Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -101,7 +101,27 @@
 <h2 id="why-we-need-memory-management"><a href="#why-we-need-memory-management" class="headerlink" title="why we need memory management"></a>why we need memory management</h2><p>For example, if a operating system have not memory management,the hardware memory will be directly accessed when the application need use memory, and this may result in other applications not being able to use the memory area and crush the system.In addition, if several applications require a large amount of memory, but the memory is not allocated and freed properly, it may lead to memory fragmentation, which may reduce the performance of the system. Therefore, memory management is a very important part of the operating system.</p>
 <h2 id="thread-management"><a href="#thread-management" class="headerlink" title="thread management"></a>thread management</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">set_affinity</span><span class="params">(pthread thread,<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pthread_setaffinity_np(thread,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_rt_thread</span><span class="params">(<span class="type">pthread_t</span> *pth, <span class="type">void</span>*(*func)(<span class="type">void</span> *), <span class="type">void</span> *arg, <span class="type">int</span> policy, <span class="type">int</span> prio, <span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">schedp</span>;</span></span><br><span class="line">	<span class="type">pthread_attr_t</span> attr;</span><br><span class="line">    <span class="comment">//cpu_set_t set;</span></span><br><span class="line">	<span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">	pthread_attr_init(&amp;attr);</span><br><span class="line">	<span class="built_in">memset</span>(&amp;schedp, <span class="number">0</span>, <span class="keyword">sizeof</span>(schedp));</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setinheritsched(&amp;attr, PTHREAD_EXPLICIT_SCHED);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setinheritsched\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setschedpolicy(&amp;attr, policy);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedpolicy\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	schedp.sched_priority = prio;</span><br><span class="line">	ret = pthread_attr_setschedparam(&amp;attr, &amp;schedp);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedparam\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_create(pth, &amp;attr, func, arg);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_create\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    ret = set_affinity(*pth,cpu_core);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_affinity_public</span><span class="params">(<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> policy = <span class="number">0</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">pthread_param</span>;</span></span><br><span class="line">    <span class="type">pid_t</span> thread_id = syscall(SYS_gettid);</span><br><span class="line">    pthread_getschedparam(pthread_self(),&amp;policy,&amp;pthread_param);</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> != sched_setaffinity(thread_id,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread %d set success core %d&quot;</span>,thread_id,cpu_core);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="thread-task-table"><a href="#thread-task-table" class="headerlink" title="thread task table"></a>thread task table</h2>
+<h2 id="thread-task-table"><a href="#thread-task-table" class="headerlink" title="thread task table"></a>thread task table</h2><h2 id="pipeline-timing-test-八级流水线"><a href="#pipeline-timing-test-八级流水线" class="headerlink" title="pipeline timing test(八级流水线)"></a>pipeline timing test(八级流水线)</h2><p>‘’’C<br>for(int i;i &lt;1000000000,i++)<br>{<br>    fact *&#x3D; i;<br>}</p>
+<p>for(int i;i &lt;1000000000,i+&#x3D;8)<br>{<br>    fact0 *&#x3D; i;<br>    fact1 *&#x3D; i+1;<br>    fact2 *&#x3D; i+2;<br>    fact3 *&#x3D; i+3;<br>    fact4 *&#x3D; i+4;<br>    fact5 *&#x3D; i+5;<br>    fact6 *&#x3D; i+6;<br>    fact7 *&#x3D; i+7;<br>}<br>‘’’</p>
+<ul>
+<li><p>实际测量数据 : 第一个耗时大概5s左右，第二个耗时1.3s</p>
+</li>
+<li><p>原因分析：即使在使用流水线技术的情况下，对于不同类型的计算和循环，你也不一定会看到线性的性能增长，尤其是在一些特定的情况下，因为流水线技术本身存在一些限制。</p>
+</li>
+<li><p>在你的例子中，第一个循环是一个简单的累积乘法运算，而第二个循环则是对于每次迭代同时进行了 8 个乘法运算。在第二个循环中，尽管你利用了流水线并行处理 8 个不相关的乘法操作，但仍然受到了数据相关性和其他因素的限制。</p>
+</li>
+<li><p>尽管处理器在第二个循环中可以并行处理多个操作，但也有一些因素可能限制了性能增长：</p>
+</li>
+<li><p>数据相关性和依赖：即使你并行处理了 8 个操作，但在多数情况下，这些操作依然存在数据相关性，可能导致某些乘法操作需要等待之前的操作结果，从而限制了流水线的效率。</p>
+</li>
+<li><p>资源竞争：在同时处理多个操作时，各个乘法操作之间可能会竞争同样的资源（比如寄存器），造成一定的资源争用，降低流水线效率。</p>
+</li>
+<li><p>其他因素：像分支预测、数据访问模式等因素也可能对性能造成一定的影响。</p>
+</li>
+<li><p>虽然你利用了流水线并行处理多个操作，但并不是所有类型的计算都能够简单地获得线性的性能提升。对于某些类型的任务，流水线技术可能并不能完全发挥其优势。针对这种情况，需要更深入地了解处理器的特性、任务本身的特性以及代码的优化，以最大化地利用流水线并行性带来的性能优势。</p>
+</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
@@ -152,7 +172,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -165,6 +185,14 @@
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
           </li>
         
@@ -174,14 +202,6 @@
         
           <li>
             <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
           </li>
         
       </ul>
@@ -197,7 +217,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2023 John Doe<br>
+      &copy; 2024 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

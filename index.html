@@ -73,6 +73,114 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-yocto-user-manual" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/01/03/yocto-user-manual/" class="article-date">
+  <time class="dt-published" datetime="2024-01-03T06:23:03.000Z" itemprop="datePublished">2024-01-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Default-Build-Parameters-Configuration"><a href="#Default-Build-Parameters-Configuration" class="headerlink" title="Default Build Parameters Configuration"></a>Default Build Parameters Configuration</h1><ul>
+<li>open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh </li>
+<li><code>MACHINE=&quot;s32r45evb&quot;</code> can set the machine default</li>
+<li><code>SOURCESDIR=&quot;NXP_R45_meta_test&quot;</code> can set the default user meta layer</li>
+<li><code>LAYER_LIST=&quot;meta-test&quot;</code> can add your own meta layer into yocto project</li>
+<li>you can replace <code>DOWNLOADS=&quot;$ROOTDIR/downloads&quot;</code> to <code>/home/user/resource/yocto/bsp37/downloads</code> can set the download dependency resources(linux,bsp,and so on)</li>
+</ul>
+<h1 id="Floder-Introduction-and-common-methods-to-add-hello-ko-into-image"><a href="#Floder-Introduction-and-common-methods-to-add-hello-ko-into-image" class="headerlink" title="Floder Introduction and common methods to add hello.ko into image"></a>Floder Introduction and common methods to add hello.ko into image</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rsdk-yocto-build-32 tree</span><br><span class="line">|--NXP_R45_meta_test   - user Repository</span><br><span class="line">|   |--meta-alb</span><br><span class="line">|   |--meta-freesale</span><br><span class="line">|   |--meta-linaro</span><br><span class="line">|   |--meta-openembedded</span><br><span class="line">|   |--meta-qoriq</span><br><span class="line">|   |--meta-rsdk</span><br><span class="line">|   |--meta-security</span><br><span class="line">|   |--meta-test</span><br><span class="line">|   |   |--conf</span><br><span class="line">|   |   |   |--layer.conf</span><br><span class="line">|   |   |--packagegroups</span><br><span class="line">|   |   |   |--packagegroup-test-drivers.bb</span><br><span class="line">|   |   |--recipes-core</span><br><span class="line">|   |   |   |--packagegroup</span><br><span class="line">|   |   |   |   |--fsl-image-auto.bbappend</span><br><span class="line">|   |   |--recipes-kernel</span><br><span class="line">|   |   |   |--hello</span><br><span class="line">|   |   |   |   |--files</span><br><span class="line">|   |   |   |   |   |--testhello.c</span><br><span class="line">|   |   |   |   |   |--Makefile</span><br><span class="line">|   |   |   |   |   |--COPYING</span><br><span class="line">|   |   |   |   |--hello-test.bb</span><br><span class="line">|   |   |--COPYING.MIT</span><br><span class="line">|   |   |--README.md</span><br><span class="line">|   |--meta-virtualization</span><br><span class="line">|   |--poky</span><br><span class="line">|--build_test          - build template files</span><br><span class="line">|--downloads           - is null will be remove to common floder or delete</span><br><span class="line">|--sstate-cache        - build cache</span><br></pre></td></tr></table></figure>
+<p><code>layer.conf</code> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># add next into layer.conf</span><br><span class="line">IMAGE_INSTALL_append=&quot; hello-test&quot;`</span><br><span class="line">IMAGE_OVERHEAD_FACTOR = &quot;3&quot;`</span><br></pre></td></tr></table></figure>
+
+<p><code>packagegroup-test-drivers.bb</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># add next into packagegroup-test-drivers.bb</span><br><span class="line">SUMMARY = &quot;RSDK Linux Kernel Drivers&quot;</span><br><span class="line">LICENSE = &quot;MIT&quot;</span><br><span class="line"></span><br><span class="line">inherit packagegroup</span><br><span class="line"></span><br><span class="line">PROVIDES = &quot;packagegroup-test-drivers&quot;</span><br><span class="line"></span><br><span class="line"># added all rsdk kernel drivers/modules</span><br><span class="line">RDEPENDS_packagegroup-test-drivers = &quot;\</span><br><span class="line">    hello-test \</span><br><span class="line">&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>fsl-image-auto.bbappend</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># add next into fsl-image-auto.bbappend</span><br><span class="line">DESCRIPTION = &quot;CUstom list of packages for build RSDK package&quot;</span><br><span class="line"></span><br><span class="line"># drivers/modules package</span><br><span class="line">IMAGE_INSTALL_append = &quot; packagegroup-test-drivers&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>bitbake hello-test</code> can test the .bb file</p>
+<p>basic command:</p>
+<ul>
+<li><code>source nxp-setup-alb.sh</code> will check the and generate the default build folder and enter <code>build_test</code>.<code>-d</code> option will generate new build folder and enter it. <code>-b</code> option will choose the special build folder and enter it.</li>
+<li><code>bitbake fsl-image-auto</code> will build the u-boot,kernel,rootfs,generate sd&#x2F;flash image automatic.</li>
+<li>u-boot and kernel compiler steps:<ul>
+<li>configure cross compile</li>
+<li>excute <code>make xx_menuconfig</code>,Configure u-boot&#x2F;kernel</li>
+<li>excute <code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-</code>,Build u-boot&#x2F;kernel</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/01/03/yocto-user-manual/" data-id="clqxg3y0w0001ssms98xv2si8" data-title="yocto_user_manual" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-bootlog-analysis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/12/09/bootlog-analysis/" class="article-date">
+  <time class="dt-published" datetime="2023-12-09T06:51:46.000Z" itemprop="datePublished">2023-12-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="printenv"><a href="#printenv" class="headerlink" title="printenv"></a>printenv</h2><p>‘’’<br>arch&#x3D;arm<br>baudrate&#x3D;115200<br>board&#x3D;s32-gen1<br>board_name&#x3D;s32-gen1<br>boot_fdt&#x3D;try<br>boot_mtd&#x3D;booti<br>bootargs&#x3D;root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7<br>bootcmd&#x3D;mmc dev ${mmcdev}; if mmc rescan; then if run loadimage; then run mmcboot; else run netboot; fi; else run netboot; fi<br>bootdelay&#x3D;2<br>bootscript&#x3D;echo Running bootscript from mmc …; source<br>console&#x3D;ttyLF0<br>cpu&#x3D;armv8<br>fdt_addr&#x3D;0x83E00000<br>fdt_enable_hs400es&#x3D;fdt addr ${fdt_addr}; fdt rm &#x2F;usdhc no-1-8-v; fdt resize;<br>fdt_file&#x3D;fsl-s32r45-evb.dtb<br>fdt_high&#x3D;0xa0000000<br>fdt_override&#x3D;;<br>fdtcontroladdr&#x3D;ffa99000<br>flashboot&#x3D;echo Booting from flash…; run flashbootargs;sf probe 6:0;sf read ${loadaddr} ${kernel_flashaddr} ${kernel_maxsize};sf read ${fdt_addr} ${fdt_flashaddr} ${fdt_maxsize};sf read ${ramdisk_addr} ${ramdisk_flashaddr} ${ramdisk_maxsize};${boot_mtd} ${loadaddr} ${ramdisk_addr} ${fdt_addr};<br>flashbootargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;&#x2F;dev&#x2F;ram rw earlycon ;setexpr fip_flashaddr 0x0;setexpr kernel_flashaddr (0x0 + 0x1f0000);setenv kernel_maxsize 0x1400000;setexpr fdt_flashaddr (0x0 + 0x15f0000);setenv fdt_maxsize 0x100000;setexpr ramdisk_flashaddr (0x0 + 0x16f0000);setenv ramdisk_maxsize 0x2000000;<br>gatewayip&#x3D;192.168.30.1<br>hwconfig&#x3D;pcie0:mode&#x3D;rc,clock&#x3D;int;pcie1:mode&#x3D;sgmii,clock&#x3D;ext,fmhz&#x3D;125,xpcs_mode&#x3D;2G5<br>image&#x3D;Image<br>initrd_high&#x3D;0xFE1FFFFF<br>ipaddr&#x3D;192.168.30.60<br>jtagboot&#x3D;echo Booting using jtag…; ${boot_mtd} ${loadaddr} ${ramdisk_addr} ${fdt_addr}<br>jtagsdboot&#x3D;echo Booting loading Linux with ramdisk from SD…; run loadimage; run loadramdisk; run loadfdt;${boot_mtd} ${loadaddr} ${ramdisk_addr} ${fdt_addr}<br>loadaddr&#x3D;0x80000000<br>loadbootscript&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};<br>loadfdt&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}; run fdt_override;<br>loadimage&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}<br>loadramdisk&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${ramdisk_addr} ${ramdisk}<br>loadtftpfdt&#x3D;tftp ${fdt_addr} ${fdt_file};<br>loadtftpimage&#x3D;tftp ${loadaddr} ${image};<br>loadtftpramdisk&#x3D;tftp ${ramdisk_addr} ${ramdisk};<br>mmcargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;${mmcroot} earlycon<br>mmcboot&#x3D;echo Booting from mmc …; run mmcargs; if run loadfdt; then ${boot_mtd} ${loadaddr} - ${fdt_addr}; else echo WARN: Cannot load the DT; fi;<br>mmcdev&#x3D;0<br>mmcpart&#x3D;1<br>mmcroot&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw<br>netargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;&#x2F;dev&#x2F;nfs ip&#x3D;dhcp nfsroot&#x3D;${serverip}:${nfsroot},v3,tcp earlycon<br>netboot&#x3D;echo Booting from net …; run netargs; if test ${ip_dyn} &#x3D; yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; ${get_cmd} ${image}; if test ${boot_fdt} &#x3D; yes || test ${boot_fdt} &#x3D; try; then if ${get_cmd} ${fdt_addr} ${fdt_file}; then ${boot_mtd} ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} &#x3D; try; then ${boot_mtd}; else echo WARN: Cannot load the DT; fi; fi; else ${boot_mtd}; fi;<br>netmask&#x3D;255.255.255.0<br>nfsboot&#x3D;echo Booting from net using tftp and nfs…; run nfsbootargs;run loadtftpimage; run loadtftpfdt;${boot_mtd} ${loadaddr} - ${fdt_addr};<br>nfsbootargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;&#x2F;dev&#x2F;nfs rw ip&#x3D;${ipaddr}:${serverip}::${netmask}::eth0:off nfsroot&#x3D;${serverip}:&#x2F;tftpboot&#x2F;rfs,nolock,v3,tcp earlycon<br>ramdisk&#x3D;rootfs.uimg<br>ramdisk_addr&#x3D;0x84000000<br>s32cc_gmac1_mode&#x3D;enable<br>s32cc_gmac_mode&#x3D;enable<br>script&#x3D;boot.scr<br>serverip&#x3D;10.0.0.1<br>soc&#x3D;s32<br>stderr&#x3D;serial@401C8000<br>stdin&#x3D;serial@401C8000<br>stdout&#x3D;serial@401C8000<br>update_sd_firmware&#x3D;if test ${ip_dyn} &#x3D; yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; if mmc dev ${mmcdev}; then if ${get_cmd} ${update_sd_firmware_filename}; then setexpr fw_sz ${filesize} &#x2F; 0x200; setexpr fw_sz ${fw_sz} - 7; setexpr loadaddr ${loadaddr} + 0x1000; mmc write ${loadaddr} 0x8 ${fw_sz}; fi; fi<br>update_sd_firmware_filename&#x3D;fip.s32<br>vendor&#x3D;freescale</p>
+<p>Environment size: 3756&#x2F;8188 bytes</p>
+<p>‘’’</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/12/09/bootlog-analysis/" data-id="clqxg3y0u0000ssms2oss53jl" data-title="bootlog analysis" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-DebugMethods" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2023/11/16/DebugMethods/" class="article-date">
@@ -414,6 +522,19 @@ git diff HEAD file2 &gt; file2.patch
 这种方式在需要分别提交修改的不同部分到代码库时非常有用。
 </code></pre>
 <p>‘’’</p>
+<h2 id="linux-use-tips"><a href="#linux-use-tips" class="headerlink" title="linux use tips"></a>linux use tips</h2><ul>
+<li>cat &#x2F;proc&#x2F;cmdline 可以查看系统的启动参数<ul>
+<li>console&#x3D;ttyLF0，115200 root&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw earlycon</li>
+<li>也可以通过 dmesg | grep “Kernel command line”</li>
+</ul>
+</li>
+<li>可以在uboot命令行中printenv bootargs打印当前的变量内容<ul>
+<li>内容如下 bootargs&#x3D;root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7</li>
+<li>setenv bootargs “root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7 printk.time&#x3D;y initcall_debug”  然后 saveenv 接着reset</li>
+<li>修改 Kernel 的 Bootargs：添加 printk.time&#x3D;y initcall_debug 到 bootargs 中，以便查看每个模块的启动耗时</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -516,7 +637,27 @@ git diff HEAD file2 &gt; file2.patch
 <h2 id="why-we-need-memory-management"><a href="#why-we-need-memory-management" class="headerlink" title="why we need memory management"></a>why we need memory management</h2><p>For example, if a operating system have not memory management,the hardware memory will be directly accessed when the application need use memory, and this may result in other applications not being able to use the memory area and crush the system.In addition, if several applications require a large amount of memory, but the memory is not allocated and freed properly, it may lead to memory fragmentation, which may reduce the performance of the system. Therefore, memory management is a very important part of the operating system.</p>
 <h2 id="thread-management"><a href="#thread-management" class="headerlink" title="thread management"></a>thread management</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">set_affinity</span><span class="params">(pthread thread,<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pthread_setaffinity_np(thread,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_rt_thread</span><span class="params">(<span class="type">pthread_t</span> *pth, <span class="type">void</span>*(*func)(<span class="type">void</span> *), <span class="type">void</span> *arg, <span class="type">int</span> policy, <span class="type">int</span> prio, <span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">schedp</span>;</span></span><br><span class="line">	<span class="type">pthread_attr_t</span> attr;</span><br><span class="line">    <span class="comment">//cpu_set_t set;</span></span><br><span class="line">	<span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">	pthread_attr_init(&amp;attr);</span><br><span class="line">	<span class="built_in">memset</span>(&amp;schedp, <span class="number">0</span>, <span class="keyword">sizeof</span>(schedp));</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setinheritsched(&amp;attr, PTHREAD_EXPLICIT_SCHED);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setinheritsched\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setschedpolicy(&amp;attr, policy);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedpolicy\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	schedp.sched_priority = prio;</span><br><span class="line">	ret = pthread_attr_setschedparam(&amp;attr, &amp;schedp);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedparam\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_create(pth, &amp;attr, func, arg);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_create\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    ret = set_affinity(*pth,cpu_core);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_affinity_public</span><span class="params">(<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> policy = <span class="number">0</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">pthread_param</span>;</span></span><br><span class="line">    <span class="type">pid_t</span> thread_id = syscall(SYS_gettid);</span><br><span class="line">    pthread_getschedparam(pthread_self(),&amp;policy,&amp;pthread_param);</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> != sched_setaffinity(thread_id,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread %d set success core %d&quot;</span>,thread_id,cpu_core);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="thread-task-table"><a href="#thread-task-table" class="headerlink" title="thread task table"></a>thread task table</h2>
+<h2 id="thread-task-table"><a href="#thread-task-table" class="headerlink" title="thread task table"></a>thread task table</h2><h2 id="pipeline-timing-test-八级流水线"><a href="#pipeline-timing-test-八级流水线" class="headerlink" title="pipeline timing test(八级流水线)"></a>pipeline timing test(八级流水线)</h2><p>‘’’C<br>for(int i;i &lt;1000000000,i++)<br>{<br>    fact *&#x3D; i;<br>}</p>
+<p>for(int i;i &lt;1000000000,i+&#x3D;8)<br>{<br>    fact0 *&#x3D; i;<br>    fact1 *&#x3D; i+1;<br>    fact2 *&#x3D; i+2;<br>    fact3 *&#x3D; i+3;<br>    fact4 *&#x3D; i+4;<br>    fact5 *&#x3D; i+5;<br>    fact6 *&#x3D; i+6;<br>    fact7 *&#x3D; i+7;<br>}<br>‘’’</p>
+<ul>
+<li><p>实际测量数据 : 第一个耗时大概5s左右，第二个耗时1.3s</p>
+</li>
+<li><p>原因分析：即使在使用流水线技术的情况下，对于不同类型的计算和循环，你也不一定会看到线性的性能增长，尤其是在一些特定的情况下，因为流水线技术本身存在一些限制。</p>
+</li>
+<li><p>在你的例子中，第一个循环是一个简单的累积乘法运算，而第二个循环则是对于每次迭代同时进行了 8 个乘法运算。在第二个循环中，尽管你利用了流水线并行处理 8 个不相关的乘法操作，但仍然受到了数据相关性和其他因素的限制。</p>
+</li>
+<li><p>尽管处理器在第二个循环中可以并行处理多个操作，但也有一些因素可能限制了性能增长：</p>
+</li>
+<li><p>数据相关性和依赖：即使你并行处理了 8 个操作，但在多数情况下，这些操作依然存在数据相关性，可能导致某些乘法操作需要等待之前的操作结果，从而限制了流水线的效率。</p>
+</li>
+<li><p>资源竞争：在同时处理多个操作时，各个乘法操作之间可能会竞争同样的资源（比如寄存器），造成一定的资源争用，降低流水线效率。</p>
+</li>
+<li><p>其他因素：像分支预测、数据访问模式等因素也可能对性能造成一定的影响。</p>
+</li>
+<li><p>虽然你利用了流水线并行处理多个操作，但并不是所有类型的计算都能够简单地获得线性的性能提升。对于某些类型的任务，流水线技术可能并不能完全发挥其优势。针对这种情况，需要更深入地了解处理器的特性、任务本身的特性以及代码的优化，以最大化地利用流水线并行性带来的性能优势。</p>
+</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
@@ -615,6 +756,7 @@ git diff HEAD file2 &gt; file2.patch
 <li>注释使用#符号，用于添加解释和注释，提高 Makefile 的可读性。</li>
 <li>变量用于存储数据，可以是文件名、编译器选项等，以便在 Makefile 中重复使用。</li>
 </ul>
+<h2 id="Makefile使用Tips"><a href="#Makefile使用Tips" class="headerlink" title="Makefile使用Tips"></a>Makefile使用Tips</h2><h3 id="怎么把换行符CRLF替换为LF"><a href="#怎么把换行符CRLF替换为LF" class="headerlink" title="怎么把换行符CRLF替换为LF"></a>怎么把换行符CRLF替换为LF</h3><p><strong>sed -i ‘s&#x2F;\r$&#x2F;&#x2F;&#x2F;‘ file1.sh</strong></p>
 
       
     </div>
@@ -657,106 +799,90 @@ git diff HEAD file2 &gt; file2.patch
 </code></pre>
 <h2 id="SPI调试总结"><a href="#SPI调试总结" class="headerlink" title="SPI调试总结"></a>SPI调试总结</h2><pre><code>SPI时序可能出现问题，需要用逻辑分析仪Kingst VIS或者示波器查看波形变化，为什么出现延时情况，读写寄存器为什么会出现这么大的时间延时。结果发现和系统调用有很大的关系，xxx.elf的进程在运行过程中采用的是默认的优先级配置的nice值默认为0，会出现被抢占的情况，所以整体的延时会出现60us的情况。正常情况下是7-8us.整个配置MMIC的时间。
 </code></pre>
+<h2 id="知乎学习链接"><a href="#知乎学习链接" class="headerlink" title="知乎学习链接"></a>知乎学习链接</h2><p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ljgibbs/posts">https://www.zhihu.com/people/ljgibbs/posts</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lgjjeff">https://www.zhihu.com/people/lgjjeff</a></strong></p>
+<p>‘’’C<br>&#x2F;&#x2F;tcp server,can reconnection and recv data from tcp client<br>#include &lt;stdio.h&gt;<br>#include &lt;sys&#x2F;socket.h&gt;<br>#include &lt;arpa&#x2F;inet.h&gt;<br>#include &lt;unistd.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;fcntl.h&gt;</p>
+<p>#define PORT 11011<br>#define IP_ADDR “192.168.30.60”</p>
+<p>int main(){</p>
+<pre><code>int server_fd, client_fd;
+struct sockaddr_in server_addr,client_addr; 
+
+// 创建 socket
+server_fd = socket(AF_INET, SOCK_STREAM, 0);
+if(server_fd &lt; 0)&#123;
+    printf(&quot;Error creating socket!&quot;);
+    return 1;
+&#125;
+
+// 设置地址与端口信息
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = inet_addr(IP_ADDR); 
+server_addr.sin_port = htons(PORT);
+
+// 绑定socket与地址信息 
+if(bind(server_fd, (struct sockaddr*)&amp;server_addr, sizeof(server_addr)) &lt; 0)&#123;
+   printf(&quot;Bind failed!&quot;);
+   return 1;
+&#125;
+
+// 开始监听
+if (listen(server_fd, 5) &lt; 0)&#123;
+    printf(&quot;Listen failed!&quot;);
+    return 1;
+&#125;
+ 
+while(1)&#123;
+    socklen_t client_len = sizeof(client_addr);
+      // 等待客户端连接请求 
+    client_fd = accept(server_fd, (struct sockaddr*)&amp;client_addr, &amp;client_len);
+      if(client_fd &lt; 0)&#123;
+      continue;
+      &#125;
+    
+    // 设置 client_fd 为非阻塞模式
+    fcntl(client_fd, F_SETFL, O_NONBLOCK);
+  
+       while(1)&#123;
+
+        // 尝试接收数据
+        char buffer[1024];        
+        int byte_num = recv(client_fd, buffer, 1024, 0);
+        // 连接已关闭
+        if(byte_num == 0)&#123;
+            close(client_fd);
+            break;
+        &#125;
+      
+        // 打印接收到的数据
+        //if(byte_num &gt; 0)&#123;
+          //  printf(&quot;Received data: %s&quot;, buffer); 
+        //&#125;
+
+        // 遍历缓冲区每个字节
+        for(int i=0; i &lt; byte_num; i++) &#123;
+
+            // 将字节转换为整数打印 
+            printf(&quot;%x &quot;, (int)buffer[i]); 
+
+        &#125; 
+
+        printf(&quot;\n&quot;);
+
+
+    &#125;
+
+    // 关闭客户端 socket
+    close(client_fd); 
+&#125;
+
+return 0;
+</code></pre>
+<p>}<br>‘’’</p>
 
       
     </div>
     <footer class="article-footer">
       <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="clocja66b0004v8ms9g6p6wxa" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ArmTrustFirmware" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/" class="article-date">
-  <time class="dt-published" datetime="2023-08-17T01:54:31.000Z" itemprop="datePublished">2023-08-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/08/17/ArmTrustFirmware/">ArmTrustFirmware</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="主要从四个部分去讲解"><a href="#主要从四个部分去讲解" class="headerlink" title="主要从四个部分去讲解"></a>主要从四个部分去讲解</h2><p>一、 安全引导的作用<br>二、 安全引导的原理<br>三、 ATF的启动过程框架<br>四、 ATF的启动过程Code解析</p>
-<h2 id="什么是ATF"><a href="#什么是ATF" class="headerlink" title="什么是ATF"></a>什么是ATF</h2><pre><code>ARM Trusted Firmware中的Trusted Firmware-A（TF-A），是其中的一个类别、项目。这个是在armV8中引入的安全解决方案。它主要包括启动和运行过程中的特权级划分，对ArmV7中的TZ进行了提高，主要是补充了启动过程中信任链的传导，细化运行过程中的特权级区间。
-</code></pre>
-<h2 id="安全引导-启动"><a href="#安全引导-启动" class="headerlink" title="安全引导&#x2F;启动"></a>安全引导&#x2F;启动</h2><h3 id="什么是安全引导-启动"><a href="#什么是安全引导-启动" class="headerlink" title="什么是安全引导&#x2F;启动"></a>什么是安全引导&#x2F;启动</h3><pre><code>指的是在系统的启动过程中，使用链式验证电子签名的方式来验证系统里的重要镜像文件的可靠性，然后再加载镜像文件的引导过程。
-</code></pre>
-<h3 id="为什么要安全引导-启动"><a href="#为什么要安全引导-启动" class="headerlink" title="为什么要安全引导&#x2F;启动"></a>为什么要安全引导&#x2F;启动</h3><pre><code>它可以保护二级厂商系统的独立性和完整性，在V8架构中arm提供了arm可信固件ATF。
-</code></pre>
-<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><pre><code>Bootloader、kernel、TEE os的启动都由ATF来加载和引导。对于V8，bootloader、kernel、TEE os镜像文件的验签工作都是在ATF中完成的。
-</code></pre>
-<h2 id="启动流程以及阶段划分"><a href="#启动流程以及阶段划分" class="headerlink" title="启动流程以及阶段划分"></a>启动流程以及阶段划分</h2><pre><code>分为两种类型：冷启动（restart）和热启动（reset）
-</code></pre>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">五个步骤/阶段：</span><br><span class="line"></span><br><span class="line">    1. BL1 -  AP Trusted ROM（normal is BootRom）</span><br><span class="line">    2. BL2 -  Trusted Boot Firmware （normal is Trusted Bootloader）</span><br><span class="line">    3. BL31-  EL3 Runtime Firmware (normal is SML,manage SMC handle and interrupt, run in secure monitor)</span><br><span class="line">    4. BL32-  Secure-EL1 Payload (normal is TEE os Image)</span><br><span class="line">    5. BL33-  Non-Trusted Firmware (normal is uboot，linux kernel)</span><br></pre></td></tr></table></figure>
-<pre><code>ATF will output BL1,BL2,BL31,and provide BL32, BL33 interface.
-I think the interface ATF provide is BL32 and BL33 can be specified, and ATF is actually a framework, it contains five procedures can be 
-defined by manufacturer.
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/17/ArmTrustFirmware/" data-id="clocja66c0005v8ms0qozhtuy" data-title="ArmTrustFirmware" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-SeperateLibrary" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/08/08/SeperateLibrary/" class="article-date">
-  <time class="dt-published" datetime="2023-08-08T01:39:30.000Z" itemprop="datePublished">2023-08-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/08/08/SeperateLibrary/">Seperate Library</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>The following method is use the abstract interface to decouple the platform and algorithm.</p>
-<h2 id="Platform"><a href="#Platform" class="headerlink" title="Platform"></a>Platform</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ADD_PARAM(params,type,value) \</span></span><br><span class="line"><span class="meta">    do &#123; \</span></span><br><span class="line"><span class="meta">        params.paramType[i] = type; \</span></span><br><span class="line"><span class="meta">        params.paramVal[i]  = value; \</span></span><br><span class="line"><span class="meta">    &#125;while(0)</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* abstract interface for dsp modules</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">PublicApi</span>&#123;</span></span><br><span class="line">    <span class="type">void</span> (* func0)(<span class="type">void</span> * context);</span><br><span class="line">    <span class="type">void</span> (* func1)(<span class="type">void</span> *);</span><br><span class="line">    <span class="type">void</span> (* func2)(<span class="type">void</span> *);</span><br><span class="line">    <span class="type">void</span> (* func3)(<span class="type">void</span> *);</span><br><span class="line">&#125;PublicApi_t;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func0(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func0</span><span class="params">(Parameters_t * params)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">testdata</span> <span class="title">test</span>;</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;param-&gt;paramNum;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ADD_PARAM(test,params-&gt;paramType[i],params-&gt;paramVal[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func1(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func1</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func2(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func2</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func3(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func3</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          </span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">publicInterfaceInit</span><span class="params">(PublicApi_t *interface)</span></span><br><span class="line">&#123;</span><br><span class="line">    interface.func0 = Func0;</span><br><span class="line">    interface.func1 = Func1;</span><br><span class="line">    interface.func2 = Func2;</span><br><span class="line">    interface.func3 = Func3;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment"> * you should be define it in your main thread loop and register it to your decouple library</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    PublicApi_t interface;</span><br><span class="line">    publicInterfaceInit(&amp;interface);</span><br><span class="line">    interfaceRegister(&amp;interface);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Library"><a href="#Library" class="headerlink" title="Library"></a>Library</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment"> * in your library you should instantiate it</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">PublicApi_t *interfaceReg; </span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void interfaceRegister(PublicApi_t *interface_ptr)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">interfaceRegister</span><span class="params">(PublicApi_t *interface_ptr)</span></span><br><span class="line">&#123;</span><br><span class="line">    interfaceReg = interface_ptr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="IF-you-want-to-register-configuration-to-platform-and-the-following-method-can-be-use"><a href="#IF-you-want-to-register-configuration-to-platform-and-the-following-method-can-be-use" class="headerlink" title="IF you want to register configuration to platform, and the following method can be use"></a>IF you want to register configuration to platform, and the following method can be use</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* user define structure</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Parameters</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> address;</span><br><span class="line">    <span class="type">int</span> size;</span><br><span class="line">    <span class="type">int</span> paramNum;</span><br><span class="line">    <span class="type">int</span>* paramType;</span><br><span class="line">    <span class="type">int</span>* paramVal;</span><br><span class="line">&#125;Parameters_t;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          call function</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">testfunc</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// configure the parameters for xxx</span></span><br><span class="line">    Parameters_t params = &#123;</span><br><span class="line">        .address   = <span class="number">0x1234</span>,</span><br><span class="line">        .size      = <span class="number">0x1</span>,</span><br><span class="line">        .paramNum  = <span class="number">6</span>,</span><br><span class="line">        .paramType = (<span class="type">int</span>[])&#123;</span><br><span class="line">            <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">6</span></span><br><span class="line">        &#125;,</span><br><span class="line">        .paramVal  = (<span class="type">int</span>[])&#123;</span><br><span class="line">            <span class="number">6</span>,  <span class="number">5</span>,  <span class="number">4</span>,  <span class="number">3</span>,  <span class="number">2</span>,  <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    interfaceReg-&gt;func0(&amp;params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/08/SeperateLibrary/" data-id="clocja6670001v8ms3e6raa4d" data-title="Seperate Library" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -791,7 +917,7 @@ defined by manufacturer.
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -804,6 +930,14 @@ defined by manufacturer.
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
           </li>
         
@@ -813,14 +947,6 @@ defined by manufacturer.
         
           <li>
             <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
           </li>
         
       </ul>
@@ -836,7 +962,7 @@ defined by manufacturer.
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2023 John Doe<br>
+      &copy; 2024 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

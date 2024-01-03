@@ -14,7 +14,7 @@
 <meta property="og:description" content="Process常用命令总结1.ps -eLo pid,tid,%cpu,%mem,psr,comm 2.cpu load 1S 打印一次： mpstat -P ALL 1 3.nice -n -20 .&#x2F;xxx.elf 4.git diff &gt; xxx.patch 5.git diff --name-only     git diff HEAD file1 &gt; file1.patch">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-30T08:34:07.000Z">
-<meta property="article:modified_time" content="2023-11-15T08:27:03.416Z">
+<meta property="article:modified_time" content="2023-12-09T05:56:45.880Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -252,6 +252,19 @@ git diff HEAD file2 &gt; file2.patch
 这种方式在需要分别提交修改的不同部分到代码库时非常有用。
 </code></pre>
 <p>‘’’</p>
+<h2 id="linux-use-tips"><a href="#linux-use-tips" class="headerlink" title="linux use tips"></a>linux use tips</h2><ul>
+<li>cat &#x2F;proc&#x2F;cmdline 可以查看系统的启动参数<ul>
+<li>console&#x3D;ttyLF0，115200 root&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw earlycon</li>
+<li>也可以通过 dmesg | grep “Kernel command line”</li>
+</ul>
+</li>
+<li>可以在uboot命令行中printenv bootargs打印当前的变量内容<ul>
+<li>内容如下 bootargs&#x3D;root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7</li>
+<li>setenv bootargs “root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7 printk.time&#x3D;y initcall_debug”  然后 saveenv 接着reset</li>
+<li>修改 Kernel 的 Bootargs：添加 printk.time&#x3D;y initcall_debug 到 bootargs 中，以便查看每个模块的启动耗时</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -303,7 +316,7 @@ git diff HEAD file2 &gt; file2.patch
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -316,6 +329,14 @@ git diff HEAD file2 &gt; file2.patch
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
           </li>
         
@@ -325,14 +346,6 @@ git diff HEAD file2 &gt; file2.patch
         
           <li>
             <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
           </li>
         
       </ul>
@@ -348,7 +361,7 @@ git diff HEAD file2 &gt; file2.patch
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2023 John Doe<br>
+      &copy; 2024 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

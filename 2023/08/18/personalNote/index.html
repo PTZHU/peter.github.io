@@ -14,7 +14,7 @@
 <meta property="og:description" content="Precautions For Inter-core Data Transferthe cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-08-18T01:43:34.000Z">
-<meta property="article:modified_time" content="2023-11-15T03:36:06.297Z">
+<meta property="article:modified_time" content="2023-12-04T11:33:14.307Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -101,6 +101,85 @@
 </code></pre>
 <h2 id="SPI调试总结"><a href="#SPI调试总结" class="headerlink" title="SPI调试总结"></a>SPI调试总结</h2><pre><code>SPI时序可能出现问题，需要用逻辑分析仪Kingst VIS或者示波器查看波形变化，为什么出现延时情况，读写寄存器为什么会出现这么大的时间延时。结果发现和系统调用有很大的关系，xxx.elf的进程在运行过程中采用的是默认的优先级配置的nice值默认为0，会出现被抢占的情况，所以整体的延时会出现60us的情况。正常情况下是7-8us.整个配置MMIC的时间。
 </code></pre>
+<h2 id="知乎学习链接"><a href="#知乎学习链接" class="headerlink" title="知乎学习链接"></a>知乎学习链接</h2><p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ljgibbs/posts">https://www.zhihu.com/people/ljgibbs/posts</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lgjjeff">https://www.zhihu.com/people/lgjjeff</a></strong></p>
+<p>‘’’C<br>&#x2F;&#x2F;tcp server,can reconnection and recv data from tcp client<br>#include &lt;stdio.h&gt;<br>#include &lt;sys&#x2F;socket.h&gt;<br>#include &lt;arpa&#x2F;inet.h&gt;<br>#include &lt;unistd.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;fcntl.h&gt;</p>
+<p>#define PORT 11011<br>#define IP_ADDR “192.168.30.60”</p>
+<p>int main(){</p>
+<pre><code>int server_fd, client_fd;
+struct sockaddr_in server_addr,client_addr; 
+
+// 创建 socket
+server_fd = socket(AF_INET, SOCK_STREAM, 0);
+if(server_fd &lt; 0)&#123;
+    printf(&quot;Error creating socket!&quot;);
+    return 1;
+&#125;
+
+// 设置地址与端口信息
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = inet_addr(IP_ADDR); 
+server_addr.sin_port = htons(PORT);
+
+// 绑定socket与地址信息 
+if(bind(server_fd, (struct sockaddr*)&amp;server_addr, sizeof(server_addr)) &lt; 0)&#123;
+   printf(&quot;Bind failed!&quot;);
+   return 1;
+&#125;
+
+// 开始监听
+if (listen(server_fd, 5) &lt; 0)&#123;
+    printf(&quot;Listen failed!&quot;);
+    return 1;
+&#125;
+ 
+while(1)&#123;
+    socklen_t client_len = sizeof(client_addr);
+      // 等待客户端连接请求 
+    client_fd = accept(server_fd, (struct sockaddr*)&amp;client_addr, &amp;client_len);
+      if(client_fd &lt; 0)&#123;
+      continue;
+      &#125;
+    
+    // 设置 client_fd 为非阻塞模式
+    fcntl(client_fd, F_SETFL, O_NONBLOCK);
+  
+       while(1)&#123;
+
+        // 尝试接收数据
+        char buffer[1024];        
+        int byte_num = recv(client_fd, buffer, 1024, 0);
+        // 连接已关闭
+        if(byte_num == 0)&#123;
+            close(client_fd);
+            break;
+        &#125;
+      
+        // 打印接收到的数据
+        //if(byte_num &gt; 0)&#123;
+          //  printf(&quot;Received data: %s&quot;, buffer); 
+        //&#125;
+
+        // 遍历缓冲区每个字节
+        for(int i=0; i &lt; byte_num; i++) &#123;
+
+            // 将字节转换为整数打印 
+            printf(&quot;%x &quot;, (int)buffer[i]); 
+
+        &#125; 
+
+        printf(&quot;\n&quot;);
+
+
+    &#125;
+
+    // 关闭客户端 socket
+    close(client_fd); 
+&#125;
+
+return 0;
+</code></pre>
+<p>}<br>‘’’</p>
 
       
     </div>
@@ -152,7 +231,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -165,6 +244,14 @@
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
           </li>
         
@@ -174,14 +261,6 @@
         
           <li>
             <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
           </li>
         
       </ul>
@@ -197,7 +276,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2023 John Doe<br>
+      &copy; 2024 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

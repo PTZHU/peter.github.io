@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>yocto_user_manual | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Default Build Parameters Configuration open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh  MACHINE&#x3D;&quot;s32r45evb&quot; can set the machine default SOURCESDIR&#x3D;&quot;NXP_R45_meta_test&quot; can set the default">
+<meta property="og:type" content="article">
+<meta property="og:title" content="yocto_user_manual">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2024/01/03/yocto-user-manual/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Default Build Parameters Configuration open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh  MACHINE&#x3D;&quot;s32r45evb&quot; can set the machine default SOURCESDIR&#x3D;&quot;NXP_R45_meta_test&quot; can set the default">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-03T06:23:03.000Z">
+<meta property="article:modified_time" content="2024-01-03T07:14:45.496Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/peter.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/peter.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/peter.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/peter.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/peter.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/peter.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/peter.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/peter.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://techexplorerpeter.github.io/peter.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-yocto-user-manual" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/01/03/yocto-user-manual/" class="article-date">
+  <time class="dt-published" datetime="2024-01-03T06:23:03.000Z" itemprop="datePublished">2024-01-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      yocto_user_manual
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Default-Build-Parameters-Configuration"><a href="#Default-Build-Parameters-Configuration" class="headerlink" title="Default Build Parameters Configuration"></a>Default Build Parameters Configuration</h1><ul>
+<li>open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh </li>
+<li><code>MACHINE=&quot;s32r45evb&quot;</code> can set the machine default</li>
+<li><code>SOURCESDIR=&quot;NXP_R45_meta_test&quot;</code> can set the default user meta layer</li>
+<li><code>LAYER_LIST=&quot;meta-test&quot;</code> can add your own meta layer into yocto project</li>
+<li>you can replace <code>DOWNLOADS=&quot;$ROOTDIR/downloads&quot;</code> to <code>/home/user/resource/yocto/bsp37/downloads</code> can set the download dependency resources(linux,bsp,and so on)</li>
+</ul>
+<h1 id="Floder-Introduction-and-common-methods-to-add-hello-ko-into-image"><a href="#Floder-Introduction-and-common-methods-to-add-hello-ko-into-image" class="headerlink" title="Floder Introduction and common methods to add hello.ko into image"></a>Floder Introduction and common methods to add hello.ko into image</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rsdk-yocto-build-32 tree</span><br><span class="line">|--NXP_R45_meta_test   - user Repository</span><br><span class="line">|   |--meta-alb</span><br><span class="line">|   |--meta-freesale</span><br><span class="line">|   |--meta-linaro</span><br><span class="line">|   |--meta-openembedded</span><br><span class="line">|   |--meta-qoriq</span><br><span class="line">|   |--meta-rsdk</span><br><span class="line">|   |--meta-security</span><br><span class="line">|   |--meta-test</span><br><span class="line">|   |   |--conf</span><br><span class="line">|   |   |   |--layer.conf</span><br><span class="line">|   |   |--packagegroups</span><br><span class="line">|   |   |   |--packagegroup-test-drivers.bb</span><br><span class="line">|   |   |--recipes-core</span><br><span class="line">|   |   |   |--packagegroup</span><br><span class="line">|   |   |   |   |--fsl-image-auto.bbappend</span><br><span class="line">|   |   |--recipes-kernel</span><br><span class="line">|   |   |   |--hello</span><br><span class="line">|   |   |   |   |--files</span><br><span class="line">|   |   |   |   |   |--testhello.c</span><br><span class="line">|   |   |   |   |   |--Makefile</span><br><span class="line">|   |   |   |   |   |--COPYING</span><br><span class="line">|   |   |   |   |--hello-test.bb</span><br><span class="line">|   |   |--COPYING.MIT</span><br><span class="line">|   |   |--README.md</span><br><span class="line">|   |--meta-virtualization</span><br><span class="line">|   |--poky</span><br><span class="line">|--build_test          - build template files</span><br><span class="line">|--downloads           - is null will be remove to common floder or delete</span><br><span class="line">|--sstate-cache        - build cache</span><br></pre></td></tr></table></figure>
+<p><code>layer.conf</code> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># add next into layer.conf</span><br><span class="line">IMAGE_INSTALL_append=&quot; hello-test&quot;`</span><br><span class="line">IMAGE_OVERHEAD_FACTOR = &quot;3&quot;`</span><br></pre></td></tr></table></figure>
+
+<p><code>packagegroup-test-drivers.bb</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># add next into packagegroup-test-drivers.bb</span><br><span class="line">SUMMARY = &quot;RSDK Linux Kernel Drivers&quot;</span><br><span class="line">LICENSE = &quot;MIT&quot;</span><br><span class="line"></span><br><span class="line">inherit packagegroup</span><br><span class="line"></span><br><span class="line">PROVIDES = &quot;packagegroup-test-drivers&quot;</span><br><span class="line"></span><br><span class="line"># added all rsdk kernel drivers/modules</span><br><span class="line">RDEPENDS_packagegroup-test-drivers = &quot;\</span><br><span class="line">    hello-test \</span><br><span class="line">&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>fsl-image-auto.bbappend</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># add next into fsl-image-auto.bbappend</span><br><span class="line">DESCRIPTION = &quot;CUstom list of packages for build RSDK package&quot;</span><br><span class="line"></span><br><span class="line"># drivers/modules package</span><br><span class="line">IMAGE_INSTALL_append = &quot; packagegroup-test-drivers&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>bitbake hello-test</code> can test the .bb file</p>
+<p>basic command:</p>
+<ul>
+<li><code>source nxp-setup-alb.sh</code> will check the and generate the default build folder and enter <code>build_test</code>.<code>-d</code> option will generate new build folder and enter it. <code>-b</code> option will choose the special build folder and enter it.</li>
+<li><code>bitbake fsl-image-auto</code> will build the u-boot,kernel,rootfs,generate sd&#x2F;flash image automatic.</li>
+<li>u-boot and kernel compiler steps:<ul>
+<li>configure cross compile</li>
+<li>excute <code>make xx_menuconfig</code>,Configure u-boot&#x2F;kernel</li>
+<li>excute <code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-</code>,Build u-boot&#x2F;kernel</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/01/03/yocto-user-manual/" data-id="clqxg3y0w0001ssms98xv2si8" data-title="yocto_user_manual" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/peter.github.io/2023/12/09/bootlog-analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">bootlog analysis</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/peter.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/peter.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/peter.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/peter.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/peter.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

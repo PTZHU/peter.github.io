@@ -73,6 +73,101 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ArmTrustFirmware" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/" class="article-date">
+  <time class="dt-published" datetime="2023-08-17T01:54:31.000Z" itemprop="datePublished">2023-08-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/17/ArmTrustFirmware/">ArmTrustFirmware</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="主要从四个部分去讲解"><a href="#主要从四个部分去讲解" class="headerlink" title="主要从四个部分去讲解"></a>主要从四个部分去讲解</h2><p>一、 安全引导的作用<br>二、 安全引导的原理<br>三、 ATF的启动过程框架<br>四、 ATF的启动过程Code解析</p>
+<h2 id="什么是ATF"><a href="#什么是ATF" class="headerlink" title="什么是ATF"></a>什么是ATF</h2><pre><code>ARM Trusted Firmware中的Trusted Firmware-A（TF-A），是其中的一个类别、项目。这个是在armV8中引入的安全解决方案。它主要包括启动和运行过程中的特权级划分，对ArmV7中的TZ进行了提高，主要是补充了启动过程中信任链的传导，细化运行过程中的特权级区间。
+</code></pre>
+<h2 id="安全引导-启动"><a href="#安全引导-启动" class="headerlink" title="安全引导&#x2F;启动"></a>安全引导&#x2F;启动</h2><h3 id="什么是安全引导-启动"><a href="#什么是安全引导-启动" class="headerlink" title="什么是安全引导&#x2F;启动"></a>什么是安全引导&#x2F;启动</h3><pre><code>指的是在系统的启动过程中，使用链式验证电子签名的方式来验证系统里的重要镜像文件的可靠性，然后再加载镜像文件的引导过程。
+</code></pre>
+<h3 id="为什么要安全引导-启动"><a href="#为什么要安全引导-启动" class="headerlink" title="为什么要安全引导&#x2F;启动"></a>为什么要安全引导&#x2F;启动</h3><pre><code>它可以保护二级厂商系统的独立性和完整性，在V8架构中arm提供了arm可信固件ATF。
+</code></pre>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><pre><code>Bootloader、kernel、TEE os的启动都由ATF来加载和引导。对于V8，bootloader、kernel、TEE os镜像文件的验签工作都是在ATF中完成的。
+</code></pre>
+<h2 id="启动流程以及阶段划分"><a href="#启动流程以及阶段划分" class="headerlink" title="启动流程以及阶段划分"></a>启动流程以及阶段划分</h2><pre><code>分为两种类型：冷启动（restart）和热启动（reset）
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">五个步骤/阶段：</span><br><span class="line"></span><br><span class="line">    1. BL1 -  AP Trusted ROM（normal is BootRom）</span><br><span class="line">    2. BL2 -  Trusted Boot Firmware （normal is Trusted Bootloader）</span><br><span class="line">    3. BL31-  EL3 Runtime Firmware (normal is SML,manage SMC handle and interrupt, run in secure monitor)</span><br><span class="line">    4. BL32-  Secure-EL1 Payload (normal is TEE os Image)</span><br><span class="line">    5. BL33-  Non-Trusted Firmware (normal is uboot，linux kernel)</span><br></pre></td></tr></table></figure>
+<pre><code>ATF will output BL1,BL2,BL31,and provide BL32, BL33 interface.
+I think the interface ATF provide is BL32 and BL33 can be specified, and ATF is actually a framework, it contains five procedures can be 
+defined by manufacturer.
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/17/ArmTrustFirmware/" data-id="clocja66c0005v8ms0qozhtuy" data-title="ArmTrustFirmware" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SeperateLibrary" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/08/SeperateLibrary/" class="article-date">
+  <time class="dt-published" datetime="2023-08-08T01:39:30.000Z" itemprop="datePublished">2023-08-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/08/SeperateLibrary/">Seperate Library</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>The following method is use the abstract interface to decouple the platform and algorithm.</p>
+<h2 id="Platform"><a href="#Platform" class="headerlink" title="Platform"></a>Platform</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ADD_PARAM(params,type,value) \</span></span><br><span class="line"><span class="meta">    do &#123; \</span></span><br><span class="line"><span class="meta">        params.paramType[i] = type; \</span></span><br><span class="line"><span class="meta">        params.paramVal[i]  = value; \</span></span><br><span class="line"><span class="meta">    &#125;while(0)</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* abstract interface for dsp modules</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">PublicApi</span>&#123;</span></span><br><span class="line">    <span class="type">void</span> (* func0)(<span class="type">void</span> * context);</span><br><span class="line">    <span class="type">void</span> (* func1)(<span class="type">void</span> *);</span><br><span class="line">    <span class="type">void</span> (* func2)(<span class="type">void</span> *);</span><br><span class="line">    <span class="type">void</span> (* func3)(<span class="type">void</span> *);</span><br><span class="line">&#125;PublicApi_t;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func0(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func0</span><span class="params">(Parameters_t * params)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">testdata</span> <span class="title">test</span>;</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;param-&gt;paramNum;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ADD_PARAM(test,params-&gt;paramType[i],params-&gt;paramVal[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func1(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func1</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func2(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func2</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void Func3(void)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Func3</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          </span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">publicInterfaceInit</span><span class="params">(PublicApi_t *interface)</span></span><br><span class="line">&#123;</span><br><span class="line">    interface.func0 = Func0;</span><br><span class="line">    interface.func1 = Func1;</span><br><span class="line">    interface.func2 = Func2;</span><br><span class="line">    interface.func3 = Func3;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment"> * you should be define it in your main thread loop and register it to your decouple library</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    PublicApi_t interface;</span><br><span class="line">    publicInterfaceInit(&amp;interface);</span><br><span class="line">    interfaceRegister(&amp;interface);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Library"><a href="#Library" class="headerlink" title="Library"></a>Library</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment"> * in your library you should instantiate it</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">PublicApi_t *interfaceReg; </span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          void interfaceRegister(PublicApi_t *interface_ptr)</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">interfaceRegister</span><span class="params">(PublicApi_t *interface_ptr)</span></span><br><span class="line">&#123;</span><br><span class="line">    interfaceReg = interface_ptr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="IF-you-want-to-register-configuration-to-platform-and-the-following-method-can-be-use"><a href="#IF-you-want-to-register-configuration-to-platform-and-the-following-method-can-be-use" class="headerlink" title="IF you want to register configuration to platform, and the following method can be use"></a>IF you want to register configuration to platform, and the following method can be use</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* user define structure</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Parameters</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> address;</span><br><span class="line">    <span class="type">int</span> size;</span><br><span class="line">    <span class="type">int</span> paramNum;</span><br><span class="line">    <span class="type">int</span>* paramType;</span><br><span class="line">    <span class="type">int</span>* paramVal;</span><br><span class="line">&#125;Parameters_t;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************************************************************</span></span><br><span class="line"><span class="comment"> @brief          call function</span></span><br><span class="line"><span class="comment"> @param[in]      none</span></span><br><span class="line"><span class="comment"> @return         none</span></span><br><span class="line"><span class="comment">**************************************************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">testfunc</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// configure the parameters for xxx</span></span><br><span class="line">    Parameters_t params = &#123;</span><br><span class="line">        .address   = <span class="number">0x1234</span>,</span><br><span class="line">        .size      = <span class="number">0x1</span>,</span><br><span class="line">        .paramNum  = <span class="number">6</span>,</span><br><span class="line">        .paramType = (<span class="type">int</span>[])&#123;</span><br><span class="line">            <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">6</span></span><br><span class="line">        &#125;,</span><br><span class="line">        .paramVal  = (<span class="type">int</span>[])&#123;</span><br><span class="line">            <span class="number">6</span>,  <span class="number">5</span>,  <span class="number">4</span>,  <span class="number">3</span>,  <span class="number">2</span>,  <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    interfaceReg-&gt;func0(&amp;params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/08/SeperateLibrary/" data-id="clocja6670001v8ms3e6raa4d" data-title="Seperate Library" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-zephyr" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2023/08/01/zephyr/" class="article-date">
@@ -187,7 +282,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -200,6 +295,14 @@
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
           </li>
         
@@ -209,14 +312,6 @@
         
           <li>
             <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
           </li>
         
       </ul>
@@ -232,7 +327,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2023 John Doe<br>
+      &copy; 2024 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
