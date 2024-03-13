@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="001-Yocto 总结分享1. yocto 之前Linux 底层BSP开发主要围绕三件事情，U-Boot、Kernel、Rootfs。在没有 yocto 构建工具之前都需要手动编译处理。  构建 U-Boot  配置交叉编译工具链；  执行 make xx\_defconfig，配置 U-Boot；  执行 make ARCH&#x3D;arm CROSS_COMPILE&#x3D;arm-li">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="001-Yocto 总结分享1. yocto 之前Linux 底层BSP开发主要围绕三件事情，U-Boot、Kernel、Rootfs。在没有 yocto 构建工具之前都需要手动编译处理。  构建 U-Boot  配置交叉编译工具链；  执行 make xx\_defconfig，配置 U-Boot；  执行 make ARCH&#x3D;arm CROSS_COMPILE&#x3D;arm-li">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b0e65e2f-85d2-473d-aec8-b9ade0aa00c4.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/fb4144cb-3776-436a-a707-4081912a393b.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f5520826-c133-4e44-b6a9-75cc0645b2b3.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/a0f565a9-5d9c-4788-b7d6-9a917ba79e98.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/5b797a9c-570a-4f0f-9c36-24306087974b.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f19e291e-3d8a-459b-8e8f-e064b0e9581c.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/e13e6491-bc79-42d2-b667-ae8df05bbedd.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/6e7be361-51a2-4c17-807b-6d52cf25733f.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f1836528-aa39-432a-a54c-0916acbef40f.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/03eb448e-eb0e-4115-89a4-8cfc4a66ff4d.png">
+<meta property="og:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b117b303-8da3-434e-8d87-c0482f3afb66.png">
+<meta property="article:published_time" content="2024-03-13T08:42:15.193Z">
+<meta property="article:modified_time" content="2024-03-13T08:35:35.128Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b0e65e2f-85d2-473d-aec8-b9ade0aa00c4.png">
+  
+    <link rel="alternate" href="/peter.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/peter.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/peter.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/peter.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/peter.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/peter.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/peter.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/peter.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://techexplorerpeter.github.io/peter.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-001-Yocto 总结分享" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:42:15.193Z" itemprop="datePublished">2024-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="001-Yocto-总结分享"><a href="#001-Yocto-总结分享" class="headerlink" title="001-Yocto 总结分享"></a>001-Yocto 总结分享</h1><h2 id="1-yocto-之前"><a href="#1-yocto-之前" class="headerlink" title="1. yocto 之前"></a>1. yocto 之前</h2><p>Linux 底层BSP开发主要围绕三件事情，U-Boot、Kernel、Rootfs。在没有 yocto 构建工具之前都需要手动编译处理。</p>
+<ul>
+<li><p><strong>构建</strong> <strong>U-Boot</strong></p>
+<ul>
+<li><p>配置交叉编译工具链；</p>
+</li>
+<li><p>执行 make xx\_defconfig，配置 U-Boot；</p>
+</li>
+<li><p>执行 make ARCH&#x3D;arm CROSS_COMPILE&#x3D;arm-linux-gnueabihf-，编译 U-Boot；</p>
+</li>
+</ul>
+</li>
+<li><p><strong>构建 Kernel</strong></p>
+<ul>
+<li><p>配置交叉编译工具链；</p>
+</li>
+<li><p>执行 make xx\_defconfig，配置 Kernel；</p>
+</li>
+<li><p>执行 make ARCH&#x3D;arm CROSS\_COMPILE&#x3D;arm-linux-gnueabihf-，编译 Kernel；</p>
+</li>
+</ul>
+</li>
+<li><p><strong>构建Rootfs</strong></p>
+<ul>
+<li>手动下载源码编译环境需要的库、应用</li>
+</ul>
+</li>
+</ul>
+<p>手动处理有一个最大的麻烦就是处理依赖，往往安装 A 软件时，发现 A 软件依赖 B 软件，装 B 软件时，又发现依赖 C 软件，这样无穷无尽。</p>
+<ul>
+<li><p>busybox；</p>
+</li>
+<li><p><strong>生成 SD&#x2F;Flash 镜像</strong></p>
+</li>
+</ul>
+<p>一般根据某一个 layout 规矩，执行脚本把上面三者打包到一起。</p>
+<h2 id="2-yocto-之后"><a href="#2-yocto-之后" class="headerlink" title="2. yocto 之后"></a>2. yocto 之后</h2><p>仅仅执行一个bitbake fsl-image-auto，上面所有的工作均自动完成，当然简单的背后是有一堆配置文件来支持。</p>
+<ul>
+<li><p><strong>解决了之前的哪些痛点</strong></p>
+<ul>
+<li>Rootfs 软件依赖问题；</li>
+</ul>
+</li>
+</ul>
+<p>例如增加 vim 软件，只需要在配置文件中添加即可。</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b0e65e2f-85d2-473d-aec8-b9ade0aa00c4.png" alt="image"></p>
+<ul>
+<li>芯片厂商更新合并的问题；</li>
+</ul>
+<p>yocto 以 patch 来管理源码，所有在源更新后，很容易把自己的 patch 打进去，如下。</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/fb4144cb-3776-436a-a707-4081912a393b.png" alt="image"></p>
+<ul>
+<li><p>方便芯片厂商管理多个平台。</p>
+</li>
+<li><p>至于对 U-Boot、Kernel 构建帮助不大，因为他们本来利用 Kconfig&#x2F;Kbuild 系统使得构建工作已经很简单了，yocto 也只是在其上又包裹了一层。</p>
+</li>
+<li><p><strong>带来了哪些问题</strong></p>
+</li>
+<li><p>编译构建对机器配置、网络均有要求；</p>
+</li>
+<li><p>概念很多，学习曲线陡峭；</p>
+</li>
+<li><p><strong>官方文档</strong></p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://docs.yoctoproject.org/current/index.html">https://docs.yoctoproject.org/current/index.html</a></p>
+<h2 id="3-yocto-基本原则"><a href="#3-yocto-基本原则" class="headerlink" title="3. yocto 基本原则"></a>3. yocto 基本原则</h2><ul>
+<li><strong>yocto 目录结构</strong></li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f5520826-c133-4e44-b6a9-75cc0645b2b3.png" alt="image"></p>
+<ul>
+<li><p>sources&#x2F;  核心目录，包含所有构建过程需要的所有的配置文件；</p>
+</li>
+<li><p>build_s32r45evb&#x2F; 包含编译过程中的源文件、中间文件以及最终镜像文件，整个文件夹都是由 sources文件夹里的配置文件控制的；</p>
+</li>
+<li><p>downloads&#x2F; 包含编译过程中从网络下载来的文件，下次需要可以直接从本地取得；</p>
+</li>
+<li><p>sstate-cache&#x2F; 编译过程中得cache；</p>
+</li>
+<li><p><strong>yocto 工作流程</strong></p>
+</li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/a0f565a9-5d9c-4788-b7d6-9a917ba79e98.png" alt="image"></p>
+<ul>
+<li><p>Fetch – get the source code</p>
+</li>
+<li><p>Extract – unpack the sources</p>
+</li>
+<li><p>Patch – apply patches for bug fixes and new capability</p>
+</li>
+<li><p>Configure – set up your environment specifications</p>
+</li>
+<li><p>Build – compile and link</p>
+</li>
+<li><p>Install – copy files to target directories</p>
+</li>
+<li><p>Package – bundle files for installation</p>
+</li>
+<li><p><strong>source 目录以及重点文件的作用</strong></p>
+</li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/5b797a9c-570a-4f0f-9c36-24306087974b.png" alt="image"></p>
+<p>每一个meta-*文件夹，yocto的语言叫做 layer。功能紧密关联的 recipes 组成 layer，layer之间功能相互独立也有依赖性。</p>
+<p>我们 r45 平台主要关注 meta-alb、meta-rsdk 两个目录，这两个目录和meta-freescale由 NXP 维护，其他某些目录由社区维护。meta-sinpro目录是我们新建的，我们的工作都体现在这个文件夹里。</p>
+<ul>
+<li><strong>layer 目录</strong></li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f19e291e-3d8a-459b-8e8f-e064b0e9581c.png" alt="image"></p>
+<ul>
+<li><p>classes：该文件夹下的.bbclass文件，包含了一些在不同的metadata之间共享的信息，以及编译信息的抽象；</p>
+</li>
+<li><p>conf：该conf文件夹下的layer.conf文件定义了该metadata中使用的哪些.bb、.bbappend文件等参与构建嵌；</p>
+</li>
+<li><p>recipes-xxx：该文件夹中有许多的.bb或.bbappend文件，这些文件定义了构建系统需要的软件包或源码等，主要包括：</p>
+<ul>
+<li><p>软件包的基本信息：作者、主页、License等</p>
+</li>
+<li><p>版本信息</p>
+</li>
+<li><p>依赖文件</p>
+</li>
+<li><p>从哪下载以及如何下载软件包</p>
+</li>
+<li><p>软件包补丁信息:是否需要补丁、补丁下载地址及方式等</p>
+</li>
+<li><p>如何配置、如何编译软件包、安装位置等</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Machine</strong></p>
+</li>
+</ul>
+<p>R45 的 machine 文件 s32r45evb.conf，如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/e13e6491-bc79-42d2-b667-ae8df05bbedd.png" alt="image"></p>
+<p>主要对 U-Boot、Kernel 的行为做一些默认配置。</p>
+<ul>
+<li><strong>Distro</strong></li>
+</ul>
+<p>Distro 的配置文件主要对发行软件做一些控制。R45的 distro 文件如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/6e7be361-51a2-4c17-807b-6d52cf25733f.png" alt="image"></p>
+<ul>
+<li><strong>使能 layer</strong></li>
+</ul>
+<p>在 nxp-setup-alb.sh 文件中添加指定的 layer 可以实现自动添加，也可以手动在 local.conf 文件中添加。</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f1836528-aa39-432a-a54c-0916acbef40f.png" alt="image"></p>
+<ul>
+<li><strong>Bitbake</strong></li>
+</ul>
+<p>bitbake 是 yocto 系统的构建工具。可以简单的认为它类似 make 工具，make 工具的行为是由 Makefile 决定的，而 bitbake 的行为是由 .bb、.bbapend文件决定的。bitbake 的命令很多，可以执行bitbake -h 查看或者参考链接 <a target="_blank" rel="noopener" href="https://docs.yoctoproject.org/bitbake/2.0/index.html">https://docs.yoctoproject.org/bitbake/2.0/index.html</a></p>
+<p>bitbake 常用命令不完全举例如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/03eb448e-eb0e-4115-89a4-8cfc4a66ff4d.png" alt="image"></p>
+<h2 id="4-yocto-实践"><a href="#4-yocto-实践" class="headerlink" title="4. yocto 实践"></a>4. yocto 实践</h2><ul>
+<li><strong>新建 sinpro layer</strong></li>
+</ul>
+<p>yocto 以补丁的形式（包括源码和配置文件）关联不同的layer，所以我们不会直接改其他 layer。我们所有的定制都在meta-sinpro层完成。新建 layer 的具体过程如下，且测试驱动的编译：</p>
+<pre><code>$ bitbake-layers create-layer ../sources/meta-sinpro
+$ cd ../sources
+$ cp -rp ../poky/meta-skeleton/recipes-kernel/ .
+$ bitbake hello-mod; #（hello-mod 是.bb文件的名字，与源文件名无关）
+</code></pre>
+<ul>
+<li><p><strong>改 U-Boot 源码（手动）</strong></p>
+<ul>
+<li><p>进入 ~&#x2F;NXP&#x2F;Workspace&#x2F;rsdk-yocto-build&#x2F;build_s32r45evb&#x2F;tmp&#x2F;work&#x2F;s32r45evb-fsl-linux&#x2F;u-boot-s32&#x2F;2020.04-r0&#x2F;git 修改代码；</p>
+</li>
+<li><p>bitbake u-boot-s32 -c clearnsstate &amp;&amp; bitbake uboot-s32 重新编译；</p>
+</li>
+<li><p>验证 patch 是ok；</p>
+</li>
+<li><p>git commit 提交这次修改；</p>
+</li>
+<li><p>git diff 生成 patch；</p>
+</li>
+<li><p>把 patch 拷贝到 meta-sinpro中，并修改相关 .bb 文件；</p>
+</li>
+</ul>
+</li>
+<li><p><strong>改 U-Boot 源码（自动）</strong></p>
+</li>
+</ul>
+<p>所谓自动实际上是用 devtool 工具，具体操作如下：</p>
+<ul>
+<li><p>devtool modify u-boot-s32，会在build目录下生成workspace目录，并把u-boot-s32的源码提取到此处；</p>
+</li>
+<li><p>修改源码；</p>
+</li>
+<li><p>devtool build u-boot-s32 编译uboot；</p>
+</li>
+<li><p>git commit 提交版本；</p>
+</li>
+<li><p>devtool finish u-boot-s32 ..&#x2F;meta-sinpro，自动提交patch到指定layer；</p>
+</li>
+</ul>
+<h2 id="5-tips"><a href="#5-tips" class="headerlink" title="5. tips"></a>5. tips</h2><ul>
+<li><strong>下载 repo 改清华源</strong></li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b117b303-8da3-434e-8d87-c0482f3afb66.png" alt="image"></p>
+<p>下载NXP bsp 改清华源</p>
+<ul>
+<li><strong>下载NXP bsp 改清华源</strong></li>
+</ul>
+<p>repo init -u <a target="_blank" rel="noopener" href="https://source.codeaurora.org/external/autobsps32/auto_yocto_bsp">https://source.codeaurora.org/external/autobsps32/auto\_yocto\_bsp</a>-b release&#x2F;bsp32.0**--repo-url&#x3D;<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/*/">https://mirrors.tuna.tsinghua.edu.cn/git/git-repo\*\</a>*</p>
+<ul>
+<li><strong>bitbake中断后继续报错</strong></li>
+</ul>
+<p>中断后会生成 .lock 文件，重新接着编译会出错，删除.lock文件就好了。</p>
+<ul>
+<li><strong>git 仓库默认协议下载慢</strong></li>
+</ul>
+<p>指定https协议，有时候会快很多，操作如下：</p>
+<p>URL ?&#x3D; “git:&#x2F;&#x2F;source.codeaurora.org&#x2F;external&#x2F;autobsps32&#x2F;linux;protocol&#x3D;https”</p>
+<ul>
+<li><p><strong>参考网站</strong></p>
+<ul>
+<li><p>开源 layer： <a target="_blank" rel="noopener" href="http://layers.openembedded.org/layerindex/branch/master/layers/">http://layers.openembedded.org/layerindex/branch/master/layers/</a></p>
+</li>
+<li><p>Yocto 官方文档，搞懂yocto，这个文档要多看： <a target="_blank" rel="noopener" href="https://docs.yoctoproject.org/index.html">https://docs.yoctoproject.org/index.html</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/" data-id="cltpk0nnv000394ms9njefiya" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/02/26/OptimizedStrategy/">OptimizedStrategy</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/peter.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/peter.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/peter.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/peter.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/peter.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -4,17 +4,15 @@
   <meta charset="utf-8">
   
   
-  <title>personalNote | Hexo</title>
+  <title>Yocto_User_Manual | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Precautions For Inter-core Data Transferthe cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section">
-<meta property="og:type" content="article">
-<meta property="og:title" content="personalNote">
-<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="Yocto_User_Manual">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/Yocto-User-Manual-0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Precautions For Inter-core Data Transferthe cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-08-18T01:43:34.000Z">
-<meta property="article:modified_time" content="2023-12-04T11:33:14.307Z">
+<meta property="article:published_time" content="2024-03-13T08:41:04.000Z">
+<meta property="article:modified_time" content="2024-03-13T08:41:04.315Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -75,10 +73,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-personalNote" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-Yocto-User-Manual-0" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/peter.github.io/2023/08/18/personalNote/" class="article-date">
-  <time class="dt-published" datetime="2023-08-18T01:43:34.000Z" itemprop="datePublished">2023-08-18</time>
+    <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:41:04.000Z" itemprop="datePublished">2024-03-13</time>
 </a>
     
   </div>
@@ -89,7 +87,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      personalNote
+      Yocto_User_Manual
     </h1>
   
 
@@ -97,94 +95,11 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Precautions-For-Inter-core-Data-Transfer"><a href="#Precautions-For-Inter-core-Data-Transfer" class="headerlink" title="Precautions For Inter-core Data Transfer"></a>Precautions For Inter-core Data Transfer</h2><pre><code>the cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section of core B memory needs to be careful if there is a cache, which is generally not recommended 
-</code></pre>
-<h2 id="SPI调试总结"><a href="#SPI调试总结" class="headerlink" title="SPI调试总结"></a>SPI调试总结</h2><pre><code>SPI时序可能出现问题，需要用逻辑分析仪Kingst VIS或者示波器查看波形变化，为什么出现延时情况，读写寄存器为什么会出现这么大的时间延时。结果发现和系统调用有很大的关系，xxx.elf的进程在运行过程中采用的是默认的优先级配置的nice值默认为0，会出现被抢占的情况，所以整体的延时会出现60us的情况。正常情况下是7-8us.整个配置MMIC的时间。
-</code></pre>
-<h2 id="知乎学习链接"><a href="#知乎学习链接" class="headerlink" title="知乎学习链接"></a>知乎学习链接</h2><p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ljgibbs/posts">https://www.zhihu.com/people/ljgibbs/posts</a></strong></p>
-<p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lgjjeff">https://www.zhihu.com/people/lgjjeff</a></strong></p>
-<p>‘’’C<br>&#x2F;&#x2F;tcp server,can reconnection and recv data from tcp client<br>#include &lt;stdio.h&gt;<br>#include &lt;sys&#x2F;socket.h&gt;<br>#include &lt;arpa&#x2F;inet.h&gt;<br>#include &lt;unistd.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;fcntl.h&gt;</p>
-<p>#define PORT 11011<br>#define IP_ADDR “192.168.30.60”</p>
-<p>int main(){</p>
-<pre><code>int server_fd, client_fd;
-struct sockaddr_in server_addr,client_addr; 
-
-// 创建 socket
-server_fd = socket(AF_INET, SOCK_STREAM, 0);
-if(server_fd &lt; 0)&#123;
-    printf(&quot;Error creating socket!&quot;);
-    return 1;
-&#125;
-
-// 设置地址与端口信息
-server_addr.sin_family = AF_INET;
-server_addr.sin_addr.s_addr = inet_addr(IP_ADDR); 
-server_addr.sin_port = htons(PORT);
-
-// 绑定socket与地址信息 
-if(bind(server_fd, (struct sockaddr*)&amp;server_addr, sizeof(server_addr)) &lt; 0)&#123;
-   printf(&quot;Bind failed!&quot;);
-   return 1;
-&#125;
-
-// 开始监听
-if (listen(server_fd, 5) &lt; 0)&#123;
-    printf(&quot;Listen failed!&quot;);
-    return 1;
-&#125;
- 
-while(1)&#123;
-    socklen_t client_len = sizeof(client_addr);
-      // 等待客户端连接请求 
-    client_fd = accept(server_fd, (struct sockaddr*)&amp;client_addr, &amp;client_len);
-      if(client_fd &lt; 0)&#123;
-      continue;
-      &#125;
-    
-    // 设置 client_fd 为非阻塞模式
-    fcntl(client_fd, F_SETFL, O_NONBLOCK);
-  
-       while(1)&#123;
-
-        // 尝试接收数据
-        char buffer[1024];        
-        int byte_num = recv(client_fd, buffer, 1024, 0);
-        // 连接已关闭
-        if(byte_num == 0)&#123;
-            close(client_fd);
-            break;
-        &#125;
-      
-        // 打印接收到的数据
-        //if(byte_num &gt; 0)&#123;
-          //  printf(&quot;Received data: %s&quot;, buffer); 
-        //&#125;
-
-        // 遍历缓冲区每个字节
-        for(int i=0; i &lt; byte_num; i++) &#123;
-
-            // 将字节转换为整数打印 
-            printf(&quot;%x &quot;, (int)buffer[i]); 
-
-        &#125; 
-
-        printf(&quot;\n&quot;);
-
-
-    &#125;
-
-    // 关闭客户端 socket
-    close(client_fd); 
-&#125;
-
-return 0;
-</code></pre>
-<p>}<br>‘’’</p>
-
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="clocja66b0004v8ms9g6p6wxa" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/Yocto-User-Manual-0/" data-id="cltpk0nnw000494ms1c3i0en4" data-title="Yocto_User_Manual" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -194,19 +109,19 @@ return 0;
     
 <nav id="article-nav">
   
-    <a href="/peter.github.io/2023/08/18/Makefile/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Makefile
+          2.5G_PHY_Configuration
         
       </div>
     </a>
   
   
-    <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/peter.github.io/2024/02/26/OptimizedStrategy/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">ArmTrustFirmware</div>
+      <div class="article-nav-title">OptimizedStrategy</div>
     </a>
   
 </nav>

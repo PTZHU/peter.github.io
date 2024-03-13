@@ -73,6 +73,507 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-001-Yocto 总结分享" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:42:15.193Z" itemprop="datePublished">2024-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="001-Yocto-总结分享"><a href="#001-Yocto-总结分享" class="headerlink" title="001-Yocto 总结分享"></a>001-Yocto 总结分享</h1><h2 id="1-yocto-之前"><a href="#1-yocto-之前" class="headerlink" title="1. yocto 之前"></a>1. yocto 之前</h2><p>Linux 底层BSP开发主要围绕三件事情，U-Boot、Kernel、Rootfs。在没有 yocto 构建工具之前都需要手动编译处理。</p>
+<ul>
+<li><p><strong>构建</strong> <strong>U-Boot</strong></p>
+<ul>
+<li><p>配置交叉编译工具链；</p>
+</li>
+<li><p>执行 make xx\_defconfig，配置 U-Boot；</p>
+</li>
+<li><p>执行 make ARCH&#x3D;arm CROSS_COMPILE&#x3D;arm-linux-gnueabihf-，编译 U-Boot；</p>
+</li>
+</ul>
+</li>
+<li><p><strong>构建 Kernel</strong></p>
+<ul>
+<li><p>配置交叉编译工具链；</p>
+</li>
+<li><p>执行 make xx\_defconfig，配置 Kernel；</p>
+</li>
+<li><p>执行 make ARCH&#x3D;arm CROSS\_COMPILE&#x3D;arm-linux-gnueabihf-，编译 Kernel；</p>
+</li>
+</ul>
+</li>
+<li><p><strong>构建Rootfs</strong></p>
+<ul>
+<li>手动下载源码编译环境需要的库、应用</li>
+</ul>
+</li>
+</ul>
+<p>手动处理有一个最大的麻烦就是处理依赖，往往安装 A 软件时，发现 A 软件依赖 B 软件，装 B 软件时，又发现依赖 C 软件，这样无穷无尽。</p>
+<ul>
+<li><p>busybox；</p>
+</li>
+<li><p><strong>生成 SD&#x2F;Flash 镜像</strong></p>
+</li>
+</ul>
+<p>一般根据某一个 layout 规矩，执行脚本把上面三者打包到一起。</p>
+<h2 id="2-yocto-之后"><a href="#2-yocto-之后" class="headerlink" title="2. yocto 之后"></a>2. yocto 之后</h2><p>仅仅执行一个bitbake fsl-image-auto，上面所有的工作均自动完成，当然简单的背后是有一堆配置文件来支持。</p>
+<ul>
+<li><p><strong>解决了之前的哪些痛点</strong></p>
+<ul>
+<li>Rootfs 软件依赖问题；</li>
+</ul>
+</li>
+</ul>
+<p>例如增加 vim 软件，只需要在配置文件中添加即可。</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b0e65e2f-85d2-473d-aec8-b9ade0aa00c4.png" alt="image"></p>
+<ul>
+<li>芯片厂商更新合并的问题；</li>
+</ul>
+<p>yocto 以 patch 来管理源码，所有在源更新后，很容易把自己的 patch 打进去，如下。</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/fb4144cb-3776-436a-a707-4081912a393b.png" alt="image"></p>
+<ul>
+<li><p>方便芯片厂商管理多个平台。</p>
+</li>
+<li><p>至于对 U-Boot、Kernel 构建帮助不大，因为他们本来利用 Kconfig&#x2F;Kbuild 系统使得构建工作已经很简单了，yocto 也只是在其上又包裹了一层。</p>
+</li>
+<li><p><strong>带来了哪些问题</strong></p>
+</li>
+<li><p>编译构建对机器配置、网络均有要求；</p>
+</li>
+<li><p>概念很多，学习曲线陡峭；</p>
+</li>
+<li><p><strong>官方文档</strong></p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://docs.yoctoproject.org/current/index.html">https://docs.yoctoproject.org/current/index.html</a></p>
+<h2 id="3-yocto-基本原则"><a href="#3-yocto-基本原则" class="headerlink" title="3. yocto 基本原则"></a>3. yocto 基本原则</h2><ul>
+<li><strong>yocto 目录结构</strong></li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f5520826-c133-4e44-b6a9-75cc0645b2b3.png" alt="image"></p>
+<ul>
+<li><p>sources&#x2F;  核心目录，包含所有构建过程需要的所有的配置文件；</p>
+</li>
+<li><p>build_s32r45evb&#x2F; 包含编译过程中的源文件、中间文件以及最终镜像文件，整个文件夹都是由 sources文件夹里的配置文件控制的；</p>
+</li>
+<li><p>downloads&#x2F; 包含编译过程中从网络下载来的文件，下次需要可以直接从本地取得；</p>
+</li>
+<li><p>sstate-cache&#x2F; 编译过程中得cache；</p>
+</li>
+<li><p><strong>yocto 工作流程</strong></p>
+</li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/a0f565a9-5d9c-4788-b7d6-9a917ba79e98.png" alt="image"></p>
+<ul>
+<li><p>Fetch – get the source code</p>
+</li>
+<li><p>Extract – unpack the sources</p>
+</li>
+<li><p>Patch – apply patches for bug fixes and new capability</p>
+</li>
+<li><p>Configure – set up your environment specifications</p>
+</li>
+<li><p>Build – compile and link</p>
+</li>
+<li><p>Install – copy files to target directories</p>
+</li>
+<li><p>Package – bundle files for installation</p>
+</li>
+<li><p><strong>source 目录以及重点文件的作用</strong></p>
+</li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/5b797a9c-570a-4f0f-9c36-24306087974b.png" alt="image"></p>
+<p>每一个meta-*文件夹，yocto的语言叫做 layer。功能紧密关联的 recipes 组成 layer，layer之间功能相互独立也有依赖性。</p>
+<p>我们 r45 平台主要关注 meta-alb、meta-rsdk 两个目录，这两个目录和meta-freescale由 NXP 维护，其他某些目录由社区维护。meta-sinpro目录是我们新建的，我们的工作都体现在这个文件夹里。</p>
+<ul>
+<li><strong>layer 目录</strong></li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f19e291e-3d8a-459b-8e8f-e064b0e9581c.png" alt="image"></p>
+<ul>
+<li><p>classes：该文件夹下的.bbclass文件，包含了一些在不同的metadata之间共享的信息，以及编译信息的抽象；</p>
+</li>
+<li><p>conf：该conf文件夹下的layer.conf文件定义了该metadata中使用的哪些.bb、.bbappend文件等参与构建嵌；</p>
+</li>
+<li><p>recipes-xxx：该文件夹中有许多的.bb或.bbappend文件，这些文件定义了构建系统需要的软件包或源码等，主要包括：</p>
+<ul>
+<li><p>软件包的基本信息：作者、主页、License等</p>
+</li>
+<li><p>版本信息</p>
+</li>
+<li><p>依赖文件</p>
+</li>
+<li><p>从哪下载以及如何下载软件包</p>
+</li>
+<li><p>软件包补丁信息:是否需要补丁、补丁下载地址及方式等</p>
+</li>
+<li><p>如何配置、如何编译软件包、安装位置等</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Machine</strong></p>
+</li>
+</ul>
+<p>R45 的 machine 文件 s32r45evb.conf，如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/e13e6491-bc79-42d2-b667-ae8df05bbedd.png" alt="image"></p>
+<p>主要对 U-Boot、Kernel 的行为做一些默认配置。</p>
+<ul>
+<li><strong>Distro</strong></li>
+</ul>
+<p>Distro 的配置文件主要对发行软件做一些控制。R45的 distro 文件如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/6e7be361-51a2-4c17-807b-6d52cf25733f.png" alt="image"></p>
+<ul>
+<li><strong>使能 layer</strong></li>
+</ul>
+<p>在 nxp-setup-alb.sh 文件中添加指定的 layer 可以实现自动添加，也可以手动在 local.conf 文件中添加。</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/f1836528-aa39-432a-a54c-0916acbef40f.png" alt="image"></p>
+<ul>
+<li><strong>Bitbake</strong></li>
+</ul>
+<p>bitbake 是 yocto 系统的构建工具。可以简单的认为它类似 make 工具，make 工具的行为是由 Makefile 决定的，而 bitbake 的行为是由 .bb、.bbapend文件决定的。bitbake 的命令很多，可以执行bitbake -h 查看或者参考链接 <a target="_blank" rel="noopener" href="https://docs.yoctoproject.org/bitbake/2.0/index.html">https://docs.yoctoproject.org/bitbake/2.0/index.html</a></p>
+<p>bitbake 常用命令不完全举例如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/03eb448e-eb0e-4115-89a4-8cfc4a66ff4d.png" alt="image"></p>
+<h2 id="4-yocto-实践"><a href="#4-yocto-实践" class="headerlink" title="4. yocto 实践"></a>4. yocto 实践</h2><ul>
+<li><strong>新建 sinpro layer</strong></li>
+</ul>
+<p>yocto 以补丁的形式（包括源码和配置文件）关联不同的layer，所以我们不会直接改其他 layer。我们所有的定制都在meta-sinpro层完成。新建 layer 的具体过程如下，且测试驱动的编译：</p>
+<pre><code>$ bitbake-layers create-layer ../sources/meta-sinpro
+$ cd ../sources
+$ cp -rp ../poky/meta-skeleton/recipes-kernel/ .
+$ bitbake hello-mod; #（hello-mod 是.bb文件的名字，与源文件名无关）
+</code></pre>
+<ul>
+<li><p><strong>改 U-Boot 源码（手动）</strong></p>
+<ul>
+<li><p>进入 ~&#x2F;NXP&#x2F;Workspace&#x2F;rsdk-yocto-build&#x2F;build_s32r45evb&#x2F;tmp&#x2F;work&#x2F;s32r45evb-fsl-linux&#x2F;u-boot-s32&#x2F;2020.04-r0&#x2F;git 修改代码；</p>
+</li>
+<li><p>bitbake u-boot-s32 -c clearnsstate &amp;&amp; bitbake uboot-s32 重新编译；</p>
+</li>
+<li><p>验证 patch 是ok；</p>
+</li>
+<li><p>git commit 提交这次修改；</p>
+</li>
+<li><p>git diff 生成 patch；</p>
+</li>
+<li><p>把 patch 拷贝到 meta-sinpro中，并修改相关 .bb 文件；</p>
+</li>
+</ul>
+</li>
+<li><p><strong>改 U-Boot 源码（自动）</strong></p>
+</li>
+</ul>
+<p>所谓自动实际上是用 devtool 工具，具体操作如下：</p>
+<ul>
+<li><p>devtool modify u-boot-s32，会在build目录下生成workspace目录，并把u-boot-s32的源码提取到此处；</p>
+</li>
+<li><p>修改源码；</p>
+</li>
+<li><p>devtool build u-boot-s32 编译uboot；</p>
+</li>
+<li><p>git commit 提交版本；</p>
+</li>
+<li><p>devtool finish u-boot-s32 ..&#x2F;meta-sinpro，自动提交patch到指定layer；</p>
+</li>
+</ul>
+<h2 id="5-tips"><a href="#5-tips" class="headerlink" title="5. tips"></a>5. tips</h2><ul>
+<li><strong>下载 repo 改清华源</strong></li>
+</ul>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/av9kqD2R2PzNlVxe/img/b117b303-8da3-434e-8d87-c0482f3afb66.png" alt="image"></p>
+<p>下载NXP bsp 改清华源</p>
+<ul>
+<li><strong>下载NXP bsp 改清华源</strong></li>
+</ul>
+<p>repo init -u <a target="_blank" rel="noopener" href="https://source.codeaurora.org/external/autobsps32/auto_yocto_bsp">https://source.codeaurora.org/external/autobsps32/auto\_yocto\_bsp</a>-b release&#x2F;bsp32.0**--repo-url&#x3D;<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/*/">https://mirrors.tuna.tsinghua.edu.cn/git/git-repo\*\</a>*</p>
+<ul>
+<li><strong>bitbake中断后继续报错</strong></li>
+</ul>
+<p>中断后会生成 .lock 文件，重新接着编译会出错，删除.lock文件就好了。</p>
+<ul>
+<li><strong>git 仓库默认协议下载慢</strong></li>
+</ul>
+<p>指定https协议，有时候会快很多，操作如下：</p>
+<p>URL ?&#x3D; “git:&#x2F;&#x2F;source.codeaurora.org&#x2F;external&#x2F;autobsps32&#x2F;linux;protocol&#x3D;https”</p>
+<ul>
+<li><p><strong>参考网站</strong></p>
+<ul>
+<li><p>开源 layer： <a target="_blank" rel="noopener" href="http://layers.openembedded.org/layerindex/branch/master/layers/">http://layers.openembedded.org/layerindex/branch/master/layers/</a></p>
+</li>
+<li><p>Yocto 官方文档，搞懂yocto，这个文档要多看： <a target="_blank" rel="noopener" href="https://docs.yoctoproject.org/index.html">https://docs.yoctoproject.org/index.html</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/" data-id="cltpk0nnv000394ms9njefiya" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-003-2.5G PHY配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:42:15.189Z" itemprop="datePublished">2024-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="003-2-5G-PHY配置"><a href="#003-2-5G-PHY配置" class="headerlink" title="003-2.5G PHY配置"></a>003-2.5G PHY配置</h1><h4 id="1-改启动配置"><a href="#1-改启动配置" class="headerlink" title="1. 改启动配置"></a>1. 改启动配置</h4><p>    • 改hwconfig为如下：</p>
+<p>    hwconfig&#x3D;pcie0:mode&#x3D;rc,clock&#x3D;int;pcie1:mode&#x3D;sgmii,clock&#x3D;ext,fmhz&#x3D;125,xpcs_mode&#x3D;2G5 </p>
+<p>    • 改mmcargs为如下：</p>
+<p>     mmcargs&#x3D;setenv bootargs console&#x3D;ttyLF0,115200 root&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw earlycon mem&#x3D;2G</p>
+<h4 id="2-修改设备树"><a href="#2-修改设备树" class="headerlink" title="2. 修改设备树"></a>2. 修改设备树</h4><p>使能gmac1设备，如下图：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/EPd6l2BQXzDyl7Ma/img/5827cab9-3f3f-4e8f-8e95-e7b072864173.png" alt="image"></p>
+<p>重新编译替换dtb文件。</p>
+<h4 id="3-改网络配置文件"><a href="#3-改网络配置文件" class="headerlink" title="3. 改网络配置文件"></a>3. 改网络配置文件</h4><p>系统启动后，改 ​&#x2F;etc&#x2F;network&#x2F;interfaces​ 文件，改动如下：</p>
+<p><img src="https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/EPd6l2BQXzDyl7Ma/img/7d92e211-43d3-497f-ac2e-8ae6d65377b9.png" alt="image"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/" data-id="cltpk0nnl000094msg8f26vdp" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2-5G-PHY-Configuration" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:41:27.000Z" itemprop="datePublished">2024-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/2-5G-PHY-Configuration/" data-id="cltpk0nns000194ms3ybk32u1" data-title="2.5G_PHY_Configuration" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Yocto-User-Manual-0" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:41:04.000Z" itemprop="datePublished">2024-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/Yocto-User-Manual-0/" data-id="cltpk0nnw000494ms1c3i0en4" data-title="Yocto_User_Manual" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-OptimizedStrategy" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/02/26/OptimizedStrategy/" class="article-date">
+  <time class="dt-published" datetime="2024-02-26T07:54:21.000Z" itemprop="datePublished">2024-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2024/02/26/OptimizedStrategy/">OptimizedStrategy</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="性能提升优化"><a href="#性能提升优化" class="headerlink" title="性能提升优化"></a>性能提升优化</h1><h2 id="DVE-stage4-和-DOA-颗粒度对齐，流水线化，实现点级并行"><a href="#DVE-stage4-和-DOA-颗粒度对齐，流水线化，实现点级并行" class="headerlink" title="DVE stage4 和　DOA　颗粒度对齐，流水线化，实现点级并行"></a>DVE stage4 和　DOA　颗粒度对齐，流水线化，实现点级并行</h2><ul>
+<li>找到 azi 和 ele 在不同硬件上的执行时间，最小颗粒度(时间3:1)</li>
+<li>查看倍数关系</li>
+<li>找到相对应的硬件资源，所需要的硬件是时间的反比(1:3),目的是流水线时间相同，达到最完美流水线</li>
+<li>优化策略之一可以看颗粒度是否是最小值或者原子</li>
+<li></li>
+</ul>
+<h2 id="时间优化策略"><a href="#时间优化策略" class="headerlink" title="时间优化策略"></a>时间优化策略</h2><ul>
+<li>要将一个周期的时间从90ms缩短到40ms以内，您可以考虑以下几种方法和技术模型：</li>
+</ul>
+<ol>
+<li><p><strong>并行处理：</strong> 首先，您可以尝试并行处理阶段，以缩短整个周期的执行时间。这意味着同时执行多个阶段，而不是等待一个阶段完成后才开始下一个阶段。您可以使用多线程或者异步编程来实现并行处理。比如，在一个线程中处理阶段1和阶段2，另一个线程处理阶段3和阶段4，最后一个阶段5由主线程处理。</p>
+</li>
+<li><p><strong>流水线处理：</strong> 类似于您之前提到的流水线模型，您可以将不同阶段的任务拆分成更小的子任务，并将它们组合成一个流水线。这样，当一个阶段完成一部分任务时，下一个阶段可以同时开始执行。这种方式可以提高整个流程的吞吐量。比如，可以将每个阶段细分成更小的子任务，使得每个子任务的执行时间更短，以便更快地完成整个阶段。</p>
+</li>
+<li><p><strong>预处理和缓存：</strong> 如果可能的话，您可以尝试预处理和缓存数据，以减少每个阶段的计算量。这样可以在一个周期内更快地完成所有阶段。比如，在每个周期开始前预先计算可能需要的数据，并将其缓存起来，以便后续阶段使用。</p>
+</li>
+<li><p><strong>优化算法和数据结构：</strong> 可以尝试优化阶段中的算法和数据结构，以减少计算复杂度和内存访问时间。这样可以加快每个阶段的执行速度，从而缩短整个周期的时间。比如，选择更高效的算法或数据结构，避免不必要的重复计算等。</p>
+</li>
+<li><p><strong>硬件加速：</strong> 如果可能的话，可以考虑使用专用硬件加速器来加速某些阶段的计算。比如，使用GPU进行并行计算，使用FPGA进行定制化的加速计算等。</p>
+</li>
+</ol>
+<p>综上所述，要将周期时间缩短到40ms以内，您可以尝试并行处理、流水线处理、预处理和缓存、优化算法和数据结构以及硬件加速等方法。具体选择哪种方法取决于您的具体需求、系统资源和技术条件。</p>
+<h3 id="并行处理方案"><a href="#并行处理方案" class="headerlink" title="并行处理方案"></a>并行处理方案</h3><ul>
+<li>在您的情况下，由于每个阶段的输入数据是动态变化的，并且每个阶段都依赖前一个阶段的结果，所以需要特别小心地设计并行处理方案，以确保数据的正确性和一致性。</li>
+</ul>
+<p>以下是一种可能的并行处理方案：</p>
+<ol>
+<li><p><strong>数据分离：</strong> 首先，考虑将输入数据的采样和阶段处理分开。这意味着您可以在一个线程中负责数据的采样，而另一个线程负责阶段的处理。这样，即使阶段处理的速度比采样快，也不会影响到下一周期的数据采样。</p>
+</li>
+<li><p><strong>多线程处理：</strong> 在阶段处理的线程中，您可以使用多个线程来处理不同的阶段。这样可以并行地处理多个阶段，以提高整个流程的速度。每个线程负责一个阶段的处理，通过线程间的通信（如队列）将阶段结果传递给下一个阶段。</p>
+</li>
+<li><p><strong>数据缓冲：</strong> 在数据采样阶段，您可以将采样数据存储到缓冲区中，并使用互斥锁或其他同步机制来确保在数据被读取之前不会被修改。这样，即使阶段处理的速度比数据采样快，也可以保证阶段处理始终使用的是一致的输入数据。</p>
+</li>
+<li><p><strong>任务调度：</strong> 使用合适的任务调度策略来管理线程的执行顺序和资源利用率。例如，可以根据不同阶段的计算量和依赖关系来动态调整线程的数量和优先级，以最大程度地利用系统资源并确保数据的及时处理。</p>
+</li>
+<li><p><strong>异常处理：</strong> 考虑可能出现的异常情况，如阶段处理时间超过了一个周期的情况。在这种情况下，您可以选择丢弃当前周期的数据，继续处理下一个周期的数据，或者采取其他适当的措施来处理异常情况。</p>
+</li>
+</ol>
+<p>综上所述，通过合理设计数据分离、多线程处理、数据缓冲、任务调度和异常处理等机制，您可以实现并行处理来加速整个流程的执行速度，同时确保数据的正确性和一致性。</p>
+<h3 id="整体方案考量"><a href="#整体方案考量" class="headerlink" title="整体方案考量"></a>整体方案考量</h3><p>要将整个周期的执行时间缩短到40ms以内，您可以采取以下一些措施：</p>
+<ol>
+<li><p><strong>优化算法和数据结构：</strong> 对每个阶段的处理算法进行优化，使得其在更短的时间内完成任务。同时，优化数据结构以提高数据访问和处理的效率。</p>
+</li>
+<li><p><strong>并行处理和流水线：</strong> 利用并行处理和流水线的概念，将不同的任务并行执行，并将整个任务流程划分为多个阶段，使得每个阶段可以并行处理，从而减少整个周期的执行时间。</p>
+</li>
+<li><p><strong>硬件加速：</strong> 如果可能的话，可以考虑使用硬件加速器（如GPU、FPGA等）来加速部分任务的执行，特别是对于计算密集型的任务。</p>
+</li>
+<li><p><strong>异步编程：</strong> 使用异步编程的技术，将部分耗时的操作异步执行，从而不阻塞主线程的执行，提高整体的并发度和效率。</p>
+</li>
+<li><p><strong>系统优化：</strong> 对系统进行优化，包括操作系统的调优、减少系统资源的占用、优化内存和存储访问等，以提高系统的响应速度和处理能力。</p>
+</li>
+<li><p><strong>并发控制和同步优化：</strong> 确保在并发执行过程中的线程安全性，并优化同步机制，减少同步的开销，提高并发执行的效率。</p>
+</li>
+<li><p><strong>精细调优和性能分析：</strong> 使用性能分析工具对系统进行精细调优，找出系统的瓶颈和性能瓶颈，并进行针对性的优化。</p>
+</li>
+</ol>
+<p>通过综合使用以上方法，您可以将整个周期的执行时间缩短到40ms以内，提高系统的响应速度和处理效率。需要根据具体的应用场景和系统需求选择合适的优化方案，并进行深入的性能分析和调优。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/02/26/OptimizedStrategy/" data-id="cltpk0nny000594ms1rbw96ey" data-title="OptimizedStrategy" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LinuxScheduleNote" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/02/02/LinuxScheduleNote/" class="article-date">
+  <time class="dt-published" datetime="2024-02-02T01:53:29.000Z" itemprop="datePublished">2024-02-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2024/02/02/LinuxScheduleNote/">LinuxScheduleNote</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="WaitQueue-wakeup"><a href="#WaitQueue-wakeup" class="headerlink" title="WaitQueue &amp;&amp; wakeup"></a>WaitQueue &amp;&amp; wakeup</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sky-heaven/p/7111996.html">https://www.cnblogs.com/sky-heaven/p/7111996.html</a></li>
+<li>独占等待和共享等待</li>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ___wait_event(wq_head, condition, state, exclusive, ret, cmd)       \</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line">(&#123;                                      \</span><br><span class="line"></span><br><span class="line">    __label__ __out;                            \</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> wait_queue_entry __wq_entry;                 \</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span> __ret = ret;   <span class="comment">/* explicit shadow */</span>               \</span><br><span class="line"></span><br><span class="line">                                        \</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化wait_queue_entry类型的变量</span></span><br><span class="line"></span><br><span class="line">    init_wait_entry(&amp;__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : <span class="number">0</span>);    \</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;                              \</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*如果state为可被中断且有挂起的signal信号，返回-ERESTARTSYS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">        *否则把wait_queue_entry添加到wait_queue_head链表中，并把进程状态设置为state</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">        *这里只更改了进程状态，并没有执行调度。*/</span></span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> __int = prepare_to_wait_event(&amp;wq_head, &amp;__wq_entry, state);\</span><br><span class="line"></span><br><span class="line">                                        \</span><br><span class="line"></span><br><span class="line">        <span class="comment">//若condition满足，则跳出for循环，在finish_wait把进程状态设置为task_running</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (condition)                          \</span><br><span class="line"></span><br><span class="line">            <span class="keyword">break</span>;                          \</span><br><span class="line"></span><br><span class="line">                                        \</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (___wait_is_interruptible(state) &amp;&amp; __int) &#123;         \</span><br><span class="line"></span><br><span class="line">            __ret = __int;                      \</span><br><span class="line"></span><br><span class="line">            <span class="keyword">goto</span> __out;                     \</span><br><span class="line"></span><br><span class="line">        &#125;                               \</span><br><span class="line"></span><br><span class="line">                                        \</span><br><span class="line"></span><br><span class="line">        <span class="comment">//cmd即为schedule()或schedule_timeout()或...，在这里触发进程调度</span></span><br><span class="line"></span><br><span class="line">        cmd;                                \</span><br><span class="line"></span><br><span class="line">    &#125;                                   \</span><br><span class="line"></span><br><span class="line">     <span class="comment">//把进程状态设置为task_running，并将wait_queue_entry从wait_queue_head链表移除</span></span><br><span class="line"></span><br><span class="line">    finish_wait(&amp;wq_head, &amp;__wq_entry);                 \</span><br><span class="line"></span><br><span class="line">__out:  __ret;                                  \</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这段代码是一个宏定义，定义了一个名为 `___wait_event` 的宏，它是对等待事件的封装。这个宏包含了一系列的操作，用于在 Linux 内核中等待特定条件的发生。以下是对这段代码的主要解释：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">1. `__label__ __out;`：定义了一个标签 `__out`，用于在后面的代码中作为跳转目标。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">2. `struct wait_queue_entry __wq_entry;`：定义了一个 `wait_queue_entry` 类型的变量 `__wq_entry`，用于表示等待队列中的一个条目。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">3. `long __ret = ret;`：定义了一个 `__ret` 变量，用于存储等待过程中的返回值。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">4. `init_wait_entry(&amp;__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);`：初始化 `__wq_entry`，设置其标志（`WQ_FLAG_EXCLUSIVE`）表示是否是独占等待。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">5. `for (;;) &#123; ... &#125;`：开始一个无限循环，用于等待条件满足。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">6. `long __int = prepare_to_wait_event(&amp;wq_head, &amp;__wq_entry, state);`：调用 `prepare_to_wait_event` 函数，准备等待事件。根据 `state` 的值和是否是可中断等待，可能会导致返回 `-ERESTARTSYS`。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">7. `if (condition) break;`：如果条件满足，则跳出循环，结束等待。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">8. `if (___wait_is_interruptible(state) &amp;&amp; __int) &#123; ... &#125;`：检查是否是可中断等待，并且是否有中断发生。如果是，记录中断的返回值，跳转到标签 `__out`。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">9. `cmd;`：执行传递进来的命令，通常是触发进程调度的操作，例如 `schedule()` 或 `schedule_timeout()`。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">10. `finish_wait(&amp;wq_head, &amp;__wq_entry);`：完成等待，将进程状态设置为 `task_running`，并将 `__wq_entry` 从等待队列中移除。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">11. `__out: __ret;`：定义了标签 `__out`，并返回 `__ret`，这里是整个宏的返回值。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">这个宏封装了在等待条件满足时执行一系列操作的过程，它是 Linux 内核中等待事件的一种实现方式。根据具体的使用场景，这段代码可能会与其他相关的内核机制和函数一起工作，例如等待队列和调度器。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> 上面程序的执行过程：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">1．用当前的进程描述块（PCB）初始化一个wait_queue描述的等待任务。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">2．在等待队列锁资源的保护下，将等待任务加入等待队列。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">3．判断等待条件是否满足，如果满足，那么将等待任务从队列中移出，退出函数。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">4．如果条件不满足，那么任务调度，将CPU资源交与其它任务。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">5．当睡眠任务被唤醒之后，需要重复（2）、（3）步骤，如果确认条件满足，退出等待事件函数。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 我在一个程序中因为使用使用wait_event_interruptible()遇到了很大的麻烦，原因就是不知道condition在函数中具体起个什么作用，通过分析源码终于搞清楚。（后面会有专门的文章来介绍那个问题。）</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">等待队列编程接口：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">wait_event(wq, condition)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">这是一个宏，让当前任务处于等待事件状态。输入参数如下：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@wq：等待队列</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@conditions：等待条件</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="为每个线程设置name-pthread-setname-np"><a href="#为每个线程设置name-pthread-setname-np" class="headerlink" title="为每个线程设置name,pthread_setname_np"></a>为每个线程设置name,pthread_setname_np</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span>* <span class="title function_">thread_function</span><span class="params">(<span class="type">void</span> *arg)</span> &#123;</span><br><span class="line">    <span class="type">int</span> thread_number = *(<span class="type">int</span>*)arg;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造线程名字</span></span><br><span class="line">    <span class="type">char</span> thread_name[<span class="number">20</span>];</span><br><span class="line">    <span class="built_in">snprintf</span>(thread_name, <span class="keyword">sizeof</span>(thread_name), <span class="string">&quot;Thread-%d&quot;</span>, thread_number);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置线程名字</span></span><br><span class="line">    pthread_setname_np(pthread_self(), thread_name);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 具体线程的工作内容...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">pthread_t</span> threads[<span class="number">4</span>];</span><br><span class="line">    <span class="type">int</span> thread_numbers[] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">        pthread_create(&amp;threads[i], <span class="literal">NULL</span>, thread_function, &amp;thread_numbers[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">        pthread_join(threads[i], <span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/02/02/LinuxScheduleNote/" data-id="cltpk0nnu000294msesu60ake" data-title="LinuxScheduleNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-yocto-user-manual" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2024/01/03/yocto-user-manual/" class="article-date">
@@ -95,14 +596,14 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="Default-Build-Parameters-Configuration"><a href="#Default-Build-Parameters-Configuration" class="headerlink" title="Default Build Parameters Configuration"></a>Default Build Parameters Configuration</h1><ul>
+        <h1 id="1-Default-Build-Parameters-Configuration"><a href="#1-Default-Build-Parameters-Configuration" class="headerlink" title="1.Default Build Parameters Configuration"></a>1.Default Build Parameters Configuration</h1><ul>
 <li>open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh </li>
 <li><code>MACHINE=&quot;s32r45evb&quot;</code> can set the machine default</li>
 <li><code>SOURCESDIR=&quot;NXP_R45_meta_test&quot;</code> can set the default user meta layer</li>
 <li><code>LAYER_LIST=&quot;meta-test&quot;</code> can add your own meta layer into yocto project</li>
 <li>you can replace <code>DOWNLOADS=&quot;$ROOTDIR/downloads&quot;</code> to <code>/home/user/resource/yocto/bsp37/downloads</code> can set the download dependency resources(linux,bsp,and so on)</li>
 </ul>
-<h1 id="Floder-Introduction-and-common-methods-to-add-hello-ko-into-image"><a href="#Floder-Introduction-and-common-methods-to-add-hello-ko-into-image" class="headerlink" title="Floder Introduction and common methods to add hello.ko into image"></a>Floder Introduction and common methods to add hello.ko into image</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rsdk-yocto-build-32 tree</span><br><span class="line">|--NXP_R45_meta_test   - user Repository</span><br><span class="line">|   |--meta-alb</span><br><span class="line">|   |--meta-freesale</span><br><span class="line">|   |--meta-linaro</span><br><span class="line">|   |--meta-openembedded</span><br><span class="line">|   |--meta-qoriq</span><br><span class="line">|   |--meta-rsdk</span><br><span class="line">|   |--meta-security</span><br><span class="line">|   |--meta-test</span><br><span class="line">|   |   |--conf</span><br><span class="line">|   |   |   |--layer.conf</span><br><span class="line">|   |   |--packagegroups</span><br><span class="line">|   |   |   |--packagegroup-test-drivers.bb</span><br><span class="line">|   |   |--recipes-core</span><br><span class="line">|   |   |   |--packagegroup</span><br><span class="line">|   |   |   |   |--fsl-image-auto.bbappend</span><br><span class="line">|   |   |--recipes-kernel</span><br><span class="line">|   |   |   |--hello</span><br><span class="line">|   |   |   |   |--files</span><br><span class="line">|   |   |   |   |   |--testhello.c</span><br><span class="line">|   |   |   |   |   |--Makefile</span><br><span class="line">|   |   |   |   |   |--COPYING</span><br><span class="line">|   |   |   |   |--hello-test.bb</span><br><span class="line">|   |   |--COPYING.MIT</span><br><span class="line">|   |   |--README.md</span><br><span class="line">|   |--meta-virtualization</span><br><span class="line">|   |--poky</span><br><span class="line">|--build_test          - build template files</span><br><span class="line">|--downloads           - is null will be remove to common floder or delete</span><br><span class="line">|--sstate-cache        - build cache</span><br></pre></td></tr></table></figure>
+<h1 id="F2-loder-Introduction-and-common-methods-to-add-hello-ko-into-image"><a href="#F2-loder-Introduction-and-common-methods-to-add-hello-ko-into-image" class="headerlink" title="F2.loder Introduction and common methods to add hello.ko into image"></a>F2.loder Introduction and common methods to add hello.ko into image</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rsdk-yocto-build-32 tree</span><br><span class="line">|--NXP_R45_meta_test   - user Repository</span><br><span class="line">|   |--meta-alb</span><br><span class="line">|   |--meta-freesale</span><br><span class="line">|   |--meta-linaro</span><br><span class="line">|   |--meta-openembedded</span><br><span class="line">|   |--meta-qoriq</span><br><span class="line">|   |--meta-rsdk</span><br><span class="line">|   |--meta-security</span><br><span class="line">|   |--meta-test</span><br><span class="line">|   |   |--conf</span><br><span class="line">|   |   |   |--layer.conf</span><br><span class="line">|   |   |--packagegroups</span><br><span class="line">|   |   |   |--packagegroup-test-drivers.bb</span><br><span class="line">|   |   |--recipes-core</span><br><span class="line">|   |   |   |--packagegroup</span><br><span class="line">|   |   |   |   |--fsl-image-auto.bbappend</span><br><span class="line">|   |   |--recipes-kernel</span><br><span class="line">|   |   |   |--hello</span><br><span class="line">|   |   |   |   |--files</span><br><span class="line">|   |   |   |   |   |--testhello.c</span><br><span class="line">|   |   |   |   |   |--Makefile</span><br><span class="line">|   |   |   |   |   |--COPYING</span><br><span class="line">|   |   |   |   |--hello-test.bb</span><br><span class="line">|   |   |--COPYING.MIT</span><br><span class="line">|   |   |--README.md</span><br><span class="line">|   |--meta-virtualization</span><br><span class="line">|   |--poky</span><br><span class="line">|--build_test          - build template files</span><br><span class="line">|--downloads           - is null will be remove to common floder or delete</span><br><span class="line">|--sstate-cache        - build cache</span><br></pre></td></tr></table></figure>
 <p><code>layer.conf</code> </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># add next into layer.conf</span><br><span class="line">IMAGE_INSTALL_append=&quot; hello-test&quot;`</span><br><span class="line">IMAGE_OVERHEAD_FACTOR = &quot;3&quot;`</span><br></pre></td></tr></table></figure>
 
@@ -123,6 +624,18 @@
 <li>excute <code>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-</code>,Build u-boot&#x2F;kernel</li>
 </ul>
 </li>
+</ul>
+<h1 id="3-For-example-add-a-new-Fdma-driver-into-yocto-project"><a href="#3-For-example-add-a-new-Fdma-driver-into-yocto-project" class="headerlink" title="3.For example add a new Fdma driver into yocto project"></a>3.For example add a new Fdma driver into yocto project</h1><p>|   |–meta-test<br>|   |   |–conf<br>|   |   |   |–layer.conf<br>|   |   |–packagegroups<br>|   |   |   |–packagegroup-test-drivers.bb<br>|   |   |–recipes-core<br>|   |   |   |–packagegroup<br>|   |   |   |   |–fsl-image-auto.bbappend<br>|   |   |   |–rsdk_env.inc<br>|   |   |–recipes-kernel<br>|   |   |   |–fdma<br>|   |   |   |   |–fdma-driver.bb<br>|   |   |   |–rsdk     - will be add into .bbappend<br>|   |   |   |   |–files<br>|   |   |   |   |   |–fdma_driver.patch    - and you can generate the patch for osal-kernel-lib.bbappend<br>|   |   |   |   |–osal-kernel-lib.bbappend<br>|   |   |   |   |–rsdk_kmod.inc<br>|   |   |   |–hello<br>|   |   |   |   |–files<br>|   |   |   |   |   |–testhello.c<br>|   |   |   |   |   |–Makefile<br>|   |   |   |   |   |–COPYING<br>|   |   |   |   |–hello-test.bb<br>|   |   |–COPYING.MIT<br>|   |   |–README.md</p>
+<ul>
+<li>add your <code>fdma_driver.patch</code> into <code>osal-kernel-lib.bbappend</code></li>
+<li>add your <code>fdma-driver.bb</code> into <code>packagegroup-test-drivers.bb</code></li>
+<li>add your <code>packagegroup-test-drivers.bb</code> into <code>fsl-image-auto.bbappend</code></li>
+</ul>
+<p>above all, and you can generate&#x2F;add a new driver into your yocto image and path is rootfs(lib&#x2F;modules&#x2F;xxx&#x2F;extra&#x2F;fdma-driver.ko)</p>
+<h1 id="if-you-want-to-debug-your-change-you-did-not-need-to-rebuild-all-the-sd-card-image-and-just-compiler-linux-image-and-dtb-and-then-replace-it-in-sd-card"><a href="#if-you-want-to-debug-your-change-you-did-not-need-to-rebuild-all-the-sd-card-image-and-just-compiler-linux-image-and-dtb-and-then-replace-it-in-sd-card" class="headerlink" title="if you want to debug your change ,you did not need to rebuild all the sd card image,and just compiler linux image and dtb, and then replace it in sd card"></a>if you want to debug your change ,you did not need to rebuild all the sd card image,and just compiler linux image and dtb, and then replace it in sd card</h1><ul>
+<li><code>bitbake linux-s32  </code> to generate the linux resources and you can add your changed into this,and if the debug is ok ,you can generate the patch</li>
+<li><code>bitbake linux-s32 -c do_compile -f </code> will generate the linux image and dtb only, and the image and the dtb the path is <code>build/tmp/work/s32r45evb-fsl-linux/linux-s32/5.15.96-r0/build/arch/arm64/boot/Image</code> and the <code>build/tmp/work/s32r45evb-fsl-linux/linux-s32/5.15.96-r0/build/arch/arm64/boot/dts/freesacle/s32r45-evb.dtb</code></li>
+<li>when you want to generate a patch by Yocto, i suggest you <code>git add -all</code> the patch apply changes and <code>git commit -m &quot;xxx&quot;</code>first, and then add your change into the resources.</li>
 </ul>
 
       
@@ -345,555 +858,6 @@
 
 
   
-    <article id="post-Linux-System-command-description" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/10/30/Linux-System-command-description/" class="article-date">
-  <time class="dt-published" datetime="2023-10-30T08:34:07.000Z" itemprop="datePublished">2023-10-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><h3 id="常用命令总结"><a href="#常用命令总结" class="headerlink" title="常用命令总结"></a>常用命令总结</h3><pre><code>1.ps -eLo pid,tid,%cpu,%mem,psr,comm
-2.cpu load 1S 打印一次： mpstat -P ALL 1
-3.nice -n -20 ./xxx.elf
-4.git diff &gt; xxx.patch
-5.git diff --name-only
-    git diff HEAD file1 &gt; file1.patch  file1文件包含所在的路径
-    git diff HEAD file2 &gt; file2.patch
-</code></pre>
-<h3 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h3><pre><code>`ps`命令提供了许多选项和格式化输出标志，以满足不同需求。以下是一些常用的`ps`选项和格式化输出标志：
-
-1. **常用`ps`选项**：
-- `-e`: 显示系统中所有进程。
-- `-f`: 显示详细的进程信息，包括父进程、终端、CPU使用率等。
-- `-l`: 显示更详细的进程信息，包括进程状态、优先级、虚拟内存大小等。
-- `-aux`: 显示所有进程的详细信息，包括用户、CPU使用率等。
-- `-A`: 显示所有进程，包括守护进程（daemon）。
-- `-t`: 显示与指定终端关联的进程。
-
-1. **格式化输出标志**：
-- `pid`: 进程ID。
-- `ppid`: 父进程ID。
-- `uid`: 用户ID。
-- `gid`: 用户组ID。
-- `tty`: 终端。
-- `ni`: 进程的nice值。
-- `sz`: 进程使用的虚拟内存大小。
-- `vsz`: 进程使用的虚拟内存大小（以K为单位）。
-- `rss`: 进程使用的物理内存大小。
-- `%cpu`: CPU利用率。
-- `%mem`: 内存利用率。
-- `comm`: 进程名称。
-
-1. **其他常用选项**：
-- `-o`: 允许用户自定义输出格式，可以选择要显示的字段。
-- `-C`: 仅列出指定命令名的进程。
-- `-u`: 列出指定用户的进程。
-- `-k`: 列出指定进程组的进程。
-- `-r`: 列出正在运行的进程。
-
-这些选项和输出标志可以组合使用，以便获取所需的信息。要了解更多选项和输出格式，你可以查阅`ps`命令的手册页，使用`man ps`命令或者`ps --help`查看可用选项。
-常用命令： ps -eLo pid,tid,%cpu,%mem,psr,comm
-cpu load 1S 打印一次： mpstat -P ALL 1
-</code></pre>
-<h3 id="linux动态库测试程序"><a href="#linux动态库测试程序" class="headerlink" title="linux动态库测试程序"></a>linux动态库测试程序</h3><h4 id="step"><a href="#step" class="headerlink" title="step"></a>step</h4><pre><code>在编译动态库时，您需要使用`-shared`选项来告诉编译器生成共享库，同时使用`-fPIC`选项确保生成位置无关的代码。下面是一个简单的示例：
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -o sum.o -c -fPIC sum.c</span><br><span class="line">gcc -o libsum.so -shared sum.o</span><br></pre></td></tr></table></figure>
-
-这里假设您的源文件名为`sum.c`。第一行将`sum.c`编译成一个位置无关的目标文件`sum.o`，而第二行将其链接成共享库`libsum.so`。
-
-如果您要指定链接时的库的名称，可以使用`-o`选项。例如：
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o libmylibrary.so -shared sum.o</span><br></pre></td></tr></table></figure>
-
-这将生成名为`libmylibrary.so`的共享库。
-
-如果您的动态库依赖于其他库，您可能需要通过`-l`和`-L`选项来指定链接库的名称和库的路径。例如，如果您的动态库依赖于`libm`，则可以这样编译：
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o libsum.so -shared sum.o -lm</span><br></pre></td></tr></table></figure>
-
-这里的`-lm`表示链接数学库。
-
-最终，如果您的测试程序也在一个单独的文件中，您可以使用以下命令来编译它：
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o test_sum test_sum.c -ldl -lsum -L.</span><br></pre></td></tr></table></figure>
-
-这里，`-lsum`表示链接`libsum.so`，而`-L.`表示在当前目录中查找库。请确保在运行测试程序之前，系统能够找到动态库，可以通过设置`LD_LIBRARY_PATH`环境变量或将动态库放在系统库路径下来实现。
-</code></pre>
-<h4 id="example"><a href="#example" class="headerlink" title="example"></a>example</h4><pre><code>libSum.so
-</code></pre>
-<p>‘’’C<br>    #include &lt;stdio.h&gt;<br>    extern “C”<br>    {<br>        int Sum(int a,int b)<br>        {<br>            printf(“Input a &#x3D; %d,b&#x3D; %d\n”,a,b);<br>            return a+b;<br>        }<br>    }<br>    &#x2F;&#x2F;Visual Studio 2022 打开 C++ linux创建控制台工程，然后选择生成so动态库，连接远程linux，生成不同平台的.so<br>‘’’<br>    main.c:<br>‘’’C<br>    #include &lt;stdio.h&gt;<br>    #include &lt;dlfcn.h&gt;<br>    #include &lt;stdlib.h&gt;<br>    extern int Sum(int a,int b);<br>    int main(void)<br>    {<br>        printf(“Result of Sum3,4() : %d\n”,Sum(3,4));<br>        return 0;<br>    }<br>‘’’<br>    编译main.c  sudo cp libSum.so &#x2F;usr&#x2F;lib<br>                gcc -o main main.c -ldl -lSum -L.</p>
-<h3 id="配置实时进程的方法"><a href="#配置实时进程的方法" class="headerlink" title="配置实时进程的方法"></a>配置实时进程的方法</h3><p>‘’’C<br>    &#x2F;* 在Linux系统中,可以通过以下步骤将一个进程配置为实时进程:</p>
-<pre><code>在编译程序时,添加实时标志:-pthread -lrt
-在程序代码中使用实时调度策略:
-cpp
-
-Copy code
-
-#include &lt;sched.h&gt;
-
-// 在主线程中
-struct sched_param param;
-param.sched_priority = sched_get_priority_max(SCHED_FIFO);
-sched_setscheduler(0, SCHED_FIFO, &amp;param);
-这会将主线程设置为FIFO实时调度。
-
-在程序启动前,使用chrt命令将其优先级设为最大:
-Copy code
-
-chrt -f -p 99 ./your_program
-将程序进程锁定到特定CPU核:
-Copy code
-
-taskset 0x1 ./your_program
-这会锁定到核1上。
-
-调整实时调度器参数:
-在/etc/security/limits.conf中加入:
-
-Copy code
-
-@users       -       rtprio     99
-禁用地址空间随机化:
-Copy code
-
-echo 0 &gt; /proc/sys/kernel/randomize_va_space
-通过以上步骤,就可以获得较高的实时性能。当然,还需要避免在程序中有长时间的阻塞和等待。
-
-Copy
-
-chrt -f -p 99 ./your_program 和nice -n -20 ./your_program 是一样的效果吗 如果不是有什么区别呢
-
-PZ
-chrt 和 nice 这两个命令都可以影响 Linux 进程的调度优先级,但有一些区别:
-
-chrt 用于设置实时优先级,nice 用于设置普通优先级
-chrt 可以将进程优先级设置为 1-99 的实时范围,会使用实时调度策略如 SCHED_FIFO。nice 的范围是 -20 到 19,使用普通的调度策略。
-
-chrt 优先级更高
-chrt 设置的 1-99 优先级高于 nice 设置的 -20 到 19 优先级。实时进程总会抢占普通进程。
-
-chrt 效果暂时,nice 效果持久
-chrt 设置只对当前shell有效,进程结束后优先级失效。nice 设置会持久保存到进程结束。
-
-chrt 能绑核,nice 不能
-chrt 可以通过 -a 参数将进程绑定到某个 CPU 核上,nice 不提供这个功能。
-
-所以 chrt -f -p 99 和 nice -n -20 效果上不是完全一致的:
-
-chrt 会启用实时调度,且优先级范围高于 nice。
-chrt 的优先级设置不会持久化,nice 会持久化。
-chrt 可以绑核,nice 不可以。
-需要根据实际场景选择使用最合适的命令来设置优先级 */
-</code></pre>
-<p>‘’’</p>
-<h3 id="patch-generate-methods"><a href="#patch-generate-methods" class="headerlink" title="patch generate methods"></a>patch generate methods</h3><p>‘’’C<br>    为每一个被修改的文件分别生成对应的patch文件,而不是把所有修改放在一个patch里。</p>
-<pre><code>可以通过以下方法实现:
-
-利用git diff的--name-only选项先查看这次修改了哪些文件:
-Copy code
-
-git diff --name-only
-这会输出所有的被修改的文件名。
-
-然后对每个文件分别进行diff,重定向到各自的patch文件:
-Copy code
-
-git diff HEAD file1 &gt; file1.patch
-git diff HEAD file2 &gt; file2.patch
-重复这个过程,直到所有被修改的文件都有了对应的patch文件。
-最后可以用git apply分别应用这些patch来还原一部分的修改。
-这样就可以非常方便地将一次修改分解为对各个文件分别的patch文件。
-
-这种方式在需要分别提交修改的不同部分到代码库时非常有用。
-</code></pre>
-<p>‘’’</p>
-<h2 id="linux-use-tips"><a href="#linux-use-tips" class="headerlink" title="linux use tips"></a>linux use tips</h2><ul>
-<li>cat &#x2F;proc&#x2F;cmdline 可以查看系统的启动参数<ul>
-<li>console&#x3D;ttyLF0，115200 root&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw earlycon</li>
-<li>也可以通过 dmesg | grep “Kernel command line”</li>
-</ul>
-</li>
-<li>可以在uboot命令行中printenv bootargs打印当前的变量内容<ul>
-<li>内容如下 bootargs&#x3D;root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7</li>
-<li>setenv bootargs “root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7 printk.time&#x3D;y initcall_debug”  然后 saveenv 接着reset</li>
-<li>修改 Kernel 的 Bootargs：添加 printk.time&#x3D;y initcall_debug 到 bootargs 中，以便查看每个模块的启动耗时</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/30/Linux-System-command-description/" data-id="clpjhc8go0002q4ms0w7ubpns" data-title="Linux System command description" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-NXP-Linux-startup-process-analysis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/" class="article-date">
-  <time class="dt-published" datetime="2023-10-30T07:54:13.000Z" itemprop="datePublished">2023-10-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="uboot-step"><a href="#uboot-step" class="headerlink" title="uboot step"></a>uboot step</h2><pre><code>under the folder /git/arch/arm/cpu/armv8/start.S  .global _start  -&gt; bl _main -&gt; /git/arch/arm/cpu/lib/crt0_64.S ENTRY(_main) -&gt;
-
--&gt;bl board_init_f (common/board_f.c, static const init_fnc_t init_sequence_f[]) -&gt;b relocate_code (arch/arm/lib/relocate_64.S)-&gt;c_runtime_cpu_setup (arch/arm/cpu/armv8/start.S) -&gt;board_init_r (common/board_r.c, static init_fnc_t init_sequence_r[]) 
-</code></pre>
-<p>[经验] 基于armv8架构对u-boot进行启动流程分析（一）以下为链接<br><strong><a target="_blank" rel="noopener" href="https://bbs.elecfans.com/jishu_2282359_1_1.html">https://bbs.elecfans.com/jishu_2282359_1_1.html</a></strong><br>[经验] 基于armv8架构对u-boot进行启动流程分析（二）以下为链接<br><strong><a target="_blank" rel="noopener" href="https://www.ws-dc.com/jishu_2282360_1_1.html">https://www.ws-dc.com/jishu_2282360_1_1.html</a></strong><br>uboot启动流程（3）<br><strong><a target="_blank" rel="noopener" href="https://adtxl.com/index.php/archives/757.html">https://adtxl.com/index.php/archives/757.html</a></strong></p>
-<p>内核启动先导知识<br><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/522195519">https://zhuanlan.zhihu.com/p/522195519</a></strong></p>
-<h3 id="ArmV8启动知识梳理"><a href="#ArmV8启动知识梳理" class="headerlink" title="ArmV8启动知识梳理"></a><strong>ArmV8启动知识梳理</strong></h3><p><strong><a target="_blank" rel="noopener" href="https://bbs.elecfans.com/jishu_2282359_1_1.html">https://bbs.elecfans.com/jishu_2282359_1_1.html</a></strong><br><img src="/peter.github.io/image.png" alt="Alt text"><br>上图详细概括了arm官方推荐的armv8的启动层次结构：<br>官方将启动分为了BL1，BL2，BL31，BL32，BL33阶段，根据顺序，芯片启动后首先执行BL1阶段代码，接着验签启动BL2，BL2根据具体设计启动BL31或者BL33，BL32只有在有BL31时才可能会存在并被验签加载启动。<br>armv8分为Secure World和Non-Secure World（Normal World），四种异常级别从高到低分别为EL3，EL2，EL1，EL0。<br>Secure World就是可以执行可信的firmware和app，比如密码支付，指纹识别等一系列依赖安全保证的服务。<br>Non-Secure World就是我们常见的u-boot，linux，qnx等裸机程序或者操作系统。<br></p>
-<ul>
-<li>EL3具有最高管理权限，负责安全监测和安全模式切换。</li>
-<li>EL2主要提供了对虚拟化的支持。</li>
-<li>EL1是一个特权模式，能够执行一些特权指令，用于运行各类操作系统，在安全模式则是可信任OS。</li>
-<li>EL0是无特权模式，所有APP应用都在EL0。</li>
-</ul>
-<p>上图中的BL1，BL2，BL31，BL32，BL33分别对应如下功能：</p>
-<ul>
-<li>BL1：是一切信任的根，一般就是固化在ROM中的一段启动加载代码，用于引导bl2，并对bl2进行验签保证可信任执行；</li>
-<li>BL2：一般是在flash中的一段可信安全启动代码，它的可信建立在bl1对它的验证，主要完成一些平台相关的初始化，比如对ddr的初始化等，并在完成初始化后寻找BL31或者BL33进行执行；如果找到了BL31则不会继续调用BL33，如果没有BL31则BL33必须有；</li>
-<li>BL31：BL31不像BL1和BL2是一次性运行的，它作为最后一道可信任固件存在，在系统运行时通过smc指令陷入EL3调用系统安全服务或者在Secure World和Non-Secure World之间进行切换；在完成BL31初始化后会去寻找BL32或者BL33进行验签后加载执行；</li>
-<li>BL32：OPTee OS + 安全app，它是一个可信安全的OS运行在EL1并在EL0启动可信任APP（上述的指纹验证等app），并在Trust OS运行完成后通过smc指令返回- - BL31，BL31切换到Non-Seucre World继续执行BL33；</li>
-<li>BL33：非安全固件，也就是我们常见的UEFI firmware或者u-boot也可能是直接启动Linux kernel；<br>启动BL1，BL2，BL31，BL32则是一个完整的ATF信任链建立流程（ARM Trusted Firmware），像常见的PSCI（Power State Coordination Interface）功能则是在ATF的BL31上实现；</li>
-</ul>
-<p>最后一张图完整展示整个调用流程：<br><img src="/peter.github.io/image-1.png" alt="Alt text"><br>BL2根据是否存在BL31和BL32可选择性的加载不同firmware；<br>综上所述可知u-boot是一个运行在非安全世界的bootloader，负责加载各类操作系统，并提供丰富的驱动接口；并根据是否存在安全固件还可以进行不同的boot流程，如下。<br>u-boot，u-boot-spl，u-boot-tpl的关系：<br>对于一般嵌入式而言只需要一个u-boot作为bootloader即可，但是在小内存，或者有atf的情况下还可以有spl，tpl；<br>spl：Secondary Program Loader，二级加载器<br>tpl：Tertiary Program Loader，三级加载器<br>出现spl和tpl的原因最开始是因为系统sram太小，rom无法在ddr未初始化的情况下一次性把所有代码从flash，emmc，uxx等搬运到sram中执行，也或者是flash太小，无法完整放下整个u-boot来进行片上执行。所以u-boot又定义了spl和tpl，spl和tpl走u-boot完全相同的boot流程，不过在spl和tpl中大多数驱动和功能被去除了，根据需要只保留一部分spl和tpl需要的功能，通过CONFIG_SPL_BUILD和CONFIG_TPL_BUILD控制；一般只用spl就足够了，spl完成ddr初始化，并完成一些外设驱动初始化，比如u<em><strong>，emmc，以此从其他外围设备加载u-boot，但是如果对于小系统spl还是太大了，则可以继续加入tpl，tpl只做ddr等的特定初始化保证代码体积极小，以此再次从指定位置加载spl，spl再去加载u-boot。<br>从目前来看，spl可以取代上图中bl2的位置，或者bl1，根据具体厂商实现来决定，有一些芯片厂商会将spl固化在rom中，使其具有从emmc，u</strong></em>等设备加载u-boot或者其他固件的能力。<br>当然在有atf的情况下可以由atf加载u-boot，或者由spl加载atf，atf再去加载u-boot。甚至在快速启动的系统中可以直接由spl启动加载linux等操作系统而跳过启动u-boot；在上图中arm官方只是给出了一个建议的启动信任链，具体实现都需要芯片厂商来决定</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/" data-id="clpjhc8gm0001q4ms4xpxg0jv" data-title="NXP Linux startup process analysis" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-LinuxMemoryManage" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/" class="article-date">
-  <time class="dt-published" datetime="2023-10-15T02:42:04.000Z" itemprop="datePublished">2023-10-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Memory management is described and explained in detail next.</p>
-<h2 id="why-we-need-memory-management"><a href="#why-we-need-memory-management" class="headerlink" title="why we need memory management"></a>why we need memory management</h2><p>For example, if a operating system have not memory management,the hardware memory will be directly accessed when the application need use memory, and this may result in other applications not being able to use the memory area and crush the system.In addition, if several applications require a large amount of memory, but the memory is not allocated and freed properly, it may lead to memory fragmentation, which may reduce the performance of the system. Therefore, memory management is a very important part of the operating system.</p>
-<h2 id="thread-management"><a href="#thread-management" class="headerlink" title="thread management"></a>thread management</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">set_affinity</span><span class="params">(pthread thread,<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pthread_setaffinity_np(thread,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_rt_thread</span><span class="params">(<span class="type">pthread_t</span> *pth, <span class="type">void</span>*(*func)(<span class="type">void</span> *), <span class="type">void</span> *arg, <span class="type">int</span> policy, <span class="type">int</span> prio, <span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">schedp</span>;</span></span><br><span class="line">	<span class="type">pthread_attr_t</span> attr;</span><br><span class="line">    <span class="comment">//cpu_set_t set;</span></span><br><span class="line">	<span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">	pthread_attr_init(&amp;attr);</span><br><span class="line">	<span class="built_in">memset</span>(&amp;schedp, <span class="number">0</span>, <span class="keyword">sizeof</span>(schedp));</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setinheritsched(&amp;attr, PTHREAD_EXPLICIT_SCHED);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setinheritsched\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setschedpolicy(&amp;attr, policy);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedpolicy\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	schedp.sched_priority = prio;</span><br><span class="line">	ret = pthread_attr_setschedparam(&amp;attr, &amp;schedp);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedparam\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_create(pth, &amp;attr, func, arg);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_create\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    ret = set_affinity(*pth,cpu_core);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_affinity_public</span><span class="params">(<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> policy = <span class="number">0</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">pthread_param</span>;</span></span><br><span class="line">    <span class="type">pid_t</span> thread_id = syscall(SYS_gettid);</span><br><span class="line">    pthread_getschedparam(pthread_self(),&amp;policy,&amp;pthread_param);</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> != sched_setaffinity(thread_id,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread %d set success core %d&quot;</span>,thread_id,cpu_core);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="thread-task-table"><a href="#thread-task-table" class="headerlink" title="thread task table"></a>thread task table</h2><h2 id="pipeline-timing-test-八级流水线"><a href="#pipeline-timing-test-八级流水线" class="headerlink" title="pipeline timing test(八级流水线)"></a>pipeline timing test(八级流水线)</h2><p>‘’’C<br>for(int i;i &lt;1000000000,i++)<br>{<br>    fact *&#x3D; i;<br>}</p>
-<p>for(int i;i &lt;1000000000,i+&#x3D;8)<br>{<br>    fact0 *&#x3D; i;<br>    fact1 *&#x3D; i+1;<br>    fact2 *&#x3D; i+2;<br>    fact3 *&#x3D; i+3;<br>    fact4 *&#x3D; i+4;<br>    fact5 *&#x3D; i+5;<br>    fact6 *&#x3D; i+6;<br>    fact7 *&#x3D; i+7;<br>}<br>‘’’</p>
-<ul>
-<li><p>实际测量数据 : 第一个耗时大概5s左右，第二个耗时1.3s</p>
-</li>
-<li><p>原因分析：即使在使用流水线技术的情况下，对于不同类型的计算和循环，你也不一定会看到线性的性能增长，尤其是在一些特定的情况下，因为流水线技术本身存在一些限制。</p>
-</li>
-<li><p>在你的例子中，第一个循环是一个简单的累积乘法运算，而第二个循环则是对于每次迭代同时进行了 8 个乘法运算。在第二个循环中，尽管你利用了流水线并行处理 8 个不相关的乘法操作，但仍然受到了数据相关性和其他因素的限制。</p>
-</li>
-<li><p>尽管处理器在第二个循环中可以并行处理多个操作，但也有一些因素可能限制了性能增长：</p>
-</li>
-<li><p>数据相关性和依赖：即使你并行处理了 8 个操作，但在多数情况下，这些操作依然存在数据相关性，可能导致某些乘法操作需要等待之前的操作结果，从而限制了流水线的效率。</p>
-</li>
-<li><p>资源竞争：在同时处理多个操作时，各个乘法操作之间可能会竞争同样的资源（比如寄存器），造成一定的资源争用，降低流水线效率。</p>
-</li>
-<li><p>其他因素：像分支预测、数据访问模式等因素也可能对性能造成一定的影响。</p>
-</li>
-<li><p>虽然你利用了流水线并行处理多个操作，但并不是所有类型的计算都能够简单地获得线性的性能提升。对于某些类型的任务，流水线技术可能并不能完全发挥其优势。针对这种情况，需要更深入地了解处理器的特性、任务本身的特性以及代码的优化，以最大化地利用流水线并行性带来的性能优势。</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/15/LinuxMemoryManage/" data-id="clocja6690002v8msdp655vtu" data-title="LinuxMemoryManage" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ARMv8Arch" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/08/29/ARMv8Arch/" class="article-date">
-  <time class="dt-published" datetime="2023-08-29T03:09:49.000Z" itemprop="datePublished">2023-08-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/08/29/ARMv8Arch/">ARMv8Arch</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>AArch64执行状态提供了32个在任何时间任何特权级下都可访问的64位的通用寄存器。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/29/ARMv8Arch/" data-id="clocja6620000v8ms15kd7mzb" data-title="ARMv8Arch" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Makefile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/08/18/Makefile/" class="article-date">
-  <time class="dt-published" datetime="2023-08-18T06:13:05.000Z" itemprop="datePublished">2023-08-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/08/18/Makefile/">Makefile</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="Makefile-培训教程"><a href="#Makefile-培训教程" class="headerlink" title="Makefile 培训教程"></a>Makefile 培训教程</h1><h2 id="Chapter-1-Makefile-简介和必要性"><a href="#Chapter-1-Makefile-简介和必要性" class="headerlink" title="Chapter 1: Makefile 简介和必要性"></a>Chapter 1: Makefile 简介和必要性</h2><h3 id="1-1-什么是-Makefile"><a href="#1-1-什么是-Makefile" class="headerlink" title="1.1 什么是 Makefile"></a>1.1 什么是 Makefile</h3><p>Makefile 是一种文本文件，用于定义如何构建和编译软件项目。它包含了一系列规则，描述了源文件如何转化为目标文件，以及构建过程中使用的命令。</p>
-<h3 id="1-2-为什么需要-Makefile"><a href="#1-2-为什么需要-Makefile" class="headerlink" title="1.2 为什么需要 Makefile"></a>1.2 为什么需要 Makefile</h3><p>Makefile 自动化了构建过程，减少了手动编译的复杂性，提高了开发效率。它能够根据文件的依赖关系自动决定哪些文件需要重新构建，从而确保项目的正确编译和构建。</p>
-<h3 id="1-3-Makefile-vs-CMake-vs-XMake"><a href="#1-3-Makefile-vs-CMake-vs-XMake" class="headerlink" title="1.3 Makefile vs CMake vs XMake"></a>1.3 Makefile vs CMake vs XMake</h3><p>Makefile、CMake 和 XMake 都是构建工具，用于管理软件项目的构建过程。它们之间的主要区别在于语法和功能上的差异。Makefile 是一种基本的构建工具，CMake 提供了更高级的构建和配置功能，而 XMake 则专注于跨平台构建。</p>
-<h3 id="1-4-Makefile-的优点"><a href="#1-4-Makefile-的优点" class="headerlink" title="1.4 Makefile 的优点"></a>1.4 Makefile 的优点</h3><ul>
-<li>简单：Makefile 的语法相对简单，易于学习和使用。</li>
-<li>高效：通过自动化构建过程，减少了手动操作，提高了编译效率。</li>
-<li>灵活：可以根据项目的需要定制构建规则和命令。</li>
-<li>可移植性高：Makefile 在不同的操作系统和环境中都能工作，确保了项目在不同平台上的一致性。</li>
-</ul>
-<h3 id="1-5-Makefile-的历史和演进"><a href="#1-5-Makefile-的历史和演进" class="headerlink" title="1.5 Makefile 的历史和演进"></a>1.5 Makefile 的历史和演进</h3><p>GNU Make 是一个常用的 Make 工具，它是在 Unix 系统上发展起来的。随着软件开发的发展，出现了许多改进版本和替代工具，如 BSD Make、GNU Make、XMake 等，以满足不同项目的需求。</p>
-<h2 id="Chapter-2-Makefile-的基本结构和语法"><a href="#Chapter-2-Makefile-的基本结构和语法" class="headerlink" title="Chapter 2: Makefile 的基本结构和语法"></a>Chapter 2: Makefile 的基本结构和语法</h2><h3 id="2-1-Makefile-的基本结构详解"><a href="#2-1-Makefile-的基本结构详解" class="headerlink" title="2.1 Makefile 的基本结构详解"></a>2.1 Makefile 的基本结构详解</h3><p>Makefile 由一系列规则组成，每个规则描述了如何将源文件转换为目标文件。规则由目标、依赖和命令三部分组成。</p>
-<ul>
-<li>目标（target）：表示要生成的文件，可以是可执行文件、中间文件等。</li>
-<li>依赖（dependencies）：表示生成目标所需的文件，当依赖文件发生变化时，目标将被重新构建。</li>
-<li>命令（commands）：表示生成目标的具体步骤，使用制表符开头，并在命令之间用换行分隔。</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 规则：生成目标文件 main.o</span></span><br><span class="line"><span class="section">main.o: main.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-2-注释和变量"><a href="#2-2-注释和变量" class="headerlink" title="2.2 注释和变量"></a>2.2 注释和变量</h3><ul>
-<li>注释使用#符号，用于添加解释和注释，提高 Makefile 的可读性。</li>
-<li>变量用于存储数据，可以是文件名、编译器选项等，以便在 Makefile 中重复使用。</li>
-</ul>
-<h2 id="Makefile使用Tips"><a href="#Makefile使用Tips" class="headerlink" title="Makefile使用Tips"></a>Makefile使用Tips</h2><h3 id="怎么把换行符CRLF替换为LF"><a href="#怎么把换行符CRLF替换为LF" class="headerlink" title="怎么把换行符CRLF替换为LF"></a>怎么把换行符CRLF替换为LF</h3><p><strong>sed -i ‘s&#x2F;\r$&#x2F;&#x2F;&#x2F;‘ file1.sh</strong></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/Makefile/" data-id="clocja66a0003v8msfc9n4quy" data-title="Makefile" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-personalNote" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/08/18/personalNote/" class="article-date">
-  <time class="dt-published" datetime="2023-08-18T01:43:34.000Z" itemprop="datePublished">2023-08-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/08/18/personalNote/">personalNote</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Precautions-For-Inter-core-Data-Transfer"><a href="#Precautions-For-Inter-core-Data-Transfer" class="headerlink" title="Precautions For Inter-core Data Transfer"></a>Precautions For Inter-core Data Transfer</h2><pre><code>the cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section of core B memory needs to be careful if there is a cache, which is generally not recommended 
-</code></pre>
-<h2 id="SPI调试总结"><a href="#SPI调试总结" class="headerlink" title="SPI调试总结"></a>SPI调试总结</h2><pre><code>SPI时序可能出现问题，需要用逻辑分析仪Kingst VIS或者示波器查看波形变化，为什么出现延时情况，读写寄存器为什么会出现这么大的时间延时。结果发现和系统调用有很大的关系，xxx.elf的进程在运行过程中采用的是默认的优先级配置的nice值默认为0，会出现被抢占的情况，所以整体的延时会出现60us的情况。正常情况下是7-8us.整个配置MMIC的时间。
-</code></pre>
-<h2 id="知乎学习链接"><a href="#知乎学习链接" class="headerlink" title="知乎学习链接"></a>知乎学习链接</h2><p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ljgibbs/posts">https://www.zhihu.com/people/ljgibbs/posts</a></strong></p>
-<p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lgjjeff">https://www.zhihu.com/people/lgjjeff</a></strong></p>
-<p>‘’’C<br>&#x2F;&#x2F;tcp server,can reconnection and recv data from tcp client<br>#include &lt;stdio.h&gt;<br>#include &lt;sys&#x2F;socket.h&gt;<br>#include &lt;arpa&#x2F;inet.h&gt;<br>#include &lt;unistd.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;fcntl.h&gt;</p>
-<p>#define PORT 11011<br>#define IP_ADDR “192.168.30.60”</p>
-<p>int main(){</p>
-<pre><code>int server_fd, client_fd;
-struct sockaddr_in server_addr,client_addr; 
-
-// 创建 socket
-server_fd = socket(AF_INET, SOCK_STREAM, 0);
-if(server_fd &lt; 0)&#123;
-    printf(&quot;Error creating socket!&quot;);
-    return 1;
-&#125;
-
-// 设置地址与端口信息
-server_addr.sin_family = AF_INET;
-server_addr.sin_addr.s_addr = inet_addr(IP_ADDR); 
-server_addr.sin_port = htons(PORT);
-
-// 绑定socket与地址信息 
-if(bind(server_fd, (struct sockaddr*)&amp;server_addr, sizeof(server_addr)) &lt; 0)&#123;
-   printf(&quot;Bind failed!&quot;);
-   return 1;
-&#125;
-
-// 开始监听
-if (listen(server_fd, 5) &lt; 0)&#123;
-    printf(&quot;Listen failed!&quot;);
-    return 1;
-&#125;
- 
-while(1)&#123;
-    socklen_t client_len = sizeof(client_addr);
-      // 等待客户端连接请求 
-    client_fd = accept(server_fd, (struct sockaddr*)&amp;client_addr, &amp;client_len);
-      if(client_fd &lt; 0)&#123;
-      continue;
-      &#125;
-    
-    // 设置 client_fd 为非阻塞模式
-    fcntl(client_fd, F_SETFL, O_NONBLOCK);
-  
-       while(1)&#123;
-
-        // 尝试接收数据
-        char buffer[1024];        
-        int byte_num = recv(client_fd, buffer, 1024, 0);
-        // 连接已关闭
-        if(byte_num == 0)&#123;
-            close(client_fd);
-            break;
-        &#125;
-      
-        // 打印接收到的数据
-        //if(byte_num &gt; 0)&#123;
-          //  printf(&quot;Received data: %s&quot;, buffer); 
-        //&#125;
-
-        // 遍历缓冲区每个字节
-        for(int i=0; i &lt; byte_num; i++) &#123;
-
-            // 将字节转换为整数打印 
-            printf(&quot;%x &quot;, (int)buffer[i]); 
-
-        &#125; 
-
-        printf(&quot;\n&quot;);
-
-
-    &#125;
-
-    // 关闭客户端 socket
-    close(client_fd); 
-&#125;
-
-return 0;
-</code></pre>
-<p>}<br>‘’’</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="clocja66b0004v8ms9g6p6wxa" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -917,7 +881,7 @@ return 0;
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -930,23 +894,23 @@ return 0;
       <ul>
         
           <li>
-            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+            <a href="/peter.github.io/2024/02/26/OptimizedStrategy/">OptimizedStrategy</a>
           </li>
         
       </ul>

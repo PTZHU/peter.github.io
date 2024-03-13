@@ -6,15 +6,15 @@
   
   <title>yocto_user_manual | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Default Build Parameters Configuration open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh  MACHINE&#x3D;&quot;s32r45evb&quot; can set the machine default SOURCESDIR&#x3D;&quot;NXP_R45_meta_test&quot; can set the default">
+  <meta name="description" content="1.Default Build Parameters Configuration open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh  MACHINE&#x3D;&quot;s32r45evb&quot; can set the machine default SOURCESDIR&#x3D;&quot;NXP_R45_meta_test&quot; can set the defau">
 <meta property="og:type" content="article">
 <meta property="og:title" content="yocto_user_manual">
 <meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2024/01/03/yocto-user-manual/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Default Build Parameters Configuration open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh  MACHINE&#x3D;&quot;s32r45evb&quot; can set the machine default SOURCESDIR&#x3D;&quot;NXP_R45_meta_test&quot; can set the default">
+<meta property="og:description" content="1.Default Build Parameters Configuration open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh  MACHINE&#x3D;&quot;s32r45evb&quot; can set the machine default SOURCESDIR&#x3D;&quot;NXP_R45_meta_test&quot; can set the defau">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-03T06:23:03.000Z">
-<meta property="article:modified_time" content="2024-01-03T07:14:45.496Z">
+<meta property="article:modified_time" content="2024-01-10T09:30:40.616Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -97,14 +97,14 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="Default-Build-Parameters-Configuration"><a href="#Default-Build-Parameters-Configuration" class="headerlink" title="Default Build Parameters Configuration"></a>Default Build Parameters Configuration</h1><ul>
+        <h1 id="1-Default-Build-Parameters-Configuration"><a href="#1-Default-Build-Parameters-Configuration" class="headerlink" title="1.Default Build Parameters Configuration"></a>1.Default Build Parameters Configuration</h1><ul>
 <li>open &#x2F;meta-alb&#x2F;nxp-setup-alb.sh </li>
 <li><code>MACHINE=&quot;s32r45evb&quot;</code> can set the machine default</li>
 <li><code>SOURCESDIR=&quot;NXP_R45_meta_test&quot;</code> can set the default user meta layer</li>
 <li><code>LAYER_LIST=&quot;meta-test&quot;</code> can add your own meta layer into yocto project</li>
 <li>you can replace <code>DOWNLOADS=&quot;$ROOTDIR/downloads&quot;</code> to <code>/home/user/resource/yocto/bsp37/downloads</code> can set the download dependency resources(linux,bsp,and so on)</li>
 </ul>
-<h1 id="Floder-Introduction-and-common-methods-to-add-hello-ko-into-image"><a href="#Floder-Introduction-and-common-methods-to-add-hello-ko-into-image" class="headerlink" title="Floder Introduction and common methods to add hello.ko into image"></a>Floder Introduction and common methods to add hello.ko into image</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rsdk-yocto-build-32 tree</span><br><span class="line">|--NXP_R45_meta_test   - user Repository</span><br><span class="line">|   |--meta-alb</span><br><span class="line">|   |--meta-freesale</span><br><span class="line">|   |--meta-linaro</span><br><span class="line">|   |--meta-openembedded</span><br><span class="line">|   |--meta-qoriq</span><br><span class="line">|   |--meta-rsdk</span><br><span class="line">|   |--meta-security</span><br><span class="line">|   |--meta-test</span><br><span class="line">|   |   |--conf</span><br><span class="line">|   |   |   |--layer.conf</span><br><span class="line">|   |   |--packagegroups</span><br><span class="line">|   |   |   |--packagegroup-test-drivers.bb</span><br><span class="line">|   |   |--recipes-core</span><br><span class="line">|   |   |   |--packagegroup</span><br><span class="line">|   |   |   |   |--fsl-image-auto.bbappend</span><br><span class="line">|   |   |--recipes-kernel</span><br><span class="line">|   |   |   |--hello</span><br><span class="line">|   |   |   |   |--files</span><br><span class="line">|   |   |   |   |   |--testhello.c</span><br><span class="line">|   |   |   |   |   |--Makefile</span><br><span class="line">|   |   |   |   |   |--COPYING</span><br><span class="line">|   |   |   |   |--hello-test.bb</span><br><span class="line">|   |   |--COPYING.MIT</span><br><span class="line">|   |   |--README.md</span><br><span class="line">|   |--meta-virtualization</span><br><span class="line">|   |--poky</span><br><span class="line">|--build_test          - build template files</span><br><span class="line">|--downloads           - is null will be remove to common floder or delete</span><br><span class="line">|--sstate-cache        - build cache</span><br></pre></td></tr></table></figure>
+<h1 id="F2-loder-Introduction-and-common-methods-to-add-hello-ko-into-image"><a href="#F2-loder-Introduction-and-common-methods-to-add-hello-ko-into-image" class="headerlink" title="F2.loder Introduction and common methods to add hello.ko into image"></a>F2.loder Introduction and common methods to add hello.ko into image</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rsdk-yocto-build-32 tree</span><br><span class="line">|--NXP_R45_meta_test   - user Repository</span><br><span class="line">|   |--meta-alb</span><br><span class="line">|   |--meta-freesale</span><br><span class="line">|   |--meta-linaro</span><br><span class="line">|   |--meta-openembedded</span><br><span class="line">|   |--meta-qoriq</span><br><span class="line">|   |--meta-rsdk</span><br><span class="line">|   |--meta-security</span><br><span class="line">|   |--meta-test</span><br><span class="line">|   |   |--conf</span><br><span class="line">|   |   |   |--layer.conf</span><br><span class="line">|   |   |--packagegroups</span><br><span class="line">|   |   |   |--packagegroup-test-drivers.bb</span><br><span class="line">|   |   |--recipes-core</span><br><span class="line">|   |   |   |--packagegroup</span><br><span class="line">|   |   |   |   |--fsl-image-auto.bbappend</span><br><span class="line">|   |   |--recipes-kernel</span><br><span class="line">|   |   |   |--hello</span><br><span class="line">|   |   |   |   |--files</span><br><span class="line">|   |   |   |   |   |--testhello.c</span><br><span class="line">|   |   |   |   |   |--Makefile</span><br><span class="line">|   |   |   |   |   |--COPYING</span><br><span class="line">|   |   |   |   |--hello-test.bb</span><br><span class="line">|   |   |--COPYING.MIT</span><br><span class="line">|   |   |--README.md</span><br><span class="line">|   |--meta-virtualization</span><br><span class="line">|   |--poky</span><br><span class="line">|--build_test          - build template files</span><br><span class="line">|--downloads           - is null will be remove to common floder or delete</span><br><span class="line">|--sstate-cache        - build cache</span><br></pre></td></tr></table></figure>
 <p><code>layer.conf</code> </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># add next into layer.conf</span><br><span class="line">IMAGE_INSTALL_append=&quot; hello-test&quot;`</span><br><span class="line">IMAGE_OVERHEAD_FACTOR = &quot;3&quot;`</span><br></pre></td></tr></table></figure>
 
@@ -126,6 +126,18 @@
 </ul>
 </li>
 </ul>
+<h1 id="3-For-example-add-a-new-Fdma-driver-into-yocto-project"><a href="#3-For-example-add-a-new-Fdma-driver-into-yocto-project" class="headerlink" title="3.For example add a new Fdma driver into yocto project"></a>3.For example add a new Fdma driver into yocto project</h1><p>|   |–meta-test<br>|   |   |–conf<br>|   |   |   |–layer.conf<br>|   |   |–packagegroups<br>|   |   |   |–packagegroup-test-drivers.bb<br>|   |   |–recipes-core<br>|   |   |   |–packagegroup<br>|   |   |   |   |–fsl-image-auto.bbappend<br>|   |   |   |–rsdk_env.inc<br>|   |   |–recipes-kernel<br>|   |   |   |–fdma<br>|   |   |   |   |–fdma-driver.bb<br>|   |   |   |–rsdk     - will be add into .bbappend<br>|   |   |   |   |–files<br>|   |   |   |   |   |–fdma_driver.patch    - and you can generate the patch for osal-kernel-lib.bbappend<br>|   |   |   |   |–osal-kernel-lib.bbappend<br>|   |   |   |   |–rsdk_kmod.inc<br>|   |   |   |–hello<br>|   |   |   |   |–files<br>|   |   |   |   |   |–testhello.c<br>|   |   |   |   |   |–Makefile<br>|   |   |   |   |   |–COPYING<br>|   |   |   |   |–hello-test.bb<br>|   |   |–COPYING.MIT<br>|   |   |–README.md</p>
+<ul>
+<li>add your <code>fdma_driver.patch</code> into <code>osal-kernel-lib.bbappend</code></li>
+<li>add your <code>fdma-driver.bb</code> into <code>packagegroup-test-drivers.bb</code></li>
+<li>add your <code>packagegroup-test-drivers.bb</code> into <code>fsl-image-auto.bbappend</code></li>
+</ul>
+<p>above all, and you can generate&#x2F;add a new driver into your yocto image and path is rootfs(lib&#x2F;modules&#x2F;xxx&#x2F;extra&#x2F;fdma-driver.ko)</p>
+<h1 id="if-you-want-to-debug-your-change-you-did-not-need-to-rebuild-all-the-sd-card-image-and-just-compiler-linux-image-and-dtb-and-then-replace-it-in-sd-card"><a href="#if-you-want-to-debug-your-change-you-did-not-need-to-rebuild-all-the-sd-card-image-and-just-compiler-linux-image-and-dtb-and-then-replace-it-in-sd-card" class="headerlink" title="if you want to debug your change ,you did not need to rebuild all the sd card image,and just compiler linux image and dtb, and then replace it in sd card"></a>if you want to debug your change ,you did not need to rebuild all the sd card image,and just compiler linux image and dtb, and then replace it in sd card</h1><ul>
+<li><code>bitbake linux-s32  </code> to generate the linux resources and you can add your changed into this,and if the debug is ok ,you can generate the patch</li>
+<li><code>bitbake linux-s32 -c do_compile -f </code> will generate the linux image and dtb only, and the image and the dtb the path is <code>build/tmp/work/s32r45evb-fsl-linux/linux-s32/5.15.96-r0/build/arch/arm64/boot/Image</code> and the <code>build/tmp/work/s32r45evb-fsl-linux/linux-s32/5.15.96-r0/build/arch/arm64/boot/dts/freesacle/s32r45-evb.dtb</code></li>
+<li>when you want to generate a patch by Yocto, i suggest you <code>git add -all</code> the patch apply changes and <code>git commit -m &quot;xxx&quot;</code>first, and then add your change into the resources.</li>
+</ul>
 
       
     </div>
@@ -139,6 +151,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/peter.github.io/2024/02/02/LinuxScheduleNote/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LinuxScheduleNote
+        
+      </div>
+    </a>
   
   
     <a href="/peter.github.io/2023/12/09/bootlog-analysis/" id="article-nav-older" class="article-nav-link-wrap">
@@ -168,7 +189,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -181,23 +202,23 @@
       <ul>
         
           <li>
-            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+            <a href="/peter.github.io/2024/02/26/OptimizedStrategy/">OptimizedStrategy</a>
           </li>
         
       </ul>

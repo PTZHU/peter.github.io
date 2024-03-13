@@ -14,7 +14,7 @@
 <meta property="og:description" content="Memory management is described and explained in detail next. why we need memory managementFor example, if a operating system have not memory management,the hardware memory will be directly accessed wh">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-15T02:42:04.000Z">
-<meta property="article:modified_time" content="2023-12-20T02:34:29.530Z">
+<meta property="article:modified_time" content="2024-02-01T03:28:02.138Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -121,6 +121,94 @@
 <li><p>虽然你利用了流水线并行处理多个操作，但并不是所有类型的计算都能够简单地获得线性的性能提升。对于某些类型的任务，流水线技术可能并不能完全发挥其优势。针对这种情况，需要更深入地了解处理器的特性、任务本身的特性以及代码的优化，以最大化地利用流水线并行性带来的性能优势。</p>
 </li>
 </ul>
+<h2 id="Linux-Command"><a href="#Linux-Command" class="headerlink" title="Linux Command"></a>Linux Command</h2><p><code>mpstat -P ALL 1</code> 命令用于显示每个CPU的性能统计信息，包括软中断等。下面是命令输出的详解：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Linux 5.4.0-81-generic (hostname)  01/31/2024  _x86_64_ (4 CPU)</span><br><span class="line"></span><br><span class="line">09:35:33 PM  CPU    %usr   %<span class="built_in">nice</span>    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</span><br><span class="line">09:35:34 PM  all    4.25    0.00    4.25    0.00    0.00    0.00    0.00    0.00    0.00   91.50</span><br><span class="line">09:35:34 PM    0    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06</span><br><span class="line">09:35:34 PM    1    4.97    0.00    4.97    0.00    0.00    0.00    0.00    0.00    0.00   90.06</span><br><span class="line">09:35:34 PM    2    5.97    0.00    5.97    0.00    0.00    0.00    0.00    0.00    0.00   88.06</span><br><span class="line">09:35:34 PM    3    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06</span><br></pre></td></tr></table></figure>
+
+<p>每一行的含义如下：</p>
+<ul>
+<li><p><strong>Linux 5.4.0-81-generic (hostname):</strong> 显示了Linux内核版本和主机名。</p>
+</li>
+<li><p><strong>01&#x2F;31&#x2F;2024:</strong> 显示了当前日期。</p>
+</li>
+<li><p><strong><em>x86_64</em> (4 CPU):</strong> 显示了系统架构和CPU核心数量。</p>
+</li>
+<li><p><strong>09:35:33 PM:</strong> 显示了当前的时间戳。</p>
+</li>
+<li><p><strong>CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle:</strong> 列出了不同的CPU使用率统计项。</p>
+<ul>
+<li><code>%usr</code>: 用户空间程序的CPU使用率。</li>
+<li><code>%nice</code>: 优先级较高的用户空间程序的CPU使用率。</li>
+<li><code>%sys</code>: 内核空间程序的CPU使用率。</li>
+<li><code>%iowait</code>: CPU等待I&#x2F;O完成的时间百分比。</li>
+<li><code>%irq</code>: 处理硬中断的CPU使用率。</li>
+<li><code>%soft</code>: 处理软中断的CPU使用率。</li>
+<li><code>%steal</code>: 被虚拟化环境偷走的CPU时间。</li>
+<li><code>%guest</code>: 运行虚拟机的CPU时间。</li>
+<li><code>%gnice</code>: 优先级较高的NICE值的用户空间程序的CPU使用率。</li>
+<li><code>%idle</code>: CPU处于空闲状态的时间百分比。</li>
+</ul>
+</li>
+<li><p><strong>all    4.25    0.00    4.25    0.00    0.00    0.00    0.00    0.00    0.00   91.50:</strong> 这一行是所有CPU的平均统计。例如，用户空间程序使用了4.25%，系统空间程序使用了4.25%，空闲时间为91.50%。</p>
+</li>
+<li><p><strong>0    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06:</strong> 这一行是第一个CPU的具体统计信息，包括用户空间、系统空间、空闲时间等。</p>
+</li>
+<li><p><strong>1    4.97    0.00    4.97    0.00    0.00    0.00    0.00    0.00    0.00   90.06:</strong> 同上，但是是第二个CPU的统计信息。</p>
+</li>
+<li><p><strong>2    5.97    0.00    5.97    0.00    0.00    0.00    0.00    0.00    0.00   88.06:</strong> 同上，但是是第三个CPU的统计信息。</p>
+</li>
+<li><p><strong>3    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06:</strong> 同上，但是是第四个CPU的统计信息。</p>
+</li>
+</ul>
+<p>这个命令的输出提供了每个CPU的详细性能统计信息，可用于监控系统中的CPU利用率情况。</p>
+<h2 id="perf命令"><a href="#perf命令" class="headerlink" title="perf命令"></a>perf命令</h2><p>在 <code>perf list | grep irq</code> 输出中，列举了一些与中断（irq）相关的事件。对于软中断，主要关注 <code>irq:softirq_entry</code>、<code>irq:softirq_exit</code> 和 <code>irq:softirq_raise</code> 事件。</p>
+<ol>
+<li><p><strong><code>irq:softirq_entry</code>：</strong></p>
+<ul>
+<li>表示软中断开始执行的事件。当内核启动执行软中断时，会记录这个事件。</li>
+</ul>
+</li>
+<li><p><strong><code>irq:softirq_exit</code>：</strong></p>
+<ul>
+<li>表示软中断执行结束的事件。当软中断执行完成后，会记录这个事件。</li>
+</ul>
+</li>
+<li><p><strong><code>irq:softirq_raise</code>：</strong></p>
+<ul>
+<li>表示软中断被触发的事件。当软中断被激活时，会记录这个事件。</li>
+</ul>
+</li>
+</ol>
+<p>针对软中断的分析，可以使用以下步骤：</p>
+<h3 id="1-使用-perf-record-捕获软中断事件："><a href="#1-使用-perf-record-捕获软中断事件：" class="headerlink" title="1. 使用 perf record 捕获软中断事件："></a>1. 使用 <code>perf record</code> 捕获软中断事件：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf record -e irq:softirq_entry -e irq:softirq_exit -e irq:softirq_raise -a</span><br></pre></td></tr></table></figure>
+
+<p>这会记录系统范围内软中断相关的事件。</p>
+<h3 id="2-使用-perf-report-查看分析报告："><a href="#2-使用-perf-report-查看分析报告：" class="headerlink" title="2. 使用 perf report 查看分析报告："></a>2. 使用 <code>perf report</code> 查看分析报告：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf report</span><br></pre></td></tr></table></figure>
+
+<p>在报告中，你可以查看软中断相关的信息，了解软中断的执行时间、次数等。</p>
+<h3 id="3-使用-perf-script-输出文本信息："><a href="#3-使用-perf-script-输出文本信息：" class="headerlink" title="3. 使用 perf script 输出文本信息："></a>3. 使用 <code>perf script</code> 输出文本信息：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf script &gt; perf_script.txt</span><br></pre></td></tr></table></figure>
+
+<p>这会将详细的性能数据输出到 <code>perf_script.txt</code> 文件中，你可以在文本文件中搜索软中断相关的信息。</p>
+<h3 id="4-使用-perf-top-查看实时性能数据："><a href="#4-使用-perf-top-查看实时性能数据：" class="headerlink" title="4. 使用 perf top 查看实时性能数据："></a>4. 使用 <code>perf top</code> 查看实时性能数据：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf top</span><br></pre></td></tr></table></figure>
+
+<p><code>perf top</code> 提供了实时的性能数据，可以用于监视系统中的软中断活动。</p>
+<h3 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h3><ul>
+<li>请根据你的系统和内核版本调整命令和选项，确保其兼容性。</li>
+<li>软中断的具体含义和影响可能取决于系统的配置和应用程序的特性。你可能需要进一步了解系统的软中断处理机制和软中断的触发方式。</li>
+</ul>
+<p>这些步骤应该能够帮助你获取有关软中断的性能数据并进行分析。</p>
+<h2 id="性能分析命令"><a href="#性能分析命令" class="headerlink" title="性能分析命令"></a>性能分析命令</h2><ul>
+<li>   trace -p pid  &#x2F;&#x2F;分析进程的调用关系和开销</li>
+<li>   irqtop  &#x2F;&#x2F;irqtop显示</li>
+<li>   lsirq   &#x2F;&#x2F;列举所有irq</li>
+<li>   mpstat -P ALL 1	&#x2F;&#x2F;1s显示一次所有信息中断，软中断等</li>
+<li>   cat &#x2F;proc&#x2F;interrupts</li>
+<li>   cat &#x2F;proc&#x2F;softirq</li>
+<li>   cat &#x2F;proc&#x2F;irq</li>
+<li>   cat &#x2F;proc&#x2F;irq&#x2F;90&#x2F;smp_affinity</li>
+<li>   pidstat -t -p 416 &#x2F;&#x2F;显示pid 416的状态</li>
+<li>   perf list | grep irq &#x2F;&#x2F;列举所有可以分析的irq事件，其中perf record -h是查看命令</li>
+<li>   ps -T -p 416	&#x2F;&#x2F;ps –help all 显示pid 416的相关信息</li>
+</ul>
 
       
     </div>
@@ -172,7 +260,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -185,23 +273,23 @@
       <ul>
         
           <li>
-            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+            <a href="/peter.github.io/2024/02/26/OptimizedStrategy/">OptimizedStrategy</a>
           </li>
         
       </ul>

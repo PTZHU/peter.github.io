@@ -73,6 +73,643 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Linux-System-command-description" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/10/30/Linux-System-command-description/" class="article-date">
+  <time class="dt-published" datetime="2023-10-30T08:34:07.000Z" itemprop="datePublished">2023-10-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><h3 id="常用命令总结"><a href="#常用命令总结" class="headerlink" title="常用命令总结"></a>常用命令总结</h3><pre><code>1.ps -eLo pid,tid,%cpu,%mem,psr,comm
+2.cpu load 1S 打印一次： mpstat -P ALL 1
+3.nice -n -20 ./xxx.elf
+4.git diff &gt; xxx.patch
+5.git diff --name-only
+    git diff HEAD file1 &gt; file1.patch  file1文件包含所在的路径
+    git diff HEAD file2 &gt; file2.patch
+</code></pre>
+<h3 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h3><pre><code>`ps`命令提供了许多选项和格式化输出标志，以满足不同需求。以下是一些常用的`ps`选项和格式化输出标志：
+
+1. **常用`ps`选项**：
+- `-e`: 显示系统中所有进程。
+- `-f`: 显示详细的进程信息，包括父进程、终端、CPU使用率等。
+- `-l`: 显示更详细的进程信息，包括进程状态、优先级、虚拟内存大小等。
+- `-aux`: 显示所有进程的详细信息，包括用户、CPU使用率等。
+- `-A`: 显示所有进程，包括守护进程（daemon）。
+- `-t`: 显示与指定终端关联的进程。
+
+1. **格式化输出标志**：
+- `pid`: 进程ID。
+- `ppid`: 父进程ID。
+- `uid`: 用户ID。
+- `gid`: 用户组ID。
+- `tty`: 终端。
+- `ni`: 进程的nice值。
+- `sz`: 进程使用的虚拟内存大小。
+- `vsz`: 进程使用的虚拟内存大小（以K为单位）。
+- `rss`: 进程使用的物理内存大小。
+- `%cpu`: CPU利用率。
+- `%mem`: 内存利用率。
+- `comm`: 进程名称。
+
+1. **其他常用选项**：
+- `-o`: 允许用户自定义输出格式，可以选择要显示的字段。
+- `-C`: 仅列出指定命令名的进程。
+- `-u`: 列出指定用户的进程。
+- `-k`: 列出指定进程组的进程。
+- `-r`: 列出正在运行的进程。
+
+这些选项和输出标志可以组合使用，以便获取所需的信息。要了解更多选项和输出格式，你可以查阅`ps`命令的手册页，使用`man ps`命令或者`ps --help`查看可用选项。
+常用命令： ps -eLo pid,tid,%cpu,%mem,psr,comm
+cpu load 1S 打印一次： mpstat -P ALL 1
+</code></pre>
+<h3 id="linux动态库测试程序"><a href="#linux动态库测试程序" class="headerlink" title="linux动态库测试程序"></a>linux动态库测试程序</h3><h4 id="step"><a href="#step" class="headerlink" title="step"></a>step</h4><pre><code>在编译动态库时，您需要使用`-shared`选项来告诉编译器生成共享库，同时使用`-fPIC`选项确保生成位置无关的代码。下面是一个简单的示例：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -o sum.o -c -fPIC sum.c</span><br><span class="line">gcc -o libsum.so -shared sum.o</span><br></pre></td></tr></table></figure>
+
+这里假设您的源文件名为`sum.c`。第一行将`sum.c`编译成一个位置无关的目标文件`sum.o`，而第二行将其链接成共享库`libsum.so`。
+
+如果您要指定链接时的库的名称，可以使用`-o`选项。例如：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o libmylibrary.so -shared sum.o</span><br></pre></td></tr></table></figure>
+
+这将生成名为`libmylibrary.so`的共享库。
+
+如果您的动态库依赖于其他库，您可能需要通过`-l`和`-L`选项来指定链接库的名称和库的路径。例如，如果您的动态库依赖于`libm`，则可以这样编译：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o libsum.so -shared sum.o -lm</span><br></pre></td></tr></table></figure>
+
+这里的`-lm`表示链接数学库。
+
+最终，如果您的测试程序也在一个单独的文件中，您可以使用以下命令来编译它：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -o test_sum test_sum.c -ldl -lsum -L.</span><br></pre></td></tr></table></figure>
+
+这里，`-lsum`表示链接`libsum.so`，而`-L.`表示在当前目录中查找库。请确保在运行测试程序之前，系统能够找到动态库，可以通过设置`LD_LIBRARY_PATH`环境变量或将动态库放在系统库路径下来实现。
+</code></pre>
+<h4 id="example"><a href="#example" class="headerlink" title="example"></a>example</h4><pre><code>libSum.so
+</code></pre>
+<p>‘’’C<br>    #include &lt;stdio.h&gt;<br>    extern “C”<br>    {<br>        int Sum(int a,int b)<br>        {<br>            printf(“Input a &#x3D; %d,b&#x3D; %d\n”,a,b);<br>            return a+b;<br>        }<br>    }<br>    &#x2F;&#x2F;Visual Studio 2022 打开 C++ linux创建控制台工程，然后选择生成so动态库，连接远程linux，生成不同平台的.so<br>‘’’<br>    main.c:<br>‘’’C<br>    #include &lt;stdio.h&gt;<br>    #include &lt;dlfcn.h&gt;<br>    #include &lt;stdlib.h&gt;<br>    extern int Sum(int a,int b);<br>    int main(void)<br>    {<br>        printf(“Result of Sum3,4() : %d\n”,Sum(3,4));<br>        return 0;<br>    }<br>‘’’<br>    编译main.c  sudo cp libSum.so &#x2F;usr&#x2F;lib<br>                gcc -o main main.c -ldl -lSum -L.</p>
+<h3 id="配置实时进程的方法"><a href="#配置实时进程的方法" class="headerlink" title="配置实时进程的方法"></a>配置实时进程的方法</h3><p>‘’’C<br>    &#x2F;* 在Linux系统中,可以通过以下步骤将一个进程配置为实时进程:</p>
+<pre><code>在编译程序时,添加实时标志:-pthread -lrt
+在程序代码中使用实时调度策略:
+cpp
+
+Copy code
+
+#include &lt;sched.h&gt;
+
+// 在主线程中
+struct sched_param param;
+param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+sched_setscheduler(0, SCHED_FIFO, &amp;param);
+这会将主线程设置为FIFO实时调度。
+
+在程序启动前,使用chrt命令将其优先级设为最大:
+Copy code
+
+chrt -f -p 99 ./your_program
+将程序进程锁定到特定CPU核:
+Copy code
+
+taskset 0x1 ./your_program
+这会锁定到核1上。
+
+调整实时调度器参数:
+在/etc/security/limits.conf中加入:
+
+Copy code
+
+@users       -       rtprio     99
+禁用地址空间随机化:
+Copy code
+
+echo 0 &gt; /proc/sys/kernel/randomize_va_space
+通过以上步骤,就可以获得较高的实时性能。当然,还需要避免在程序中有长时间的阻塞和等待。
+
+Copy
+
+chrt -f -p 99 ./your_program 和nice -n -20 ./your_program 是一样的效果吗 如果不是有什么区别呢
+
+PZ
+chrt 和 nice 这两个命令都可以影响 Linux 进程的调度优先级,但有一些区别:
+
+chrt 用于设置实时优先级,nice 用于设置普通优先级
+chrt 可以将进程优先级设置为 1-99 的实时范围,会使用实时调度策略如 SCHED_FIFO。nice 的范围是 -20 到 19,使用普通的调度策略。
+
+chrt 优先级更高
+chrt 设置的 1-99 优先级高于 nice 设置的 -20 到 19 优先级。实时进程总会抢占普通进程。
+
+chrt 效果暂时,nice 效果持久
+chrt 设置只对当前shell有效,进程结束后优先级失效。nice 设置会持久保存到进程结束。
+
+chrt 能绑核,nice 不能
+chrt 可以通过 -a 参数将进程绑定到某个 CPU 核上,nice 不提供这个功能。
+
+所以 chrt -f -p 99 和 nice -n -20 效果上不是完全一致的:
+
+chrt 会启用实时调度,且优先级范围高于 nice。
+chrt 的优先级设置不会持久化,nice 会持久化。
+chrt 可以绑核,nice 不可以。
+需要根据实际场景选择使用最合适的命令来设置优先级 */
+</code></pre>
+<p>‘’’</p>
+<h3 id="patch-generate-methods"><a href="#patch-generate-methods" class="headerlink" title="patch generate methods"></a>patch generate methods</h3><p>‘’’C<br>    为每一个被修改的文件分别生成对应的patch文件,而不是把所有修改放在一个patch里。</p>
+<pre><code>可以通过以下方法实现:
+
+利用git diff的--name-only选项先查看这次修改了哪些文件:
+Copy code
+
+git diff --name-only
+这会输出所有的被修改的文件名。
+
+然后对每个文件分别进行diff,重定向到各自的patch文件:
+Copy code
+
+git diff HEAD file1 &gt; file1.patch
+git diff HEAD file2 &gt; file2.patch
+重复这个过程,直到所有被修改的文件都有了对应的patch文件。
+最后可以用git apply分别应用这些patch来还原一部分的修改。
+这样就可以非常方便地将一次修改分解为对各个文件分别的patch文件。
+
+这种方式在需要分别提交修改的不同部分到代码库时非常有用。
+</code></pre>
+<p>‘’’</p>
+<h2 id="linux-use-tips"><a href="#linux-use-tips" class="headerlink" title="linux use tips"></a>linux use tips</h2><ul>
+<li>cat &#x2F;proc&#x2F;cmdline 可以查看系统的启动参数<ul>
+<li>console&#x3D;ttyLF0，115200 root&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw earlycon</li>
+<li>也可以通过 dmesg | grep “Kernel command line”</li>
+</ul>
+</li>
+<li>可以在uboot命令行中printenv bootargs打印当前的变量内容<ul>
+<li>内容如下 bootargs&#x3D;root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7</li>
+<li>setenv bootargs “root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7 printk.time&#x3D;y initcall_debug”  然后 saveenv 接着reset</li>
+<li>修改 Kernel 的 Bootargs：添加 printk.time&#x3D;y initcall_debug 到 bootargs 中，以便查看每个模块的启动耗时</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/30/Linux-System-command-description/" data-id="clpjhc8go0002q4ms0w7ubpns" data-title="Linux System command description" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-NXP-Linux-startup-process-analysis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/" class="article-date">
+  <time class="dt-published" datetime="2023-10-30T07:54:13.000Z" itemprop="datePublished">2023-10-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/">NXP Linux startup process analysis</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="uboot-step"><a href="#uboot-step" class="headerlink" title="uboot step"></a>uboot step</h2><pre><code>under the folder /git/arch/arm/cpu/armv8/start.S  .global _start  -&gt; bl _main -&gt; /git/arch/arm/cpu/lib/crt0_64.S ENTRY(_main) -&gt;
+
+-&gt;bl board_init_f (common/board_f.c, static const init_fnc_t init_sequence_f[]) -&gt;b relocate_code (arch/arm/lib/relocate_64.S)-&gt;c_runtime_cpu_setup (arch/arm/cpu/armv8/start.S) -&gt;board_init_r (common/board_r.c, static init_fnc_t init_sequence_r[]) 
+</code></pre>
+<p>[经验] 基于armv8架构对u-boot进行启动流程分析（一）以下为链接<br><strong><a target="_blank" rel="noopener" href="https://bbs.elecfans.com/jishu_2282359_1_1.html">https://bbs.elecfans.com/jishu_2282359_1_1.html</a></strong><br>[经验] 基于armv8架构对u-boot进行启动流程分析（二）以下为链接<br><strong><a target="_blank" rel="noopener" href="https://www.ws-dc.com/jishu_2282360_1_1.html">https://www.ws-dc.com/jishu_2282360_1_1.html</a></strong><br>uboot启动流程（3）<br><strong><a target="_blank" rel="noopener" href="https://adtxl.com/index.php/archives/757.html">https://adtxl.com/index.php/archives/757.html</a></strong></p>
+<p>内核启动先导知识<br><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/522195519">https://zhuanlan.zhihu.com/p/522195519</a></strong></p>
+<h3 id="ArmV8启动知识梳理"><a href="#ArmV8启动知识梳理" class="headerlink" title="ArmV8启动知识梳理"></a><strong>ArmV8启动知识梳理</strong></h3><p><strong><a target="_blank" rel="noopener" href="https://bbs.elecfans.com/jishu_2282359_1_1.html">https://bbs.elecfans.com/jishu_2282359_1_1.html</a></strong><br><img src="/peter.github.io/image.png" alt="Alt text"><br>上图详细概括了arm官方推荐的armv8的启动层次结构：<br>官方将启动分为了BL1，BL2，BL31，BL32，BL33阶段，根据顺序，芯片启动后首先执行BL1阶段代码，接着验签启动BL2，BL2根据具体设计启动BL31或者BL33，BL32只有在有BL31时才可能会存在并被验签加载启动。<br>armv8分为Secure World和Non-Secure World（Normal World），四种异常级别从高到低分别为EL3，EL2，EL1，EL0。<br>Secure World就是可以执行可信的firmware和app，比如密码支付，指纹识别等一系列依赖安全保证的服务。<br>Non-Secure World就是我们常见的u-boot，linux，qnx等裸机程序或者操作系统。<br></p>
+<ul>
+<li>EL3具有最高管理权限，负责安全监测和安全模式切换。</li>
+<li>EL2主要提供了对虚拟化的支持。</li>
+<li>EL1是一个特权模式，能够执行一些特权指令，用于运行各类操作系统，在安全模式则是可信任OS。</li>
+<li>EL0是无特权模式，所有APP应用都在EL0。</li>
+</ul>
+<p>上图中的BL1，BL2，BL31，BL32，BL33分别对应如下功能：</p>
+<ul>
+<li>BL1：是一切信任的根，一般就是固化在ROM中的一段启动加载代码，用于引导bl2，并对bl2进行验签保证可信任执行；</li>
+<li>BL2：一般是在flash中的一段可信安全启动代码，它的可信建立在bl1对它的验证，主要完成一些平台相关的初始化，比如对ddr的初始化等，并在完成初始化后寻找BL31或者BL33进行执行；如果找到了BL31则不会继续调用BL33，如果没有BL31则BL33必须有；</li>
+<li>BL31：BL31不像BL1和BL2是一次性运行的，它作为最后一道可信任固件存在，在系统运行时通过smc指令陷入EL3调用系统安全服务或者在Secure World和Non-Secure World之间进行切换；在完成BL31初始化后会去寻找BL32或者BL33进行验签后加载执行；</li>
+<li>BL32：OPTee OS + 安全app，它是一个可信安全的OS运行在EL1并在EL0启动可信任APP（上述的指纹验证等app），并在Trust OS运行完成后通过smc指令返回- - BL31，BL31切换到Non-Seucre World继续执行BL33；</li>
+<li>BL33：非安全固件，也就是我们常见的UEFI firmware或者u-boot也可能是直接启动Linux kernel；<br>启动BL1，BL2，BL31，BL32则是一个完整的ATF信任链建立流程（ARM Trusted Firmware），像常见的PSCI（Power State Coordination Interface）功能则是在ATF的BL31上实现；</li>
+</ul>
+<p>最后一张图完整展示整个调用流程：<br><img src="/peter.github.io/image-1.png" alt="Alt text"><br>BL2根据是否存在BL31和BL32可选择性的加载不同firmware；<br>综上所述可知u-boot是一个运行在非安全世界的bootloader，负责加载各类操作系统，并提供丰富的驱动接口；并根据是否存在安全固件还可以进行不同的boot流程，如下。<br>u-boot，u-boot-spl，u-boot-tpl的关系：<br>对于一般嵌入式而言只需要一个u-boot作为bootloader即可，但是在小内存，或者有atf的情况下还可以有spl，tpl；<br>spl：Secondary Program Loader，二级加载器<br>tpl：Tertiary Program Loader，三级加载器<br>出现spl和tpl的原因最开始是因为系统sram太小，rom无法在ddr未初始化的情况下一次性把所有代码从flash，emmc，uxx等搬运到sram中执行，也或者是flash太小，无法完整放下整个u-boot来进行片上执行。所以u-boot又定义了spl和tpl，spl和tpl走u-boot完全相同的boot流程，不过在spl和tpl中大多数驱动和功能被去除了，根据需要只保留一部分spl和tpl需要的功能，通过CONFIG_SPL_BUILD和CONFIG_TPL_BUILD控制；一般只用spl就足够了，spl完成ddr初始化，并完成一些外设驱动初始化，比如u<em><strong>，emmc，以此从其他外围设备加载u-boot，但是如果对于小系统spl还是太大了，则可以继续加入tpl，tpl只做ddr等的特定初始化保证代码体积极小，以此再次从指定位置加载spl，spl再去加载u-boot。<br>从目前来看，spl可以取代上图中bl2的位置，或者bl1，根据具体厂商实现来决定，有一些芯片厂商会将spl固化在rom中，使其具有从emmc，u</strong></em>等设备加载u-boot或者其他固件的能力。<br>当然在有atf的情况下可以由atf加载u-boot，或者由spl加载atf，atf再去加载u-boot。甚至在快速启动的系统中可以直接由spl启动加载linux等操作系统而跳过启动u-boot；在上图中arm官方只是给出了一个建议的启动信任链，具体实现都需要芯片厂商来决定</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/30/NXP-Linux-startup-process-analysis/" data-id="clpjhc8gm0001q4ms4xpxg0jv" data-title="NXP Linux startup process analysis" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LinuxMemoryManage" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/10/15/LinuxMemoryManage/" class="article-date">
+  <time class="dt-published" datetime="2023-10-15T02:42:04.000Z" itemprop="datePublished">2023-10-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/10/15/LinuxMemoryManage/">LinuxMemoryManage</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Memory management is described and explained in detail next.</p>
+<h2 id="why-we-need-memory-management"><a href="#why-we-need-memory-management" class="headerlink" title="why we need memory management"></a>why we need memory management</h2><p>For example, if a operating system have not memory management,the hardware memory will be directly accessed when the application need use memory, and this may result in other applications not being able to use the memory area and crush the system.In addition, if several applications require a large amount of memory, but the memory is not allocated and freed properly, it may lead to memory fragmentation, which may reduce the performance of the system. Therefore, memory management is a very important part of the operating system.</p>
+<h2 id="thread-management"><a href="#thread-management" class="headerlink" title="thread management"></a>thread management</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sched.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">set_affinity</span><span class="params">(pthread thread,<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pthread_setaffinity_np(thread,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_rt_thread</span><span class="params">(<span class="type">pthread_t</span> *pth, <span class="type">void</span>*(*func)(<span class="type">void</span> *), <span class="type">void</span> *arg, <span class="type">int</span> policy, <span class="type">int</span> prio, <span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">schedp</span>;</span></span><br><span class="line">	<span class="type">pthread_attr_t</span> attr;</span><br><span class="line">    <span class="comment">//cpu_set_t set;</span></span><br><span class="line">	<span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">	pthread_attr_init(&amp;attr);</span><br><span class="line">	<span class="built_in">memset</span>(&amp;schedp, <span class="number">0</span>, <span class="keyword">sizeof</span>(schedp));</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setinheritsched(&amp;attr, PTHREAD_EXPLICIT_SCHED);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setinheritsched\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_attr_setschedpolicy(&amp;attr, policy);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedpolicy\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	schedp.sched_priority = prio;</span><br><span class="line">	ret = pthread_attr_setschedparam(&amp;attr, &amp;schedp);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_attr_setschedparam\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	ret = pthread_create(pth, &amp;attr, func, arg);</span><br><span class="line">	<span class="keyword">if</span> (ret) &#123;</span><br><span class="line">		error(<span class="string">&quot;pthread_create\n&quot;</span>, ret);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    ret = set_affinity(*pth,cpu_core);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">set_affinity_public</span><span class="params">(<span class="type">int</span> cpu_core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> policy = <span class="number">0</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sched_param</span> <span class="title">pthread_param</span>;</span></span><br><span class="line">    <span class="type">pid_t</span> thread_id = syscall(SYS_gettid);</span><br><span class="line">    pthread_getschedparam(pthread_self(),&amp;policy,&amp;pthread_param);</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(cpu_core,&amp;cpu_set);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> != sched_setaffinity(thread_id,<span class="keyword">sizeof</span>(<span class="type">cpu_set_t</span>),&amp;cpuset))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread %d set success core %d&quot;</span>,thread_id,cpu_core);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="thread-task-table"><a href="#thread-task-table" class="headerlink" title="thread task table"></a>thread task table</h2><h2 id="pipeline-timing-test-八级流水线"><a href="#pipeline-timing-test-八级流水线" class="headerlink" title="pipeline timing test(八级流水线)"></a>pipeline timing test(八级流水线)</h2><p>‘’’C<br>for(int i;i &lt;1000000000,i++)<br>{<br>    fact *&#x3D; i;<br>}</p>
+<p>for(int i;i &lt;1000000000,i+&#x3D;8)<br>{<br>    fact0 *&#x3D; i;<br>    fact1 *&#x3D; i+1;<br>    fact2 *&#x3D; i+2;<br>    fact3 *&#x3D; i+3;<br>    fact4 *&#x3D; i+4;<br>    fact5 *&#x3D; i+5;<br>    fact6 *&#x3D; i+6;<br>    fact7 *&#x3D; i+7;<br>}<br>‘’’</p>
+<ul>
+<li><p>实际测量数据 : 第一个耗时大概5s左右，第二个耗时1.3s</p>
+</li>
+<li><p>原因分析：即使在使用流水线技术的情况下，对于不同类型的计算和循环，你也不一定会看到线性的性能增长，尤其是在一些特定的情况下，因为流水线技术本身存在一些限制。</p>
+</li>
+<li><p>在你的例子中，第一个循环是一个简单的累积乘法运算，而第二个循环则是对于每次迭代同时进行了 8 个乘法运算。在第二个循环中，尽管你利用了流水线并行处理 8 个不相关的乘法操作，但仍然受到了数据相关性和其他因素的限制。</p>
+</li>
+<li><p>尽管处理器在第二个循环中可以并行处理多个操作，但也有一些因素可能限制了性能增长：</p>
+</li>
+<li><p>数据相关性和依赖：即使你并行处理了 8 个操作，但在多数情况下，这些操作依然存在数据相关性，可能导致某些乘法操作需要等待之前的操作结果，从而限制了流水线的效率。</p>
+</li>
+<li><p>资源竞争：在同时处理多个操作时，各个乘法操作之间可能会竞争同样的资源（比如寄存器），造成一定的资源争用，降低流水线效率。</p>
+</li>
+<li><p>其他因素：像分支预测、数据访问模式等因素也可能对性能造成一定的影响。</p>
+</li>
+<li><p>虽然你利用了流水线并行处理多个操作，但并不是所有类型的计算都能够简单地获得线性的性能提升。对于某些类型的任务，流水线技术可能并不能完全发挥其优势。针对这种情况，需要更深入地了解处理器的特性、任务本身的特性以及代码的优化，以最大化地利用流水线并行性带来的性能优势。</p>
+</li>
+</ul>
+<h2 id="Linux-Command"><a href="#Linux-Command" class="headerlink" title="Linux Command"></a>Linux Command</h2><p><code>mpstat -P ALL 1</code> 命令用于显示每个CPU的性能统计信息，包括软中断等。下面是命令输出的详解：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Linux 5.4.0-81-generic (hostname)  01/31/2024  _x86_64_ (4 CPU)</span><br><span class="line"></span><br><span class="line">09:35:33 PM  CPU    %usr   %<span class="built_in">nice</span>    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</span><br><span class="line">09:35:34 PM  all    4.25    0.00    4.25    0.00    0.00    0.00    0.00    0.00    0.00   91.50</span><br><span class="line">09:35:34 PM    0    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06</span><br><span class="line">09:35:34 PM    1    4.97    0.00    4.97    0.00    0.00    0.00    0.00    0.00    0.00   90.06</span><br><span class="line">09:35:34 PM    2    5.97    0.00    5.97    0.00    0.00    0.00    0.00    0.00    0.00   88.06</span><br><span class="line">09:35:34 PM    3    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06</span><br></pre></td></tr></table></figure>
+
+<p>每一行的含义如下：</p>
+<ul>
+<li><p><strong>Linux 5.4.0-81-generic (hostname):</strong> 显示了Linux内核版本和主机名。</p>
+</li>
+<li><p><strong>01&#x2F;31&#x2F;2024:</strong> 显示了当前日期。</p>
+</li>
+<li><p><strong><em>x86_64</em> (4 CPU):</strong> 显示了系统架构和CPU核心数量。</p>
+</li>
+<li><p><strong>09:35:33 PM:</strong> 显示了当前的时间戳。</p>
+</li>
+<li><p><strong>CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle:</strong> 列出了不同的CPU使用率统计项。</p>
+<ul>
+<li><code>%usr</code>: 用户空间程序的CPU使用率。</li>
+<li><code>%nice</code>: 优先级较高的用户空间程序的CPU使用率。</li>
+<li><code>%sys</code>: 内核空间程序的CPU使用率。</li>
+<li><code>%iowait</code>: CPU等待I&#x2F;O完成的时间百分比。</li>
+<li><code>%irq</code>: 处理硬中断的CPU使用率。</li>
+<li><code>%soft</code>: 处理软中断的CPU使用率。</li>
+<li><code>%steal</code>: 被虚拟化环境偷走的CPU时间。</li>
+<li><code>%guest</code>: 运行虚拟机的CPU时间。</li>
+<li><code>%gnice</code>: 优先级较高的NICE值的用户空间程序的CPU使用率。</li>
+<li><code>%idle</code>: CPU处于空闲状态的时间百分比。</li>
+</ul>
+</li>
+<li><p><strong>all    4.25    0.00    4.25    0.00    0.00    0.00    0.00    0.00    0.00   91.50:</strong> 这一行是所有CPU的平均统计。例如，用户空间程序使用了4.25%，系统空间程序使用了4.25%，空闲时间为91.50%。</p>
+</li>
+<li><p><strong>0    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06:</strong> 这一行是第一个CPU的具体统计信息，包括用户空间、系统空间、空闲时间等。</p>
+</li>
+<li><p><strong>1    4.97    0.00    4.97    0.00    0.00    0.00    0.00    0.00    0.00   90.06:</strong> 同上，但是是第二个CPU的统计信息。</p>
+</li>
+<li><p><strong>2    5.97    0.00    5.97    0.00    0.00    0.00    0.00    0.00    0.00   88.06:</strong> 同上，但是是第三个CPU的统计信息。</p>
+</li>
+<li><p><strong>3    2.97    0.00    2.97    0.00    0.00    0.00    0.00    0.00    0.00   94.06:</strong> 同上，但是是第四个CPU的统计信息。</p>
+</li>
+</ul>
+<p>这个命令的输出提供了每个CPU的详细性能统计信息，可用于监控系统中的CPU利用率情况。</p>
+<h2 id="perf命令"><a href="#perf命令" class="headerlink" title="perf命令"></a>perf命令</h2><p>在 <code>perf list | grep irq</code> 输出中，列举了一些与中断（irq）相关的事件。对于软中断，主要关注 <code>irq:softirq_entry</code>、<code>irq:softirq_exit</code> 和 <code>irq:softirq_raise</code> 事件。</p>
+<ol>
+<li><p><strong><code>irq:softirq_entry</code>：</strong></p>
+<ul>
+<li>表示软中断开始执行的事件。当内核启动执行软中断时，会记录这个事件。</li>
+</ul>
+</li>
+<li><p><strong><code>irq:softirq_exit</code>：</strong></p>
+<ul>
+<li>表示软中断执行结束的事件。当软中断执行完成后，会记录这个事件。</li>
+</ul>
+</li>
+<li><p><strong><code>irq:softirq_raise</code>：</strong></p>
+<ul>
+<li>表示软中断被触发的事件。当软中断被激活时，会记录这个事件。</li>
+</ul>
+</li>
+</ol>
+<p>针对软中断的分析，可以使用以下步骤：</p>
+<h3 id="1-使用-perf-record-捕获软中断事件："><a href="#1-使用-perf-record-捕获软中断事件：" class="headerlink" title="1. 使用 perf record 捕获软中断事件："></a>1. 使用 <code>perf record</code> 捕获软中断事件：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf record -e irq:softirq_entry -e irq:softirq_exit -e irq:softirq_raise -a</span><br></pre></td></tr></table></figure>
+
+<p>这会记录系统范围内软中断相关的事件。</p>
+<h3 id="2-使用-perf-report-查看分析报告："><a href="#2-使用-perf-report-查看分析报告：" class="headerlink" title="2. 使用 perf report 查看分析报告："></a>2. 使用 <code>perf report</code> 查看分析报告：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf report</span><br></pre></td></tr></table></figure>
+
+<p>在报告中，你可以查看软中断相关的信息，了解软中断的执行时间、次数等。</p>
+<h3 id="3-使用-perf-script-输出文本信息："><a href="#3-使用-perf-script-输出文本信息：" class="headerlink" title="3. 使用 perf script 输出文本信息："></a>3. 使用 <code>perf script</code> 输出文本信息：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf script &gt; perf_script.txt</span><br></pre></td></tr></table></figure>
+
+<p>这会将详细的性能数据输出到 <code>perf_script.txt</code> 文件中，你可以在文本文件中搜索软中断相关的信息。</p>
+<h3 id="4-使用-perf-top-查看实时性能数据："><a href="#4-使用-perf-top-查看实时性能数据：" class="headerlink" title="4. 使用 perf top 查看实时性能数据："></a>4. 使用 <code>perf top</code> 查看实时性能数据：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo perf top</span><br></pre></td></tr></table></figure>
+
+<p><code>perf top</code> 提供了实时的性能数据，可以用于监视系统中的软中断活动。</p>
+<h3 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h3><ul>
+<li>请根据你的系统和内核版本调整命令和选项，确保其兼容性。</li>
+<li>软中断的具体含义和影响可能取决于系统的配置和应用程序的特性。你可能需要进一步了解系统的软中断处理机制和软中断的触发方式。</li>
+</ul>
+<p>这些步骤应该能够帮助你获取有关软中断的性能数据并进行分析。</p>
+<h2 id="性能分析命令"><a href="#性能分析命令" class="headerlink" title="性能分析命令"></a>性能分析命令</h2><ul>
+<li>   trace -p pid  &#x2F;&#x2F;分析进程的调用关系和开销</li>
+<li>   irqtop  &#x2F;&#x2F;irqtop显示</li>
+<li>   lsirq   &#x2F;&#x2F;列举所有irq</li>
+<li>   mpstat -P ALL 1	&#x2F;&#x2F;1s显示一次所有信息中断，软中断等</li>
+<li>   cat &#x2F;proc&#x2F;interrupts</li>
+<li>   cat &#x2F;proc&#x2F;softirq</li>
+<li>   cat &#x2F;proc&#x2F;irq</li>
+<li>   cat &#x2F;proc&#x2F;irq&#x2F;90&#x2F;smp_affinity</li>
+<li>   pidstat -t -p 416 &#x2F;&#x2F;显示pid 416的状态</li>
+<li>   perf list | grep irq &#x2F;&#x2F;列举所有可以分析的irq事件，其中perf record -h是查看命令</li>
+<li>   ps -T -p 416	&#x2F;&#x2F;ps –help all 显示pid 416的相关信息</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/10/15/LinuxMemoryManage/" data-id="clocja6690002v8msdp655vtu" data-title="LinuxMemoryManage" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ARMv8Arch" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/29/ARMv8Arch/" class="article-date">
+  <time class="dt-published" datetime="2023-08-29T03:09:49.000Z" itemprop="datePublished">2023-08-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/29/ARMv8Arch/">ARMv8Arch</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>AArch64执行状态提供了32个在任何时间任何特权级下都可访问的64位的通用寄存器。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/29/ARMv8Arch/" data-id="clocja6620000v8ms15kd7mzb" data-title="ARMv8Arch" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Makefile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/18/Makefile/" class="article-date">
+  <time class="dt-published" datetime="2023-08-18T06:13:05.000Z" itemprop="datePublished">2023-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/18/Makefile/">Makefile</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Makefile-培训教程"><a href="#Makefile-培训教程" class="headerlink" title="Makefile 培训教程"></a>Makefile 培训教程</h1><h2 id="Chapter-1-Makefile-简介和必要性"><a href="#Chapter-1-Makefile-简介和必要性" class="headerlink" title="Chapter 1: Makefile 简介和必要性"></a>Chapter 1: Makefile 简介和必要性</h2><h3 id="1-1-什么是-Makefile"><a href="#1-1-什么是-Makefile" class="headerlink" title="1.1 什么是 Makefile"></a>1.1 什么是 Makefile</h3><p>Makefile 是一种文本文件，用于定义如何构建和编译软件项目。它包含了一系列规则，描述了源文件如何转化为目标文件，以及构建过程中使用的命令。</p>
+<h3 id="1-2-为什么需要-Makefile"><a href="#1-2-为什么需要-Makefile" class="headerlink" title="1.2 为什么需要 Makefile"></a>1.2 为什么需要 Makefile</h3><p>Makefile 自动化了构建过程，减少了手动编译的复杂性，提高了开发效率。它能够根据文件的依赖关系自动决定哪些文件需要重新构建，从而确保项目的正确编译和构建。</p>
+<h3 id="1-3-Makefile-vs-CMake-vs-XMake"><a href="#1-3-Makefile-vs-CMake-vs-XMake" class="headerlink" title="1.3 Makefile vs CMake vs XMake"></a>1.3 Makefile vs CMake vs XMake</h3><p>Makefile、CMake 和 XMake 都是构建工具，用于管理软件项目的构建过程。它们之间的主要区别在于语法和功能上的差异。Makefile 是一种基本的构建工具，CMake 提供了更高级的构建和配置功能，而 XMake 则专注于跨平台构建。</p>
+<h3 id="1-4-Makefile-的优点"><a href="#1-4-Makefile-的优点" class="headerlink" title="1.4 Makefile 的优点"></a>1.4 Makefile 的优点</h3><ul>
+<li>简单：Makefile 的语法相对简单，易于学习和使用。</li>
+<li>高效：通过自动化构建过程，减少了手动操作，提高了编译效率。</li>
+<li>灵活：可以根据项目的需要定制构建规则和命令。</li>
+<li>可移植性高：Makefile 在不同的操作系统和环境中都能工作，确保了项目在不同平台上的一致性。</li>
+</ul>
+<h3 id="1-5-Makefile-的历史和演进"><a href="#1-5-Makefile-的历史和演进" class="headerlink" title="1.5 Makefile 的历史和演进"></a>1.5 Makefile 的历史和演进</h3><p>GNU Make 是一个常用的 Make 工具，它是在 Unix 系统上发展起来的。随着软件开发的发展，出现了许多改进版本和替代工具，如 BSD Make、GNU Make、XMake 等，以满足不同项目的需求。</p>
+<h2 id="Chapter-2-Makefile-的基本结构和语法"><a href="#Chapter-2-Makefile-的基本结构和语法" class="headerlink" title="Chapter 2: Makefile 的基本结构和语法"></a>Chapter 2: Makefile 的基本结构和语法</h2><h3 id="2-1-Makefile-的基本结构详解"><a href="#2-1-Makefile-的基本结构详解" class="headerlink" title="2.1 Makefile 的基本结构详解"></a>2.1 Makefile 的基本结构详解</h3><p>Makefile 由一系列规则组成，每个规则描述了如何将源文件转换为目标文件。规则由目标、依赖和命令三部分组成。</p>
+<ul>
+<li>目标（target）：表示要生成的文件，可以是可执行文件、中间文件等。</li>
+<li>依赖（dependencies）：表示生成目标所需的文件，当依赖文件发生变化时，目标将被重新构建。</li>
+<li>命令（commands）：表示生成目标的具体步骤，使用制表符开头，并在命令之间用换行分隔。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 规则：生成目标文件 main.o</span></span><br><span class="line"><span class="section">main.o: main.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-2-注释和变量"><a href="#2-2-注释和变量" class="headerlink" title="2.2 注释和变量"></a>2.2 注释和变量</h3><ul>
+<li>注释使用#符号，用于添加解释和注释，提高 Makefile 的可读性。</li>
+<li>变量用于存储数据，可以是文件名、编译器选项等，以便在 Makefile 中重复使用。</li>
+</ul>
+<h2 id="Makefile使用Tips"><a href="#Makefile使用Tips" class="headerlink" title="Makefile使用Tips"></a>Makefile使用Tips</h2><h3 id="怎么把换行符CRLF替换为LF"><a href="#怎么把换行符CRLF替换为LF" class="headerlink" title="怎么把换行符CRLF替换为LF"></a>怎么把换行符CRLF替换为LF</h3><p><strong>sed -i ‘s&#x2F;\r$&#x2F;&#x2F;&#x2F;‘ file1.sh</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/Makefile/" data-id="clocja66a0003v8msfc9n4quy" data-title="Makefile" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-personalNote" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/08/18/personalNote/" class="article-date">
+  <time class="dt-published" datetime="2023-08-18T01:43:34.000Z" itemprop="datePublished">2023-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/08/18/personalNote/">personalNote</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Precautions-For-Inter-core-Data-Transfer"><a href="#Precautions-For-Inter-core-Data-Transfer" class="headerlink" title="Precautions For Inter-core Data Transfer"></a>Precautions For Inter-core Data Transfer</h2><pre><code>the cache needs to be especially careful because it can cause your data to be accessed incorrectly. If core A needs to access the memory of core B, this section of core B memory needs to be careful if there is a cache, which is generally not recommended 
+</code></pre>
+<h2 id="SPI调试总结"><a href="#SPI调试总结" class="headerlink" title="SPI调试总结"></a>SPI调试总结</h2><pre><code>SPI时序可能出现问题，需要用逻辑分析仪Kingst VIS或者示波器查看波形变化，为什么出现延时情况，读写寄存器为什么会出现这么大的时间延时。结果发现和系统调用有很大的关系，xxx.elf的进程在运行过程中采用的是默认的优先级配置的nice值默认为0，会出现被抢占的情况，所以整体的延时会出现60us的情况。正常情况下是7-8us.整个配置MMIC的时间。
+</code></pre>
+<h2 id="知乎学习链接"><a href="#知乎学习链接" class="headerlink" title="知乎学习链接"></a>知乎学习链接</h2><p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ljgibbs/posts">https://www.zhihu.com/people/ljgibbs/posts</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/people/lgjjeff">https://www.zhihu.com/people/lgjjeff</a></strong></p>
+<p>‘’’C<br>&#x2F;&#x2F;tcp server,can reconnection and recv data from tcp client<br>#include &lt;stdio.h&gt;<br>#include &lt;sys&#x2F;socket.h&gt;<br>#include &lt;arpa&#x2F;inet.h&gt;<br>#include &lt;unistd.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;fcntl.h&gt;</p>
+<p>#define PORT 11011<br>#define IP_ADDR “192.168.30.60”</p>
+<p>int main(){</p>
+<pre><code>int server_fd, client_fd;
+struct sockaddr_in server_addr,client_addr; 
+
+// 创建 socket
+server_fd = socket(AF_INET, SOCK_STREAM, 0);
+if(server_fd &lt; 0)&#123;
+    printf(&quot;Error creating socket!&quot;);
+    return 1;
+&#125;
+
+// 设置地址与端口信息
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = inet_addr(IP_ADDR); 
+server_addr.sin_port = htons(PORT);
+
+// 绑定socket与地址信息 
+if(bind(server_fd, (struct sockaddr*)&amp;server_addr, sizeof(server_addr)) &lt; 0)&#123;
+   printf(&quot;Bind failed!&quot;);
+   return 1;
+&#125;
+
+// 开始监听
+if (listen(server_fd, 5) &lt; 0)&#123;
+    printf(&quot;Listen failed!&quot;);
+    return 1;
+&#125;
+ 
+while(1)&#123;
+    socklen_t client_len = sizeof(client_addr);
+      // 等待客户端连接请求 
+    client_fd = accept(server_fd, (struct sockaddr*)&amp;client_addr, &amp;client_len);
+      if(client_fd &lt; 0)&#123;
+      continue;
+      &#125;
+    
+    // 设置 client_fd 为非阻塞模式
+    fcntl(client_fd, F_SETFL, O_NONBLOCK);
+  
+       while(1)&#123;
+
+        // 尝试接收数据
+        char buffer[1024];        
+        int byte_num = recv(client_fd, buffer, 1024, 0);
+        // 连接已关闭
+        if(byte_num == 0)&#123;
+            close(client_fd);
+            break;
+        &#125;
+      
+        // 打印接收到的数据
+        //if(byte_num &gt; 0)&#123;
+          //  printf(&quot;Received data: %s&quot;, buffer); 
+        //&#125;
+
+        // 遍历缓冲区每个字节
+        for(int i=0; i &lt; byte_num; i++) &#123;
+
+            // 将字节转换为整数打印 
+            printf(&quot;%x &quot;, (int)buffer[i]); 
+
+        &#125; 
+
+        printf(&quot;\n&quot;);
+
+
+    &#125;
+
+    // 关闭客户端 socket
+    close(client_fd); 
+&#125;
+
+return 0;
+</code></pre>
+<p>}<br>‘’’</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/18/personalNote/" data-id="clocja66b0004v8ms9g6p6wxa" data-title="personalNote" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-ArmTrustFirmware" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2023/08/17/ArmTrustFirmware/" class="article-date">
@@ -282,7 +919,7 @@ defined by manufacturer.
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
     </div>
   </div>
 
@@ -295,23 +932,23 @@ defined by manufacturer.
       <ul>
         
           <li>
-            <a href="/peter.github.io/2024/01/03/yocto-user-manual/">yocto_user_manual</a>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/11/16/ToolsMethods/">ToolsMethods</a>
+            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
           </li>
         
           <li>
-            <a href="/peter.github.io/2023/10/30/Linux-System-command-description/">Linux System command description</a>
+            <a href="/peter.github.io/2024/02/26/OptimizedStrategy/">OptimizedStrategy</a>
           </li>
         
       </ul>
