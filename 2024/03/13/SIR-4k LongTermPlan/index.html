@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="SIR-4k 内部长期工作计划 平台工作计划  1.1  BSP  Uboot 网络移植；  服务器编译环境配置；  BSP 的前期修改点集中到 meta-sinpro 层；  升级到 BSP37；  升级方案实现及优化；  SD卡方案；  flash；  生产；    kernel、文件系统裁剪；  启动时间优化；  FDMA 驱动支持；  M核、A核 boot 过程；   1.2  APP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="SIR-4k 内部长期工作计划 平台工作计划  1.1  BSP  Uboot 网络移植；  服务器编译环境配置；  BSP 的前期修改点集中到 meta-sinpro 层；  升级到 BSP37；  升级方案实现及优化；  SD卡方案；  flash；  生产；    kernel、文件系统裁剪；  启动时间优化；  FDMA 驱动支持；  M核、A核 boot 过程；   1.2  APP">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-13T08:45:15.513Z">
+<meta property="article:modified_time" content="2024-03-13T08:36:38.511Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/peter.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/peter.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/peter.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/peter.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/peter.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/peter.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/peter.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/peter.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://techexplorerpeter.github.io/peter.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-SIR-4k LongTermPlan" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/" class="article-date">
+  <time class="dt-published" datetime="2024-03-13T08:45:15.513Z" itemprop="datePublished">2024-03-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="SIR-4k-内部长期工作计划"><a href="#SIR-4k-内部长期工作计划" class="headerlink" title="SIR-4k 内部长期工作计划"></a>SIR-4k 内部长期工作计划</h1><ol>
+<li><strong>平台工作计划</strong></li>
+</ol>
+<p><strong>1.1  BSP</strong></p>
+<ol>
+<li><p>Uboot 网络移植；</p>
+</li>
+<li><p>服务器编译环境配置；</p>
+</li>
+<li><p>BSP 的前期修改点集中到 meta-sinpro 层；</p>
+</li>
+<li><p>升级到 BSP37；</p>
+</li>
+<li><p>升级方案实现及优化；</p>
+<ol>
+<li><p>SD卡方案；</p>
+</li>
+<li><p>flash；</p>
+</li>
+<li><p>生产；</p>
+</li>
+</ol>
+</li>
+<li><p>kernel、文件系统裁剪；</p>
+</li>
+<li><p>启动时间优化；</p>
+</li>
+<li><p>FDMA 驱动支持；</p>
+</li>
+<li><p>M核、A核 boot 过程；</p>
+</li>
+</ol>
+<p><strong>1.2  APP</strong></p>
+<ol start="10">
+<li><p>lax 算法部分与BSW解耦；</p>
+</li>
+<li><p>SBC 基本功能实现；</p>
+</li>
+<li><p>线程优先级优化</p>
+</li>
+</ol>
+<pre><code>1.  线程调度策略选择；
+    
+2.  测试系统实时性；
+    
+</code></pre>
+<ol start="13">
+<li>代码规范化</li>
+</ol>
+<pre><code>1.  参考《c编码规范》；
+    
+2.  注释风格统一；
+    
+</code></pre>
+<ol start="14">
+<li>功能模块解耦合 2023.12.11——2023.12.15</li>
+</ol>
+<pre><code>1.  优雅消灭全局变量；
+    
+2.  过期模块删除；
+    
+3.  数据产生与 dataConvert 模块的内存解耦，中间要有映射层，比如点云；
+    
+4.  BSW 工程与 DSP 工程之间禁止直接 extern；
+    
+5.  对外结构体与算法内部结构体解耦；
+    
+6.  DSP 和 BSW 工程的代码不应该相互extern来共享变量、函数；
+    
+7.  DSP 必须要在 BSW 申请吗？
+    
+</code></pre>
+<ol start="15">
+<li><p>log 模块</p>
+</li>
+<li><p>capture 采集失败与 dsp 处理配合</p>
+</li>
+<li><p>全局 error 码，为 faultlist 做准备</p>
+</li>
+<li><p>进程、线程优先级以及核独占</p>
+</li>
+<li><p>时间同步</p>
+</li>
+<li><p>监控模块</p>
+</li>
+</ol>
+<pre><code>1.  统计算法模块时间；
+    
+2.  监控关键节点时间，配合上位机显示，可视化雷达运行情况；
+    
+</code></pre>
+<ol start="21">
+<li><p>dsp库、感知库编译成动态库；</p>
+</li>
+<li><p>lib、bsw工程构建优化</p>
+</li>
+</ol>
+<pre><code>1.  构建优化（spt库、radar\_library合并），同时编译bbe32
+    
+2.  bsw 工程要同时编译app、bbe32
+    
+</code></pre>
+<ol start="23">
+<li>spt</li>
+</ol>
+<pre><code>1.  驱动优化，丰富的错误信息返回；
+    
+2.  算力优势（相比其他核）；
+    
+</code></pre>
+<ol start="24">
+<li>bbe32</li>
+</ol>
+<pre><code>1.  A53直接调用BBE32；
+    
+2.  BBE32 log 信息输出；
+    
+3.  算力优势（相比其他核）
+    
+</code></pre>
+<ol start="25">
+<li>lax</li>
+</ol>
+<pre><code>1.  算力优势（相比其他核）
+    
+</code></pre>
+<ol start="26">
+<li><p>cte</p>
+</li>
+<li><p>APP 热重启支持</p>
+</li>
+<li><p>感知下片</p>
+</li>
+<li><p>SRAM、DDR优化</p>
+</li>
+</ol>
+<pre><code>1.  测试SRAM、DDR性能数据；
+    
+2.  SRAM 最大利用率优化；
+    
+</code></pre>
+<ol start="30">
+<li>RSDK更新</li>
+</ol>
+<pre><code>1.  是否可将RFE, SPT/LAX/BBE32 驱动部分与APP部分分离
+    
+</code></pre>
+<p><strong>1.3  M7 相关开发</strong></p>
+<p><strong>2. 客户工作计划</strong></p>
+<p><strong>2.1 博世</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>内容</strong></th>
+<th><strong>详细说明</strong></th>
+<th><strong>计划时间</strong></th>
+<th><strong>完成状态</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gptp</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/" data-id="cltpk3ty3000028ms824t8qrq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/peter.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/peter.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/peter.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/peter.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/peter.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
