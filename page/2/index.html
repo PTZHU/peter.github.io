@@ -73,6 +73,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DebugMethods" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2023/11/16/DebugMethods/" class="article-date">
+  <time class="dt-published" datetime="2023-11-16T03:32:33.000Z" itemprop="datePublished">2023-11-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2023/11/16/DebugMethods/">DebugMethods</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="S32R45-Debug-Methos"><a href="#S32R45-Debug-Methos" class="headerlink" title="S32R45 Debug Methos"></a>S32R45 Debug Methos</h1><h2 id="LAX"><a href="#LAX" class="headerlink" title="LAX"></a>LAX</h2><h2 id="SPT"><a href="#SPT" class="headerlink" title="SPT"></a>SPT</h2><h2 id="BBE"><a href="#BBE" class="headerlink" title="BBE"></a>BBE</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/11/16/DebugMethods/" data-id="clpjhc8gh0000q4ms2xb0fti1" data-title="DebugMethods" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-ToolsMethods" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2023/11/16/ToolsMethods/" class="article-date">
@@ -638,6 +676,9 @@ git diff HEAD file2 &gt; file2.patch
     <div class="e-content article-entry" itemprop="articleBody">
       
         <h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>AArch64执行状态提供了32个在任何时间任何特权级下都可访问的64位的通用寄存器。</p>
+<h1 id="S32R41-startup"><a href="#S32R41-startup" class="headerlink" title="S32R41 startup"></a>S32R41 startup</h1><ul>
+<li><code>FBL</code> load the image to sram, and will change the  <code>pc</code> pointer to <code>M7 bootloader</code> and then control the <code>A53</code> startup(special register).</li>
+</ul>
 
       
     </div>
@@ -931,46 +972,6 @@ defined by manufacturer.
 
 
   
-    <article id="post-zephyr" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/08/01/zephyr/" class="article-date">
-  <time class="dt-published" datetime="2023-08-01T01:39:30.000Z" itemprop="datePublished">2023-08-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/08/01/zephyr/">zephyr</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>The following usage is based on zephyr v2.7.</p>
-<h2 id="Stack-Usage"><a href="#Stack-Usage" class="headerlink" title="Stack Usage"></a>Stack Usage</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;zephyr.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;kernel.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;kernel_structs.h&gt;</span></span></span><br><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment"> *  stack guard default value</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STACK_GUARD_VALUE 0xAA</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">check_stage_usage</span><span class="params">(<span class="type">k_tid_t</span> tid,<span class="type">const</span> <span class="type">char</span> *thread_name, <span class="type">size_t</span> stack_size)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> unused_stack_space;</span><br><span class="line">    <span class="type">size_t</span> total_stack_space = stack_size;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">k_thread</span> *<span class="title">thread</span> =</span> (<span class="keyword">struct</span> k_thread *) tid;</span><br><span class="line">    <span class="type">uint8_t</span> *stack_ptr = (<span class="type">uint8_t</span> *)thread-&gt;stack_info.start;</span><br><span class="line">    k_thread_stack_space_get(tid,&amp;unused_stack_space);</span><br><span class="line">    <span class="comment">//calculate the stack size usage</span></span><br><span class="line">    <span class="type">size_t</span> used_stack_space = total_stack_space - unused_stack_space;</span><br><span class="line">    <span class="type">double</span> stack_usage = (<span class="type">double</span>)used_stack_space/total_stack_space;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(stack_usage &gt; <span class="number">0.8</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// TODO</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    The stack sentinel is placed at the far end of the stack, so if the stack grows</span></span><br><span class="line"><span class="comment">    beyond its bounds, the sentinel value will be overwritten.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span>(stack_ptr[<span class="number">0</span>]!=STACK_GUARD_VALUE)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//TOD: stack overflow</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="CPU-Load"><a href="#CPU-Load" class="headerlink" title="CPU Load"></a>CPU Load</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> LOOP_CYCLE 669/100</span></span><br><span class="line"><span class="comment">//used to calculate the current thread cpu load</span></span><br><span class="line"><span class="type">uint32_t</span> last_runtimes;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">k_thread_runtime_stats</span> <span class="title">stats</span>;</span></span><br><span class="line">k_thread_runtime_stats_get(k_current_get(),stats);</span><br><span class="line"><span class="type">float</span> cpu_load = (<span class="type">float</span>)<span class="number">100</span> *(stats.execution_cycles - last_runtimes)/(CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC/<span class="number">1000</span>*LOOP_CYCLE);</span><br><span class="line">last_runtimes = stats.execution_cycles;</span><br><span class="line"></span><br><span class="line"><span class="comment">//used to calculate the total thread cpu load</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">thread_runtime_cb</span><span class="params">(<span class="keyword">struct</span> k_thread *thread,<span class="type">void</span> *user_data)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint32_t</span> *total*_runtime = (<span class="type">uint32_t</span> *)user_data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">k_thread_runtime_stats</span> <span class="title">stats</span>;</span></span><br><span class="line">    k_thread_runtime_stats_get(thread,stats);</span><br><span class="line">    *total_runtime += stats.execution_cycles;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_cpu_load</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint64_t</span> total_runtime = <span class="number">0</span>;</span><br><span class="line">    <span class="type">float</span> cpu_load;</span><br><span class="line">    k_thread_foreach(thread_runtime_cb,&amp;total_runtime);</span><br><span class="line">    cpu_load = (<span class="type">float</span>)<span class="number">100</span> * (total_runtime - last_total_runtime)/((CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC/<span class="number">1000</span>*LOOP_CYCLE));</span><br><span class="line">    prink(<span class="string">&quot;cpu load = %.2f%%\n&quot;</span>,cpu_load);</span><br><span class="line">    last_total_runtime = total_runtime;</span><br><span class="line">    <span class="keyword">return</span> cpu_load;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/08/01/zephyr/" data-id="clocja66g0007v8msfnhd4e0b" data-title="zephyr" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1007,6 +1008,10 @@ defined by manufacturer.
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/03/22/r45-m7-sample-bringup/">r45_m7_sample_bringup</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/">(no title)</a>
           </li>
         
@@ -1020,10 +1025,6 @@ defined by manufacturer.
         
           <li>
             <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2024/03/13/Yocto-User-Manual-0/">Yocto_User_Manual</a>
           </li>
         
       </ul>

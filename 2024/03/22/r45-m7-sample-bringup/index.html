@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>r45_m7_sample_bringup | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="M7 Bringup StepsYocto Configuration Add m7-sample path to file  m7-sample.bb as shown below: Add the required cross-compilation toolchain to file cortex-m-toochain.bb m7-sample will be compiled into t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="r45_m7_sample_bringup">
+<meta property="og:url" content="https://techexplorerpeter.github.io/peter.github.io/2024/03/22/r45-m7-sample-bringup/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="M7 Bringup StepsYocto Configuration Add m7-sample path to file  m7-sample.bb as shown below: Add the required cross-compilation toolchain to file cortex-m-toochain.bb m7-sample will be compiled into t">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/001.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/002.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/003.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/004.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/006.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/007.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/011.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/014.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/017.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/016.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/018.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/017.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/019.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/021.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/020.png">
+<meta property="og:image" content="https://techexplorerpeter.github.io/images/m7_sample/022.png">
+<meta property="article:published_time" content="2024-03-22T05:46:17.000Z">
+<meta property="article:modified_time" content="2024-03-22T07:28:41.320Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://techexplorerpeter.github.io/images/m7_sample/001.png">
+  
+    <link rel="alternate" href="/peter.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/peter.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/peter.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/peter.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/peter.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/peter.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/peter.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/peter.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://techexplorerpeter.github.io/peter.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-r45-m7-sample-bringup" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/22/r45-m7-sample-bringup/" class="article-date">
+  <time class="dt-published" datetime="2024-03-22T05:46:17.000Z" itemprop="datePublished">2024-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      r45_m7_sample_bringup
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="M7-Bringup-Steps"><a href="#M7-Bringup-Steps" class="headerlink" title="M7 Bringup Steps"></a><strong>M7 Bringup Steps</strong></h1><h2 id="Yocto-Configuration"><a href="#Yocto-Configuration" class="headerlink" title="Yocto Configuration"></a><strong>Yocto Configuration</strong></h2><ul>
+<li><strong>Add <code>m7-sample</code> path to file <code> m7-sample.bb</code> as shown below</strong>:<br><img src="/peter.github.io/../../images/m7_sample/001.png" alt="Alt text"></li>
+<li><strong>Add the required cross-compilation toolchain to file <code>cortex-m-toochain.bb</code></strong><br><img src="/peter.github.io/../../images/m7_sample/002.png" alt="Alt text"></li>
+<li><strong><code>m7-sample</code> will be compiled into the image under name <code>m7-boot</code>,this is shown in the figure below:</strong><br><img src="/peter.github.io/../../images/m7_sample/003.png" alt="Alt text"></li>
+<li><strong>next you should add the <code>DISTRO_FEATURE:append = &quot;m7-boot&quot;</code> to <code>build\conf\local.conf</code> as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/004.png" alt="Alt text"></li>
+<li><strong>and then you can use command<code>bitbake m7-sample</code> to build the <code>m7-sample.bb</code> for generate the sdcard file.</strong><ul>
+<li>Notice: if you want to build your own new code add in <code>m7-sample</code> project under <code>build/tmp/work/cortexa53-crypto-fsl-linux/m7-sample/1.0-r0/git</code> only,<br>you can use the command <code>bitbake m7-sample -c do_compile -f</code> to build it.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Pre-analyze-fip-s32-sdcard-m7"><a href="#Pre-analyze-fip-s32-sdcard-m7" class="headerlink" title="Pre-analyze fip.s32-sdcard.m7"></a><strong>Pre-analyze <code>fip.s32-sdcard.m7</code></strong></h2><ul>
+<li><p><strong>Before analyzing the mirror, it is necessary to understand the structure of the IVT, as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/006.png" alt="Alt text"></p>
+</li>
+<li><p><strong>Application boot as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/007.png" alt="Alt text"></p>
+</li>
+</ul>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a><strong>Example</strong></h3><ul>
+<li><p><strong><code>fip.s32-sdcard.m7</code> information as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/011.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>IVT</code> table shows that the entry address of the <code>ivt header</code> is <code>0x1000</code>, and the <code>Applicatioin boot entry pointer address</code> is <code>0x1200</code>( store the application boot ram address)</strong><br><img src="/peter.github.io/../../images/m7_sample/014.png" alt="Alt text"></p>
+</li>
+<li><p><strong>Application boot image structure(BOOT_SEQ&#x3D;0) as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/017.png" alt="Alt text"></p>
+</li>
+<li><p><strong>From the <code>Application boot image structure</code> and you can find the <code>RAM_start_pointer</code>, <code>RAM_entry pointer</code> and <code>Code_len</code>;</strong><br><img src="/peter.github.io/../../images/m7_sample/016.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>M7.bin</code> actual size is <code>0xdbe0</code> as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/018.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>M7.bin</code> start address as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/017.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>M7.bin</code> end address(start address + actual size) as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/019.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>fip.bin</code> as shown below:</strong><br><img src="/peter.github.io/../../images/m7_sample/021.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>0x11240</code> is the <code>fip.bin</code> start address</strong><br><img src="/peter.github.io/../../images/m7_sample/020.png" alt="Alt text"></p>
+</li>
+<li><p><strong><code>fip.bin</code> size is <code>0xf0690</code></strong><br><img src="/peter.github.io/../../images/m7_sample/022.png" alt="Alt text"></p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/22/r45-m7-sample-bringup/" data-id="clu2cc8qz0000i4ms9jcdcj66" data-title="r45_m7_sample_bringup" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/10/">October 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/peter.github.io/archives/2023/07/">July 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/22/r45-m7-sample-bringup/">r45_m7_sample_bringup</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/SIR-4k%20LongTermPlan/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/001-Yocto%20%E6%80%BB%E7%BB%93%E5%88%86%E4%BA%AB/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/peter.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/peter.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/peter.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/peter.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/peter.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
