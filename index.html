@@ -73,6 +73,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-C-Compiler-Note" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/peter.github.io/2024/03/22/C-Compiler-Note/" class="article-date">
+  <time class="dt-published" datetime="2024-03-22T09:09:40.000Z" itemprop="datePublished">2024-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/peter.github.io/2024/03/22/C-Compiler-Note/">C_Compiler_Note</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="变量定义位置"><a href="#变量定义位置" class="headerlink" title="变量定义位置"></a>变量定义位置</h1><ul>
+<li><h2 id="const-uint32-t-const-data-和-const-uint32-t-const-data-42-存放于-rodata-段"><a href="#const-uint32-t-const-data-和-const-uint32-t-const-data-42-存放于-rodata-段" class="headerlink" title="const uint32_t const_data; 和 const uint32_t const_data = 42;- 存放于 .rodata 段"></a><code>const uint32_t const_data;</code> 和 <code>const uint32_t const_data = 42;</code><br>- 存放于 <code>.rodata</code> 段</h2></li>
+<li><h2 id="uint32-t-uninit-data-存放于-bss段"><a href="#uint32-t-uninit-data-存放于-bss段" class="headerlink" title="uint32_t uninit_data;- 存放于 .bss段"></a><code>uint32_t uninit_data;</code><br>- 存放于 <code>.bss</code>段</h2></li>
+<li><code>uint32_t init_data = 0x340a0000UL;</code>和 <code>const char * data_char_test = &quot;Hello, World!&quot;;</code><ul>
+<li>存放于 <code>.data</code>段</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2024/03/22/C-Compiler-Note/" data-id="cluul5tii00006cmsgzh8bdpz" data-title="C_Compiler_Note" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-r45-m7-sample-bringup" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/peter.github.io/2024/03/22/r45-m7-sample-bringup/" class="article-date">
@@ -946,47 +992,6 @@ $ bitbake hello-mod; #（hello-mod 是.bb文件的名字，与源文件名无关
 
 
   
-    <article id="post-bootlog-analysis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/peter.github.io/2023/12/09/bootlog-analysis/" class="article-date">
-  <time class="dt-published" datetime="2023-12-09T06:51:46.000Z" itemprop="datePublished">2023-12-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/peter.github.io/2023/12/09/bootlog-analysis/">bootlog analysis</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="printenv"><a href="#printenv" class="headerlink" title="printenv"></a>printenv</h2><p>‘’’<br>arch&#x3D;arm<br>baudrate&#x3D;115200<br>board&#x3D;s32-gen1<br>board_name&#x3D;s32-gen1<br>boot_fdt&#x3D;try<br>boot_mtd&#x3D;booti<br>bootargs&#x3D;root&#x3D;&#x2F;dev&#x2F;ram rw earlycon loglevel&#x3D;7<br>bootcmd&#x3D;mmc dev ${mmcdev}; if mmc rescan; then if run loadimage; then run mmcboot; else run netboot; fi; else run netboot; fi<br>bootdelay&#x3D;2<br>bootscript&#x3D;echo Running bootscript from mmc …; source<br>console&#x3D;ttyLF0<br>cpu&#x3D;armv8<br>fdt_addr&#x3D;0x83E00000<br>fdt_enable_hs400es&#x3D;fdt addr ${fdt_addr}; fdt rm &#x2F;usdhc no-1-8-v; fdt resize;<br>fdt_file&#x3D;fsl-s32r45-evb.dtb<br>fdt_high&#x3D;0xa0000000<br>fdt_override&#x3D;;<br>fdtcontroladdr&#x3D;ffa99000<br>flashboot&#x3D;echo Booting from flash…; run flashbootargs;sf probe 6:0;sf read ${loadaddr} ${kernel_flashaddr} ${kernel_maxsize};sf read ${fdt_addr} ${fdt_flashaddr} ${fdt_maxsize};sf read ${ramdisk_addr} ${ramdisk_flashaddr} ${ramdisk_maxsize};${boot_mtd} ${loadaddr} ${ramdisk_addr} ${fdt_addr};<br>flashbootargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;&#x2F;dev&#x2F;ram rw earlycon ;setexpr fip_flashaddr 0x0;setexpr kernel_flashaddr (0x0 + 0x1f0000);setenv kernel_maxsize 0x1400000;setexpr fdt_flashaddr (0x0 + 0x15f0000);setenv fdt_maxsize 0x100000;setexpr ramdisk_flashaddr (0x0 + 0x16f0000);setenv ramdisk_maxsize 0x2000000;<br>gatewayip&#x3D;192.168.30.1<br>hwconfig&#x3D;pcie0:mode&#x3D;rc,clock&#x3D;int;pcie1:mode&#x3D;sgmii,clock&#x3D;ext,fmhz&#x3D;125,xpcs_mode&#x3D;2G5<br>image&#x3D;Image<br>initrd_high&#x3D;0xFE1FFFFF<br>ipaddr&#x3D;192.168.30.60<br>jtagboot&#x3D;echo Booting using jtag…; ${boot_mtd} ${loadaddr} ${ramdisk_addr} ${fdt_addr}<br>jtagsdboot&#x3D;echo Booting loading Linux with ramdisk from SD…; run loadimage; run loadramdisk; run loadfdt;${boot_mtd} ${loadaddr} ${ramdisk_addr} ${fdt_addr}<br>loadaddr&#x3D;0x80000000<br>loadbootscript&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};<br>loadfdt&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}; run fdt_override;<br>loadimage&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}<br>loadramdisk&#x3D;fatload mmc ${mmcdev}:${mmcpart} ${ramdisk_addr} ${ramdisk}<br>loadtftpfdt&#x3D;tftp ${fdt_addr} ${fdt_file};<br>loadtftpimage&#x3D;tftp ${loadaddr} ${image};<br>loadtftpramdisk&#x3D;tftp ${ramdisk_addr} ${ramdisk};<br>mmcargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;${mmcroot} earlycon<br>mmcboot&#x3D;echo Booting from mmc …; run mmcargs; if run loadfdt; then ${boot_mtd} ${loadaddr} - ${fdt_addr}; else echo WARN: Cannot load the DT; fi;<br>mmcdev&#x3D;0<br>mmcpart&#x3D;1<br>mmcroot&#x3D;&#x2F;dev&#x2F;mmcblk0p2 rootwait rw<br>netargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;&#x2F;dev&#x2F;nfs ip&#x3D;dhcp nfsroot&#x3D;${serverip}:${nfsroot},v3,tcp earlycon<br>netboot&#x3D;echo Booting from net …; run netargs; if test ${ip_dyn} &#x3D; yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; ${get_cmd} ${image}; if test ${boot_fdt} &#x3D; yes || test ${boot_fdt} &#x3D; try; then if ${get_cmd} ${fdt_addr} ${fdt_file}; then ${boot_mtd} ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} &#x3D; try; then ${boot_mtd}; else echo WARN: Cannot load the DT; fi; fi; else ${boot_mtd}; fi;<br>netmask&#x3D;255.255.255.0<br>nfsboot&#x3D;echo Booting from net using tftp and nfs…; run nfsbootargs;run loadtftpimage; run loadtftpfdt;${boot_mtd} ${loadaddr} - ${fdt_addr};<br>nfsbootargs&#x3D;setenv bootargs console&#x3D;${console},${baudrate} root&#x3D;&#x2F;dev&#x2F;nfs rw ip&#x3D;${ipaddr}:${serverip}::${netmask}::eth0:off nfsroot&#x3D;${serverip}:&#x2F;tftpboot&#x2F;rfs,nolock,v3,tcp earlycon<br>ramdisk&#x3D;rootfs.uimg<br>ramdisk_addr&#x3D;0x84000000<br>s32cc_gmac1_mode&#x3D;enable<br>s32cc_gmac_mode&#x3D;enable<br>script&#x3D;boot.scr<br>serverip&#x3D;10.0.0.1<br>soc&#x3D;s32<br>stderr&#x3D;serial@401C8000<br>stdin&#x3D;serial@401C8000<br>stdout&#x3D;serial@401C8000<br>update_sd_firmware&#x3D;if test ${ip_dyn} &#x3D; yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; if mmc dev ${mmcdev}; then if ${get_cmd} ${update_sd_firmware_filename}; then setexpr fw_sz ${filesize} &#x2F; 0x200; setexpr fw_sz ${fw_sz} - 7; setexpr loadaddr ${loadaddr} + 0x1000; mmc write ${loadaddr} 0x8 ${fw_sz}; fi; fi<br>update_sd_firmware_filename&#x3D;fip.s32<br>vendor&#x3D;freescale</p>
-<p>Environment size: 3756&#x2F;8188 bytes</p>
-<p>‘’’</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://techexplorerpeter.github.io/peter.github.io/2023/12/09/bootlog-analysis/" data-id="clqxg3y0u0000ssms2oss53jl" data-title="bootlog analysis" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1023,6 +1028,10 @@ $ bitbake hello-mod; #（hello-mod 是.bb文件的名字，与源文件名无关
       <ul>
         
           <li>
+            <a href="/peter.github.io/2024/03/22/C-Compiler-Note/">C_Compiler_Note</a>
+          </li>
+        
+          <li>
             <a href="/peter.github.io/2024/03/22/r45-m7-sample-bringup/">r45_m7_sample_bringup</a>
           </li>
         
@@ -1036,10 +1045,6 @@ $ bitbake hello-mod; #（hello-mod 是.bb文件的名字，与源文件名无关
         
           <li>
             <a href="/peter.github.io/2024/03/13/003-2.5G%20PHY%E9%85%8D%E7%BD%AE/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/peter.github.io/2024/03/13/2-5G-PHY-Configuration/">2.5G_PHY_Configuration</a>
           </li>
         
       </ul>
